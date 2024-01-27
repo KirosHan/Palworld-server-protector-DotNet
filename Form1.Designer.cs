@@ -240,7 +240,6 @@
             passWordbox.Location = new Point(171, 511);
             passWordbox.Margin = new Padding(5, 4, 5, 4);
             passWordbox.Name = "passWordbox";
-            passWordbox.PasswordChar = '*';
             passWordbox.Size = new Size(384, 30);
             passWordbox.TabIndex = 1;
             passWordbox.Text = "admin";
@@ -466,9 +465,9 @@
             // 
             // button4
             // 
-            button4.Location = new Point(307, 353);
+            button4.Location = new Point(309, 353);
             button4.Name = "button4";
-            button4.Size = new Size(112, 32);
+            button4.Size = new Size(135, 32);
             button4.TabIndex = 20;
             button4.Text = "获取服本号";
             button4.UseVisualStyleBackColor = true;
@@ -476,9 +475,9 @@
             // 
             // button3
             // 
-            button3.Location = new Point(164, 353);
+            button3.Location = new Point(166, 353);
             button3.Name = "button3";
-            button3.Size = new Size(112, 32);
+            button3.Size = new Size(135, 32);
             button3.TabIndex = 20;
             button3.Text = "10s安全关服";
             button3.UseVisualStyleBackColor = true;
@@ -488,9 +487,9 @@
             // 
             button2.Location = new Point(25, 353);
             button2.Name = "button2";
-            button2.Size = new Size(112, 32);
+            button2.Size = new Size(135, 32);
             button2.TabIndex = 19;
-            button2.Text = "手动存档";
+            button2.Text = "服务端存档";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 

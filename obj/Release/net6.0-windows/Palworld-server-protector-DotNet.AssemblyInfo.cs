@@ -12,7 +12,7 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("@ONBETA")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Kiros @ONBETA")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2.0.2")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.0.2+c87ecd88ddb53d1070016013ac5b9e609d61ee25")]
