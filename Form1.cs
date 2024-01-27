@@ -76,7 +76,7 @@ namespace Palworld_server_protector_DotNet
                         {
                             OutputMessageAsync($"内存达到警戒阈值！！！");
                             // 使用rcon向服务端发送指令
-                            RconUtils.TestConnection(rconHost, rconPort, rconPassword);
+                            RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
                             var info = RconUtils.SendMsg("save");
                             OutputMessageAsync($"{info}");
                             var result = RconUtils.SendMsg($"Shutdown {rebootSeconds} The_server_will_restart_in_{rebootSeconds}_seconds.");
@@ -134,7 +134,7 @@ namespace Palworld_server_protector_DotNet
                     return;
                 }
 
-                RconUtils.TestConnection(rconHost, rconPort, rconPassword);
+                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
                 var players = RconUtils.ShowPlayers();
 
                 playersCounterLabel.Text = $"当前在线：{players.Count}人";
@@ -251,7 +251,7 @@ namespace Palworld_server_protector_DotNet
         {
             try
             {
-                RconUtils.TestConnection(rconHost, rconPort, rconPassword);
+                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
                 await Task.CompletedTask;
                 var info = RconUtils.SendMsg("info");
@@ -320,7 +320,8 @@ namespace Palworld_server_protector_DotNet
 
         private void checkBox_startprocess_CheckedChanged(object sender, EventArgs e)
         {
-            if (cmdPath == "") {
+            if (cmdPath == "")
+            {
                 OutputMessageAsync($"请先设置服务端路径。");
                 checkBox_startprocess.Checked = false;
 
@@ -430,7 +431,7 @@ namespace Palworld_server_protector_DotNet
 
         private void checkBox_reboot_CheckedChanged(object sender, EventArgs e)
         {
-            if(cmdPath == "")
+            if (cmdPath == "")
             {
                 checkBox_reboot.Checked = false;
                 OutputMessageAsync($"请先选择服务端路径。");
@@ -468,33 +469,30 @@ namespace Palworld_server_protector_DotNet
 
         private void button2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                RconUtils.TestConnection(rconHost, rconPort, rconPassword);
-                var info = RconUtils.SendMsg("save");
-                OutputMessageAsync($"{info}");
-            }
-            catch
-            {
-                OutputMessageAsync($"手动存档失败。");
 
-            }
+            RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
+            
+            
+            var info = RconUtils.SendMsg("save");
+            OutputMessageAsync($"{info}");
+
+
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             try
             {
-                RconUtils.TestConnection(rconHost, rconPort, rconPassword);
+                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
                 var result = RconUtils.SendMsg($"Shutdown 10 The_server_will_restart_in_10econds.");
 
                 OutputMessageAsync($"{result}");
 
             }
-            catch
+            catch (Exception ex)
             {
-                OutputMessageAsync($"关服指令发送失败。");
+                OutputMessageAsync($"关服指令发送失败：{ex.Message}");
             }
 
         }
@@ -503,7 +501,7 @@ namespace Palworld_server_protector_DotNet
         {
             try
             {
-                RconUtils.TestConnection(rconHost, rconPort, rconPassword);
+                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
                 var info = RconUtils.SendMsg("info");
 
@@ -514,17 +512,18 @@ namespace Palworld_server_protector_DotNet
                 OutputMessageAsync($"当前服务端版本：{version}");
 
             }
-            catch
+            catch (Exception ex)
             {
-                OutputMessageAsync($"info指令发送失败。");
+                OutputMessageAsync($"info指令发送失败：{ex.Message}");
             }
+         
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                RconUtils.TestConnection(rconHost, rconPort, rconPassword);
+                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
                 textBox1.Text = textBox1.Text.Replace(" ", "_");
                 var info = RconUtils.SendMsg($"broadcast {textBox1.Text.Trim()}");
@@ -532,15 +531,28 @@ namespace Palworld_server_protector_DotNet
                 OutputMessageAsync($"当前服务端版本：{info}");
 
             }
-            catch
+
+            catch (Exception ex)
             {
-                OutputMessageAsync($"broadcast指令发送失败。");
+                OutputMessageAsync($"broadcast指令发送失败。{ex.Message}");
             }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/KirosHan/Palworld-server-protector-DotNet");
+            try
+            {
+                string url = "https://github.com/KirosHan/Palworld-server-protector-DotNet";
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void passWordbox_TextChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }

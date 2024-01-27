@@ -155,12 +155,12 @@
             // labelForpassword
             // 
             labelForpassword.AutoSize = true;
-            labelForpassword.Location = new Point(34, 517);
+            labelForpassword.Location = new Point(25, 517);
             labelForpassword.Margin = new Padding(5, 0, 5, 0);
             labelForpassword.Name = "labelForpassword";
-            labelForpassword.Size = new Size(46, 24);
+            labelForpassword.Size = new Size(100, 24);
             labelForpassword.TabIndex = 6;
-            labelForpassword.Text = "密码";
+            labelForpassword.Text = "管理员密码";
             // 
             // checkSecondbox
             // 
@@ -243,6 +243,7 @@
             passWordbox.Size = new Size(384, 30);
             passWordbox.TabIndex = 1;
             passWordbox.Text = "admin";
+            passWordbox.TextChanged += passWordbox_TextChanged;
             passWordbox.KeyPress += passWordbox_KeyPress;
             // 
             // cmdbox

@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Palworld-server-protector-DotNet/2.0.2": {
+      "Palworld-server-protector-DotNet/2.0.3": {
         "runtime": {
           "Palworld-server-protector-DotNet.dll": {}
         }
@@ -14,7 +14,7 @@
     }
   },
   "libraries": {
-    "Palworld-server-protector-DotNet/2.0.2": {
+    "Palworld-server-protector-DotNet/2.0.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
