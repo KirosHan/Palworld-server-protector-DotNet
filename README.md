@@ -1,5 +1,5 @@
 # Palworld-server-protector-DotNet
-【新】GUI版本 Palworld服务端进程守护+内存监控+优雅重启+自动存档
+【新】GUI版本 Palworld服务端进程守护+内存监控+优雅重启+自动存档+Rcon
 （for windows）
 
 
@@ -33,14 +33,11 @@
 
 也可以Buy me a coffee☕︎
 
-![BuyMeACoffee](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-electron/main/PNG/buymeacoffee.png)
+![BuyMeACoffee](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/buymeacoffee.png)
 
 ## 编译运行
 Visual studio 2022
 
-## 打包
-
-在目录命令行中运行`npx electron-builder --win --x64`
 
 ## 运行逻辑
 
@@ -59,9 +56,8 @@ graph TD
     I --> H
 ```
 ## 已知问题
-1.受服务端限制，rcon发送的文本中无法保留空格
+1.受服务端限制，rcon发送的文本中无法保留空格，已自动替换为下划线
 
-2.受服务端限制，rcon无法发送中文，貌似服务端是gbk编码
+2.受服务端限制，rcon无法发送中文
 
-3.rcon发送命令后，无法获取响应，但rcon客户端仍然会期待响应，这导致了虽然会报错，但服务端仍会正常接收，不影响实际使用。
-```Error sending RCON command: Error: Timeout for packet id 1```RCON超时报错不影响使用
+
