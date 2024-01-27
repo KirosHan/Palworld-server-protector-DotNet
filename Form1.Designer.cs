@@ -172,7 +172,7 @@
             checkSecondbox.Name = "checkSecondbox";
             checkSecondbox.Size = new Size(384, 30);
             checkSecondbox.TabIndex = 2;
-            checkSecondbox.Value = new decimal(new int[] { 5, 0, 0, 0 });
+            checkSecondbox.Value = new decimal(new int[] { 20, 0, 0, 0 });
             checkSecondbox.ValueChanged += checkSecondbox_ValueChanged;
             // 
             // labelForrconport

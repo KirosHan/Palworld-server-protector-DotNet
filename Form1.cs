@@ -538,7 +538,7 @@ namespace Palworld_server_protector_DotNet
                 textBox1.Text = textBox1.Text.Replace(" ", "_");
                 var info = RconUtils.SendMsg($"broadcast {textBox1.Text.Trim()}");
 
-                OutputMessageAsync($"当前服务端版本：{info}");
+                OutputMessageAsync($"已发送：{info}");
 
             }
 
