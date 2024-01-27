@@ -56,6 +56,7 @@
             memOutput = new Label();
             checkBox_geplayers = new CheckBox();
             groupBox1 = new GroupBox();
+            checkBox_cServer = new CheckBox();
             label1 = new Label();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
@@ -359,6 +360,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(checkBox_cServer);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(selectCmdbutton);
             groupBox1.Controls.Add(checkBox_reboot);
@@ -384,6 +386,17 @@
             groupBox1.TabIndex = 11;
             groupBox1.TabStop = false;
             groupBox1.Text = "监控";
+            // 
+            // checkBox_cServer
+            // 
+            checkBox_cServer.AutoSize = true;
+            checkBox_cServer.Location = new Point(171, 217);
+            checkBox_cServer.Name = "checkBox_cServer";
+            checkBox_cServer.Size = new Size(180, 28);
+            checkBox_cServer.TabIndex = 10;
+            checkBox_cServer.Text = "注册为社区服务器";
+            checkBox_cServer.UseVisualStyleBackColor = true;
+            checkBox_cServer.CheckedChanged += checkBox_cServer_CheckedChanged;
             // 
             // label1
             // 
@@ -628,5 +641,6 @@
         private Label versionLabel;
         private LinkLabel linkLabel1;
         private Label verisionLabel;
+        private CheckBox checkBox_cServer;
     }
 }

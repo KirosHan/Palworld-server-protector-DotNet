@@ -110,13 +110,23 @@ namespace Palworld_server_protector_DotNet
                     {
                         try
                         {
-                            OutputMessageAsync($"正在尝试启动服务端...");
 
-                            Process.Start(cmdPath);
+
+                            if (checkBox_cServer.Checked)
+                            {
+                                OutputMessageAsync($"正在尝试启动服务端(社区)...");
+                                Process.Start(cmdPath, "EpicApp=PalServer");
+                            }
+                            else
+                            {
+                                OutputMessageAsync($"正在尝试启动服务端...");
+
+                                Process.Start(cmdPath);
+                            }
                         }
                         catch (Exception ex)
                         {
-                            OutputMessageAsync($"服务端启动失败：请检查路径");
+                            OutputMessageAsync($"服务端启动失败：{ex}");
                         }
                     }
 
@@ -471,8 +481,8 @@ namespace Palworld_server_protector_DotNet
         {
 
             RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
-            
-            
+
+
             var info = RconUtils.SendMsg("save");
             OutputMessageAsync($"{info}");
 
@@ -516,7 +526,7 @@ namespace Palworld_server_protector_DotNet
             {
                 OutputMessageAsync($"info指令发送失败：{ex.Message}");
             }
-         
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -552,7 +562,19 @@ namespace Palworld_server_protector_DotNet
 
         private void passWordbox_TextChanged(object sender, EventArgs e)
         {
-            
+
+        }
+
+        private void checkBox_cServer_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox_cServer.Checked)
+            {
+                OutputMessageAsync($"下次启动时将注册为社区服务器。");
+            }
+            else
+            {
+                OutputMessageAsync($"下次启动时将不会注册为社区服务器。");
+            }
         }
     }
 }
