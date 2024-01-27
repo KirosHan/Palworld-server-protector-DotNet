@@ -544,7 +544,7 @@ namespace Palworld_server_protector_DotNet
 
             catch (Exception ex)
             {
-                OutputMessageAsync($"broadcast÷∏¡Ó∑¢ÀÕ ß∞‹°£{ex.Message}");
+               OutputMessageAsync($"broadcast÷∏¡Ó∑¢ÀÕ ß∞‹°£{ex.Message}");
             }
         }
 

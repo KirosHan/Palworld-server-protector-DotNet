@@ -38,7 +38,7 @@ public class RconClient : IDisposable
             out resp
         );
     }
-
+       
     public bool SendCommand(string command, out RconMessage resp)
     {
         return sendMessage(

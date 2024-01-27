@@ -12,30 +12,30 @@ public class Encoder
 
         bytes.AddRange(BitConverter.GetBytes(msg.Length));
         bytes.AddRange(BitConverter.GetBytes(msg.ID));
-        bytes.AddRange(BitConverter.GetBytes((int) msg.Type));
-        bytes.AddRange(Encoding.ASCII.GetBytes(msg.Body));
-        bytes.AddRange(new byte[] {0, 0});
+        bytes.AddRange(BitConverter.GetBytes((int)msg.Type));
+        bytes.AddRange(Encoding.UTF8.GetBytes(msg.Body)); // Modified to use UTF-8 encoding
+        bytes.AddRange(new byte[] { 0, 0 });
 
         return bytes.ToArray();
     }
 
     public static RconMessage DecodeMessage(byte[] bytes)
     {
-        int len  = BitConverter.ToInt32(bytes, 0);
-        int id   = BitConverter.ToInt32(bytes, 4);
+        int len = BitConverter.ToInt32(bytes, 0);
+        int id = BitConverter.ToInt32(bytes, 4);
         int type = BitConverter.ToInt32(bytes, 8);
 
         int bodyLen = bytes.Length - (HeaderLength + 4);
-        if(bodyLen > 0)
+        if (bodyLen > 0)
         {
             byte[] bodyBytes = new byte[bodyLen];
             Array.Copy(bytes, 12, bodyBytes, 0, bodyLen);
             Array.Resize(ref bodyBytes, bodyLen);
-            return new RconMessage(len, id, (RconMessageType) type, Encoding.ASCII.GetString(bodyBytes));
+            return new RconMessage(len, id, (RconMessageType)type, Encoding.UTF8.GetString(bodyBytes)); // Modified to use UTF-8 encoding
         }
         else
         {
-            return new RconMessage(len, id, (RconMessageType) type, "");
+            return new RconMessage(len, id, (RconMessageType)type, "");
         }
     }
 }

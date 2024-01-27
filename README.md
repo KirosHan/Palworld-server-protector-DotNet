@@ -23,7 +23,7 @@
 
 ## 直接下载（懒人专属）
 
-[Releases](https://github.com/KirosHan/Palworld-server-protector-DotNet/releases)
+[https://github.com/KirosHan/Palworld-server-protector-DotNet/releases](https://github.com/KirosHan/Palworld-server-protector-DotNet/releases)
 
 如无法运行，请安装.net 6.0运行环境
 
