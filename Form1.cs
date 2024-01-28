@@ -10,6 +10,7 @@ namespace Palworld_server_protector_DotNet
     using static System.Net.WebRequestMethods;
     using System.Runtime.InteropServices;
     using System.Text;
+    using static System.Windows.Forms.LinkLabel;
 
     public partial class Form1 : Form
     {
@@ -433,6 +434,8 @@ namespace Palworld_server_protector_DotNet
             cmdPath = "";
             gamedataPath = "";
             backupPath = "";
+            saveTimer.Interval = Convert.ToInt32(backupSecondsbox.Value) * 1000;
+
 
 
         }

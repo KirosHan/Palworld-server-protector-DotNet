@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Kiros @ONBETA")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.2.0+74504edb38a8cc301df66c8e5b88e0d2cc62ab7b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.2.0+34be59c859148fb89a512ce3d613005809d3aced")]
 [assembly: System.Reflection.AssemblyProductAttribute("Palworld-server-protector-DotNet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Palworld-server-protector-DotNet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("2.2.0")]
