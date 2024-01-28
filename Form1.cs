@@ -8,6 +8,8 @@ namespace Palworld_server_protector_DotNet
     using System.IO.Compression;
     using System.Drawing;
     using static System.Net.WebRequestMethods;
+    using System.Runtime.InteropServices;
+    using System.Text;
 
     public partial class Form1 : Form
     {
@@ -22,7 +24,15 @@ namespace Palworld_server_protector_DotNet
         private Int32 rconPort;
         private string rconPassword;
         private Int32 rebootSeconds;
+        private string errorLogname = $"error_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log";
 
+        private const string ConfigFilePath = "config.ini";
+
+        [DllImport("kernel32")]
+        private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
+
+        [DllImport("kernel32")]
+        private static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
 
         public Form1()
         {
@@ -86,9 +96,10 @@ namespace Palworld_server_protector_DotNet
 
 
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         OutputMessageAsync($"发送指令失败，请检查配置。");
+                        AppendToErrorLog($"发送指令失败，请检查配置。{ex.Message}");
 
                     }
 
@@ -112,10 +123,10 @@ namespace Palworld_server_protector_DotNet
                         {
 
 
-                            if (checkBox_cServer.Checked)
+                            if (checkBox_args.Checked && arguments.Text != "")
                             {
-                                OutputMessageAsync($"正在尝试启动服务端(社区)...");
-                                Process.Start(cmdPath, "EpicApp=PalServer");
+                                OutputMessageAsync($"正在尝试启动服务端({arguments.Text})...");
+                                Process.Start(cmdPath, arguments.Text);
                             }
                             else
                             {
@@ -126,7 +137,8 @@ namespace Palworld_server_protector_DotNet
                         }
                         catch (Exception ex)
                         {
-                            OutputMessageAsync($"服务端启动失败：{ex}");
+                            OutputMessageAsync($"服务端启动失败。");
+                            AppendToErrorLog($"服务端启动失败：{ex.Message}");
                         }
                     }
 
@@ -158,15 +170,20 @@ namespace Palworld_server_protector_DotNet
                     playersView.Items.Add(item);
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                AppendToErrorLog($"获取在线玩家失败：{ex.Message}");
             }
         }
         private void CopyGameDataToBackupPath()
         {
             try
             {
+                if (backupPath == "")
+                {
+                    OutputMessageAsync($"未设置备份存放目录。无法备份。");
+                    return;
+                }
                 string backupFolderName = $"SaveGames-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.zip";
                 string backupFilePath = Path.Combine(backupPath, backupFolderName);
 
@@ -188,7 +205,8 @@ namespace Palworld_server_protector_DotNet
             }
             catch (Exception ex)
             {
-                OutputMessageAsync($"备份存档失败：{ex.Message}");
+                OutputMessageAsync($"备份存档失败");
+                AppendToErrorLog($"备份存档失败：{ex.Message}");
             }
         }
 
@@ -230,6 +248,7 @@ namespace Palworld_server_protector_DotNet
                 cmdPath = cmdbox.Text;
                 OutputMessageAsync($"已选择服务端路径为：{cmdPath}");
                 gamedataPath = Path.Combine(Path.GetDirectoryName(cmdPath), "Pal", "Saved", "SaveGames");
+                gamedataBox.Text = gamedataPath;
                 OutputMessageAsync($"游戏存档路径修改为：{gamedataPath}");
             }
         }
@@ -242,9 +261,9 @@ namespace Palworld_server_protector_DotNet
                 {
                     outPutbox.AppendText($"[{DateTime.Now.ToString("HH:mm:ss")}] {message}" + Environment.NewLine);
 
-                    if (outPutbox.Lines.Length > 50)
+                    if (outPutbox.Lines.Length > 100)
                     {
-                        outPutbox.Text = string.Join(Environment.NewLine, outPutbox.Lines.Skip(outPutbox.Lines.Length - 50));
+                        outPutbox.Text = string.Join(Environment.NewLine, outPutbox.Lines.Skip(outPutbox.Lines.Length - 100));
                         outPutbox.SelectionStart = outPutbox.Text.Length;
                         outPutbox.ScrollToCaret();
                     }
@@ -257,37 +276,12 @@ namespace Palworld_server_protector_DotNet
             });
         }
 
-        private async void startAndstop_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
-
-                await Task.CompletedTask;
-                var info = RconUtils.SendMsg("info");
-                MessageBox.Show(info);
-            }
-            catch
-            {
-                MessageBox.Show("连接失败，检查");
-
-            }
-
-        }
+   
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            memTimer.Interval = Convert.ToInt32(checkSecondbox.Value) * 1000;
-            memTimer.Start();
-            memTarget = Convert.ToInt32(memTargetbox.Value);
-            rconHost = "127.0.0.1";
-            rconPort = 25575;
-            rconPassword = "admin";
-            rebootSeconds = 10;
-            cmdPath = "";
-            backupPath = "";
-            playersView.View = View.Details;
 
+            playersView.View = View.Details;
             playersView.Columns.Add(new ColumnHeader() { Text = "Name", Width = playersView.Width / 3 });
             playersView.Columns.Add(new ColumnHeader() { Text = "UID", Width = playersView.Width / 3 });
             playersView.Columns.Add(new ColumnHeader() { Text = "Steam ID", Width = playersView.Width / 3 });
@@ -296,7 +290,8 @@ namespace Palworld_server_protector_DotNet
             playersView.MultiSelect = false;
             playersView.HideSelection = false;
 
-
+            LoadConfig();
+            memTimer.Start();
             string buildVersion = Application.ProductVersion;
             int endIndex = buildVersion.IndexOf('+'); // 找到版本号中的"+"符号的索引位置
             string version = buildVersion.Substring(0, endIndex); // 使用Substring方法提取从0到endIndex之间的子字符串
@@ -305,25 +300,139 @@ namespace Palworld_server_protector_DotNet
             OutputMessageAsync($"当前构建版本号：{version}");
             OutputMessageAsync($"本项目开源地址：https://github.com/KirosHan/Palworld-server-protector-DotNet");
 
-
             OutputMessageAsync($"请先配置好信息，再勾选功能启动");
 
-
+   
+        }
+        private void LoadConfig()
+        {
+            try
+            {
+                if (System.IO.File.Exists(ConfigFilePath))
+                {
+                    using (StreamReader reader = new StreamReader(ConfigFilePath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (line.StartsWith("CmdPath="))
+                            {
+                                cmdPath = line.Substring("CmdPath=".Length);
+                                cmdbox.Text = cmdPath;
+                            }
+                            else if (line.StartsWith("BackupPath="))
+                            {
+                                backupPath = line.Substring("BackupPath=".Length);
+                                backupPathbox.Text = backupPath;
+                            }
+                            else if (line.StartsWith("GameDataPath="))
+                            {
+                                gamedataPath = line.Substring("GameDataPath=".Length);
+                                gamedataBox.Text = gamedataPath;
+                            }
+                            else if (line.StartsWith("MemTarget="))
+                            {
+                                memTarget = Convert.ToInt32(line.Substring("MemTarget=".Length));
+                                memTargetbox.Value = memTarget;
+                            }
+                            else if (line.StartsWith("RconHost="))
+                            {
+                                rconHost = line.Substring("RconHost=".Length);
+                            }
+                            else if (line.StartsWith("RconPort="))
+                            {
+                                rconPort = Convert.ToInt32(line.Substring("RconPort=".Length));
+                                rconPortbox.Text = rconPort.ToString();
+                            }
+                            else if (line.StartsWith("RconPassword="))
+                            {
+                                rconPassword = line.Substring("RconPassword=".Length);
+                                passWordbox.Text = rconPassword;
+                            }
+                            else if (line.StartsWith("RebootSeconds="))
+                            {
+                                rebootSeconds = Convert.ToInt32(line.Substring("RebootSeconds=".Length));
+                                rebootSecondbox.Value = rebootSeconds;
+                            }
+                            else if (line.StartsWith("CheckSeconds="))
+                            {
+                                memTimer.Interval = Convert.ToInt32(line.Substring("CheckSeconds=".Length)) * 1000;
+                                checkSecondbox.Value = memTimer.Interval / 1000;
+                            }
+                            else if (line.StartsWith("BackupSeconds="))
+                            {
+                                saveTimer.Interval = Convert.ToInt32(line.Substring("BackupSeconds=".Length)) * 1000;
+                                backupSecondsbox.Value = saveTimer.Interval / 1000;
+                            }
+                            else if (line.StartsWith("Parameters="))
+                            {
+                                arguments.Text = line.Substring("Parameters=".Length);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    OutputMessageAsync($"未找到配置文件，已加载默认配置。");
+                    dataInit();
+                }
+            }
+            catch (Exception ex)
+            {
+                OutputMessageAsync($"读取配置文件失败。");
+                AppendToErrorLog($"读取配置文件失败：{ex.Message}");
+            }
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveConfig();
         }
 
-        private void checkSecondbox_ValueChanged(object sender, EventArgs e)
+
+
+
+        private void SaveConfig()
         {
-            var newSecond = Convert.ToInt32(checkSecondbox.Value);
-            memTimer.Interval = newSecond * 1000;
-            OutputMessageAsync($"监测周期已调整为：{newSecond}秒");
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(ConfigFilePath))
+                {
+                    writer.WriteLine("[General]");
+                    writer.WriteLine("CmdPath=" + cmdbox.Text);
+                    writer.WriteLine("Parameters=" + arguments.Text);
+                    writer.WriteLine("BackupPath=" + backupPathbox.Text);
+                    writer.WriteLine("GameDataPath=" + gamedataBox.Text);
+                    writer.WriteLine("MemTarget=" + memTarget);
+                    writer.WriteLine("RconHost=" + rconHost);
+                    writer.WriteLine("RconPort=" + rconPortbox.Text);
+                    writer.WriteLine("RconPassword=" + passWordbox.Text);
+                    writer.WriteLine("RebootSeconds=" + rebootSeconds);
+                    writer.WriteLine("CheckSeconds=" + memTimer.Interval / 1000);
+                    writer.WriteLine("BackupSeconds=" + saveTimer.Interval / 1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                OutputMessageAsync($"保存配置文件失败。");
+                AppendToErrorLog($"保存配置文件失败：{ex.Message}");
+            }
         }
 
-        private void cmdbox_TextChanged(object sender, EventArgs e)
+
+
+
+        private void dataInit()
         {
-            cmdPath = cmdbox.Text;
-            OutputMessageAsync($"服务端路径修改为：{cmdPath}");
-            gamedataPath = Path.Combine(Path.GetDirectoryName(cmdPath), "Pal", "Saved", "SaveGames");
-            OutputMessageAsync($"游戏存档路径修改为：{gamedataPath}");
+            memTimer.Interval = Convert.ToInt32(checkSecondbox.Value) * 1000;
+
+            memTarget = Convert.ToInt32(memTargetbox.Value);
+            rconHost = "127.0.0.1";
+            rconPort = 25575;
+            rconPassword = "admin";
+            rebootSeconds = 10;
+            cmdPath = "";
+            gamedataPath = "";
+            backupPath = "";
 
 
         }
@@ -351,9 +460,9 @@ namespace Palworld_server_protector_DotNet
         {
             if (checkBox_save.Checked)
             {
-                if (cmdPath == "")
+                if (gamedataPath == "")
                 {
-                    OutputMessageAsync($"请先选择服务端路径。");
+                    OutputMessageAsync($"请先选择游戏存档路径。");
                     checkBox_save.Checked = false;
                 }
                 else if (backupPath == "")
@@ -377,16 +486,6 @@ namespace Palworld_server_protector_DotNet
 
         }
 
-        private void backupSecondsbox_ValueChanged(object sender, EventArgs e)
-        {
-
-            var newBackupSecond = Convert.ToInt32(backupSecondsbox.Value) * 1000;
-            saveTimer.Interval = newBackupSecond;
-            OutputMessageAsync($"监测周期已调整为：{newBackupSecond}秒");
-
-
-        }
-
         private void selectBackuppathButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
@@ -398,18 +497,9 @@ namespace Palworld_server_protector_DotNet
             }
         }
 
-        private void backupPathbox_TextChanged(object sender, EventArgs e)
-        {
-            backupPath = backupPathbox.Text;
-            OutputMessageAsync($"已设置存档备份路径为：{backupPath}");
-        }
 
-        private void memTargetbox_ValueChanged(object sender, EventArgs e)
-        {
-            memTarget = Convert.ToInt32(memTargetbox.Value);
-            OutputMessageAsync($"内存阈值已调整为：{memTarget}%");
 
-        }
+
 
         private void rconPortbox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -419,12 +509,7 @@ namespace Palworld_server_protector_DotNet
             }
         }
 
-        private void rconPortbox_TextChanged(object sender, EventArgs e)
-        {
-            rconPort = Convert.ToInt32(rconPortbox.Text);
-            OutputMessageAsync($"Rcon端口已调整为：{rconPort}");
 
-        }
 
         private void passWordbox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -434,8 +519,7 @@ namespace Palworld_server_protector_DotNet
 
         private void rebootSecondbox_ValueChanged(object sender, EventArgs e)
         {
-            rebootSeconds = Convert.ToInt32(rebootSecondbox.Value);
-            OutputMessageAsync($"重启延迟已设置为：{rebootSeconds}秒");
+
 
         }
 
@@ -502,7 +586,8 @@ namespace Palworld_server_protector_DotNet
             }
             catch (Exception ex)
             {
-                OutputMessageAsync($"关服指令发送失败：{ex.Message}");
+                OutputMessageAsync($"关服指令发送失败。");
+                AppendToErrorLog($"关服指令发送失败：{ex.Message}");
             }
 
         }
@@ -524,7 +609,8 @@ namespace Palworld_server_protector_DotNet
             }
             catch (Exception ex)
             {
-                OutputMessageAsync($"info指令发送失败：{ex.Message}");
+                OutputMessageAsync($"info指令发送失败。");
+                AppendToErrorLog($"info指令发送失败：{ex.Message}");
             }
 
         }
@@ -544,7 +630,8 @@ namespace Palworld_server_protector_DotNet
 
             catch (Exception ex)
             {
-               OutputMessageAsync($"broadcast指令发送失败。{ex.Message}");
+                OutputMessageAsync($"broadcast指令发送失败。");
+                AppendToErrorLog($"broadcast指令发送失败：{ex.Message}");
             }
         }
 
@@ -560,20 +647,172 @@ namespace Palworld_server_protector_DotNet
             }
         }
 
-        private void passWordbox_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        private void checkBox_cServer_CheckedChanged(object sender, EventArgs e)
+        private void checkBox_args_CheckedChanged(object sender, EventArgs e)
         {
-            if(checkBox_cServer.Checked)
+            if (checkBox_args.Checked)
             {
-                OutputMessageAsync($"下次启动时将注册为社区服务器。");
+                arguments.Enabled = true;
+                OutputMessageAsync($"请填写服务端启动参数。");
             }
             else
             {
-                OutputMessageAsync($"下次启动时将不会注册为社区服务器。");
+                arguments.Enabled = false;
+            }
+        }
+
+        private void selectCustombutton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                gamedataBox.Text = folderBrowserDialog.SelectedPath;
+                gamedataPath = gamedataBox.Text;
+                OutputMessageAsync($"已选择游戏存档路径为：{gamedataPath}");
+            }
+        }
+        private bool isKeyUpEvent_backupSecond = false;
+        private void backupSecondsbox_KeyUp(object sender, KeyEventArgs e)
+        {
+            var newBackupSecond = Convert.ToInt32(backupSecondsbox.Value) * 1000;
+            saveTimer.Interval = newBackupSecond;
+            isKeyUpEvent_backupSecond = true;
+            OutputMessageAsync($"存档周期已调整为：{newBackupSecond / 1000}秒");
+        }
+        private void backupSecondsbox_ValueChanged(object sender, EventArgs e)
+        {
+            if (isKeyUpEvent_backupSecond)
+            {
+                isKeyUpEvent_backupSecond = false;
+                return;
+            }
+            var newBackupSecond = Convert.ToInt32(backupSecondsbox.Value) * 1000;
+            saveTimer.Interval = newBackupSecond;
+            OutputMessageAsync($"存档周期已调整为：{newBackupSecond / 1000}秒");
+        }
+
+        private bool isKeyUpEvent_rebootSecond = false;
+        private void rebootSecondbox_KeyUp(object sender, KeyEventArgs e)
+        {
+            rebootSeconds = Convert.ToInt32(rebootSecondbox.Value);
+            isKeyUpEvent_rebootSecond = true;
+            OutputMessageAsync($"重启延迟已设置为：{rebootSeconds}秒");
+        }
+
+        private void rebootSecondbox_ValueChanged_1(object sender, EventArgs e)
+        {
+            if (isKeyUpEvent_rebootSecond)
+            {
+                isKeyUpEvent_rebootSecond = false;
+                return;
+            }
+            rebootSeconds = Convert.ToInt32(rebootSecondbox.Value);
+            OutputMessageAsync($"重启延迟已设置为：{rebootSeconds}秒");
+        }
+
+        private bool isKeyUpEvent_checkSecond = false;
+
+        private void checkSecondbox_ValueChanged(object sender, EventArgs e)
+        {
+            if (isKeyUpEvent_checkSecond)
+            {
+                isKeyUpEvent_checkSecond = false;
+                return;
+            }
+            var newSecond = Convert.ToInt32(checkSecondbox.Value);
+            memTimer.Interval = newSecond * 1000;
+            OutputMessageAsync($"监测周期已调整为：{newSecond}秒");
+        }
+
+        private void checkSecondbox_KeyUp(object sender, KeyEventArgs e)
+        {
+            var newSecond = Convert.ToInt32(checkSecondbox.Value);
+            memTimer.Interval = newSecond * 1000;
+            isKeyUpEvent_checkSecond = true;
+            OutputMessageAsync($"监测周期已调整为：{newSecond}秒");
+        }
+
+        private bool isKeyUpEvent_memTarget = false;
+
+        private void memTargetbox_KeyUp(object sender, KeyEventArgs e)
+        {
+            memTarget = Convert.ToInt32(memTargetbox.Value);
+            isKeyUpEvent_memTarget = true;
+            OutputMessageAsync($"内存阈值已调整为：{memTarget}%");
+        }
+        private void memTargetbox_ValueChanged(object sender, EventArgs e)
+        {
+            if (isKeyUpEvent_memTarget)
+            {
+                isKeyUpEvent_memTarget = false;
+                return;
+            }
+            memTarget = Convert.ToInt32(memTargetbox.Value);
+            OutputMessageAsync($"内存阈值已调整为：{memTarget}%");
+
+        }
+
+        private void playersView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (playersView.SelectedItems.Count > 0)
+            {
+
+                string Uid = playersView.SelectedItems[0].SubItems[1].Text;
+                UIDBox.Text = Uid;
+
+            }
+        }
+
+        private void kickbutton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
+
+                var info = RconUtils.SendMsg($"KickPlayer {UIDBox.Text.Trim()}");
+
+                OutputMessageAsync($"{info}");
+
+            }
+
+            catch (Exception ex)
+            {
+                OutputMessageAsync($"Kickplayer指令发送失败。");
+                AppendToErrorLog($"Kickplayer指令发送失败：{ex.Message}");
+            }
+        }
+
+        private void banbutton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
+
+                var info = RconUtils.SendMsg($"BanPlayer {UIDBox.Text.Trim()}");
+
+                OutputMessageAsync($"{info}");
+
+            }
+
+            catch (Exception ex)
+            {
+                OutputMessageAsync($"BanPlayer指令发送失败。{ex.Message}");
+                AppendToErrorLog($"BanPlayer指令发送失败。");
+            }
+        }
+        private void AppendToErrorLog(string content)
+        {
+            string logFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "log");
+            string errorLogPath = Path.Combine(logFolderPath, errorLogname);
+
+            if (!Directory.Exists(logFolderPath))
+            {
+                Directory.CreateDirectory(logFolderPath);
+            }
+
+            using (StreamWriter writer = System.IO.File.AppendText(errorLogPath))
+            {
+                writer.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {content}");
             }
         }
     }

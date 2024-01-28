@@ -56,13 +56,21 @@
             memOutput = new Label();
             checkBox_geplayers = new CheckBox();
             groupBox1 = new GroupBox();
-            checkBox_cServer = new CheckBox();
+            arguments = new TextBox();
+            checkBox_args = new CheckBox();
             label1 = new Label();
             groupBox2 = new GroupBox();
+            label3 = new Label();
+            selectCustombutton = new Button();
+            gamedataBox = new TextBox();
             groupBox3 = new GroupBox();
             playersView = new ListView();
             playersCounterLabel = new Label();
             groupBox4 = new GroupBox();
+            UIDBox = new TextBox();
+            label5 = new Label();
+            banbutton = new Button();
+            kickbutton = new Button();
             versionLabel = new Label();
             button4 = new Button();
             button3 = new Button();
@@ -126,7 +134,7 @@
             outPutbox.Location = new Point(3, 26);
             outPutbox.Margin = new Padding(5, 4, 5, 4);
             outPutbox.Name = "outPutbox";
-            outPutbox.Size = new Size(658, 442);
+            outPutbox.Size = new Size(658, 505);
             outPutbox.TabIndex = 0;
             outPutbox.Text = "";
             // 
@@ -143,6 +151,7 @@
             // 
             // rebootSecondbox
             // 
+            rebootSecondbox.BorderStyle = BorderStyle.FixedSingle;
             rebootSecondbox.Location = new Point(171, 415);
             rebootSecondbox.Margin = new Padding(5, 4, 5, 4);
             rebootSecondbox.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
@@ -151,7 +160,8 @@
             rebootSecondbox.Size = new Size(384, 30);
             rebootSecondbox.TabIndex = 2;
             rebootSecondbox.Value = new decimal(new int[] { 10, 0, 0, 0 });
-            rebootSecondbox.ValueChanged += rebootSecondbox_ValueChanged;
+            rebootSecondbox.ValueChanged += rebootSecondbox_ValueChanged_1;
+            rebootSecondbox.KeyUp += rebootSecondbox_KeyUp;
             // 
             // labelForpassword
             // 
@@ -165,6 +175,7 @@
             // 
             // checkSecondbox
             // 
+            checkSecondbox.BorderStyle = BorderStyle.FixedSingle;
             checkSecondbox.Location = new Point(171, 365);
             checkSecondbox.Margin = new Padding(5, 4, 5, 4);
             checkSecondbox.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
@@ -174,6 +185,7 @@
             checkSecondbox.TabIndex = 2;
             checkSecondbox.Value = new decimal(new int[] { 20, 0, 0, 0 });
             checkSecondbox.ValueChanged += checkSecondbox_ValueChanged;
+            checkSecondbox.KeyUp += checkSecondbox_KeyUp;
             // 
             // labelForrconport
             // 
@@ -187,6 +199,7 @@
             // 
             // memTargetbox
             // 
+            memTargetbox.BorderStyle = BorderStyle.FixedSingle;
             memTargetbox.Location = new Point(171, 311);
             memTargetbox.Margin = new Padding(5, 4, 5, 4);
             memTargetbox.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -195,6 +208,7 @@
             memTargetbox.TabIndex = 2;
             memTargetbox.Value = new decimal(new int[] { 90, 0, 0, 0 });
             memTargetbox.ValueChanged += memTargetbox_ValueChanged;
+            memTargetbox.KeyUp += memTargetbox_KeyUp;
             // 
             // labelForrebootsecond
             // 
@@ -238,33 +252,34 @@
             // 
             // passWordbox
             // 
+            passWordbox.BorderStyle = BorderStyle.FixedSingle;
             passWordbox.Location = new Point(171, 511);
             passWordbox.Margin = new Padding(5, 4, 5, 4);
             passWordbox.Name = "passWordbox";
             passWordbox.Size = new Size(384, 30);
             passWordbox.TabIndex = 1;
             passWordbox.Text = "admin";
-            passWordbox.TextChanged += passWordbox_TextChanged;
             passWordbox.KeyPress += passWordbox_KeyPress;
             // 
             // cmdbox
             // 
-            cmdbox.Location = new Point(171, 261);
+            cmdbox.BorderStyle = BorderStyle.FixedSingle;
+            cmdbox.Location = new Point(173, 264);
             cmdbox.Margin = new Padding(5, 4, 5, 4);
             cmdbox.Name = "cmdbox";
+            cmdbox.ReadOnly = true;
             cmdbox.Size = new Size(314, 30);
             cmdbox.TabIndex = 1;
-            cmdbox.TextChanged += cmdbox_TextChanged;
             // 
             // rconPortbox
             // 
+            rconPortbox.BorderStyle = BorderStyle.FixedSingle;
             rconPortbox.Location = new Point(171, 464);
             rconPortbox.Margin = new Padding(5, 4, 5, 4);
             rconPortbox.Name = "rconPortbox";
             rconPortbox.Size = new Size(384, 30);
             rconPortbox.TabIndex = 1;
             rconPortbox.Text = "25575";
-            rconPortbox.TextChanged += rconPortbox_TextChanged;
             rconPortbox.KeyPress += rconPortbox_KeyPress;
             // 
             // checkBox_startprocess
@@ -281,7 +296,7 @@
             // 
             // selectBackuppathButton
             // 
-            selectBackuppathButton.Location = new Point(495, 146);
+            selectBackuppathButton.Location = new Point(495, 268);
             selectBackuppathButton.Name = "selectBackuppathButton";
             selectBackuppathButton.Size = new Size(63, 32);
             selectBackuppathButton.TabIndex = 4;
@@ -291,6 +306,7 @@
             // 
             // backupSecondsbox
             // 
+            backupSecondsbox.BorderStyle = BorderStyle.FixedSingle;
             backupSecondsbox.Location = new Point(167, 94);
             backupSecondsbox.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
             backupSecondsbox.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -299,11 +315,12 @@
             backupSecondsbox.TabIndex = 3;
             backupSecondsbox.Value = new decimal(new int[] { 1800, 0, 0, 0 });
             backupSecondsbox.ValueChanged += backupSecondsbox_ValueChanged;
+            backupSecondsbox.KeyUp += backupSecondsbox_KeyUp;
             // 
             // labelForbackuppath
             // 
             labelForbackuppath.AutoSize = true;
-            labelForbackuppath.Location = new Point(25, 146);
+            labelForbackuppath.Location = new Point(25, 266);
             labelForbackuppath.Margin = new Padding(5, 0, 5, 0);
             labelForbackuppath.Name = "labelForbackuppath";
             labelForbackuppath.Size = new Size(118, 24);
@@ -312,12 +329,13 @@
             // 
             // backupPathbox
             // 
-            backupPathbox.Location = new Point(167, 143);
+            backupPathbox.BorderStyle = BorderStyle.FixedSingle;
+            backupPathbox.Location = new Point(167, 264);
             backupPathbox.Margin = new Padding(5, 4, 5, 4);
             backupPathbox.Name = "backupPathbox";
+            backupPathbox.ReadOnly = true;
             backupPathbox.Size = new Size(318, 30);
             backupPathbox.TabIndex = 1;
-            backupPathbox.TextChanged += backupPathbox_TextChanged;
             // 
             // labelForbackupsecond
             // 
@@ -350,7 +368,7 @@
             // checkBox_geplayers
             // 
             checkBox_geplayers.AutoSize = true;
-            checkBox_geplayers.Location = new Point(25, 239);
+            checkBox_geplayers.Location = new Point(25, 240);
             checkBox_geplayers.Name = "checkBox_geplayers";
             checkBox_geplayers.Size = new Size(180, 28);
             checkBox_geplayers.TabIndex = 10;
@@ -360,7 +378,8 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(checkBox_cServer);
+            groupBox1.Controls.Add(arguments);
+            groupBox1.Controls.Add(checkBox_args);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(selectCmdbutton);
             groupBox1.Controls.Add(checkBox_reboot);
@@ -387,16 +406,26 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "监控";
             // 
-            // checkBox_cServer
+            // arguments
             // 
-            checkBox_cServer.AutoSize = true;
-            checkBox_cServer.Location = new Point(171, 217);
-            checkBox_cServer.Name = "checkBox_cServer";
-            checkBox_cServer.Size = new Size(180, 28);
-            checkBox_cServer.TabIndex = 10;
-            checkBox_cServer.Text = "注册为社区服务器";
-            checkBox_cServer.UseVisualStyleBackColor = true;
-            checkBox_cServer.CheckedChanged += checkBox_cServer_CheckedChanged;
+            arguments.BorderStyle = BorderStyle.FixedSingle;
+            arguments.Enabled = false;
+            arguments.Location = new Point(353, 215);
+            arguments.Name = "arguments";
+            arguments.Size = new Size(202, 30);
+            arguments.TabIndex = 11;
+            arguments.Text = "EpicApp=PalServer";
+            // 
+            // checkBox_args
+            // 
+            checkBox_args.AutoSize = true;
+            checkBox_args.Location = new Point(171, 217);
+            checkBox_args.Name = "checkBox_args";
+            checkBox_args.Size = new Size(180, 28);
+            checkBox_args.TabIndex = 10;
+            checkBox_args.Text = "参数启动（可选）";
+            checkBox_args.UseVisualStyleBackColor = true;
+            checkBox_args.CheckedChanged += checkBox_args_CheckedChanged;
             // 
             // label1
             // 
@@ -409,25 +438,56 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(label3);
+            groupBox2.Controls.Add(selectCustombutton);
+            groupBox2.Controls.Add(gamedataBox);
             groupBox2.Controls.Add(selectBackuppathButton);
             groupBox2.Controls.Add(checkBox_save);
             groupBox2.Controls.Add(backupSecondsbox);
             groupBox2.Controls.Add(labelForbackupsecond);
             groupBox2.Controls.Add(labelForbackuppath);
             groupBox2.Controls.Add(backupPathbox);
-            groupBox2.Location = new Point(19, 607);
+            groupBox2.Location = new Point(19, 591);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(592, 199);
+            groupBox2.Size = new Size(592, 320);
             groupBox2.TabIndex = 12;
             groupBox2.TabStop = false;
             groupBox2.Text = "自动存档";
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(25, 146);
+            label3.Name = "label3";
+            label3.Size = new Size(118, 96);
+            label3.TabIndex = 8;
+            label3.Text = "游戏存档目录\r\n（根据服务端\r\n位置自动生成\r\n可手动选择）";
+            // 
+            // selectCustombutton
+            // 
+            selectCustombutton.Location = new Point(495, 142);
+            selectCustombutton.Name = "selectCustombutton";
+            selectCustombutton.Size = new Size(63, 32);
+            selectCustombutton.TabIndex = 7;
+            selectCustombutton.Text = "选择";
+            selectCustombutton.UseVisualStyleBackColor = true;
+            selectCustombutton.Click += selectCustombutton_Click;
+            // 
+            // gamedataBox
+            // 
+            gamedataBox.BorderStyle = BorderStyle.FixedSingle;
+            gamedataBox.Location = new Point(167, 144);
+            gamedataBox.Name = "gamedataBox";
+            gamedataBox.ReadOnly = true;
+            gamedataBox.Size = new Size(318, 30);
+            gamedataBox.TabIndex = 6;
+            // 
             // groupBox3
             // 
             groupBox3.Controls.Add(outPutbox);
-            groupBox3.Location = new Point(631, 439);
+            groupBox3.Location = new Point(637, 469);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(664, 471);
+            groupBox3.Size = new Size(664, 534);
             groupBox3.TabIndex = 13;
             groupBox3.TabStop = false;
             groupBox3.Text = "Console";
@@ -439,11 +499,12 @@
             playersView.Size = new Size(651, 174);
             playersView.TabIndex = 14;
             playersView.UseCompatibleStateImageBehavior = false;
+            playersView.ItemSelectionChanged += playersView_ItemSelectionChanged;
             // 
             // playersCounterLabel
             // 
             playersCounterLabel.AutoSize = true;
-            playersCounterLabel.Location = new Point(234, 240);
+            playersCounterLabel.Location = new Point(234, 241);
             playersCounterLabel.Name = "playersCounterLabel";
             playersCounterLabel.Size = new Size(136, 24);
             playersCounterLabel.TabIndex = 15;
@@ -451,6 +512,10 @@
             // 
             // groupBox4
             // 
+            groupBox4.Controls.Add(UIDBox);
+            groupBox4.Controls.Add(label5);
+            groupBox4.Controls.Add(banbutton);
+            groupBox4.Controls.Add(kickbutton);
             groupBox4.Controls.Add(versionLabel);
             groupBox4.Controls.Add(button4);
             groupBox4.Controls.Add(button3);
@@ -463,15 +528,52 @@
             groupBox4.Controls.Add(checkBox_geplayers);
             groupBox4.Location = new Point(631, 22);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(664, 406);
+            groupBox4.Size = new Size(664, 441);
             groupBox4.TabIndex = 16;
             groupBox4.TabStop = false;
             groupBox4.Text = "Rcon";
             // 
+            // UIDBox
+            // 
+            UIDBox.BorderStyle = BorderStyle.FixedSingle;
+            UIDBox.Location = new Point(95, 288);
+            UIDBox.Name = "UIDBox";
+            UIDBox.Size = new Size(275, 30);
+            UIDBox.TabIndex = 25;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(25, 290);
+            label5.Name = "label5";
+            label5.Size = new Size(60, 24);
+            label5.TabIndex = 24;
+            label5.Text = "UID：";
+            // 
+            // banbutton
+            // 
+            banbutton.Location = new Point(518, 286);
+            banbutton.Name = "banbutton";
+            banbutton.Size = new Size(112, 32);
+            banbutton.TabIndex = 23;
+            banbutton.Text = "Ban";
+            banbutton.UseVisualStyleBackColor = true;
+            banbutton.Click += banbutton_Click;
+            // 
+            // kickbutton
+            // 
+            kickbutton.Location = new Point(391, 286);
+            kickbutton.Name = "kickbutton";
+            kickbutton.Size = new Size(112, 32);
+            kickbutton.TabIndex = 23;
+            kickbutton.Text = "Kick";
+            kickbutton.UseVisualStyleBackColor = true;
+            kickbutton.Click += kickbutton_Click;
+            // 
             // versionLabel
             // 
             versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(450, 357);
+            versionLabel.Location = new Point(459, 394);
             versionLabel.Name = "versionLabel";
             versionLabel.Size = new Size(154, 24);
             versionLabel.TabIndex = 21;
@@ -479,7 +581,7 @@
             // 
             // button4
             // 
-            button4.Location = new Point(309, 353);
+            button4.Location = new Point(309, 390);
             button4.Name = "button4";
             button4.Size = new Size(135, 32);
             button4.TabIndex = 20;
@@ -489,7 +591,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(166, 353);
+            button3.Location = new Point(166, 390);
             button3.Name = "button3";
             button3.Size = new Size(135, 32);
             button3.TabIndex = 20;
@@ -499,7 +601,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(25, 353);
+            button2.Location = new Point(25, 390);
             button2.Name = "button2";
             button2.Size = new Size(135, 32);
             button2.TabIndex = 19;
@@ -509,7 +611,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(518, 305);
+            button1.Location = new Point(518, 338);
             button1.Name = "button1";
             button1.Size = new Size(112, 32);
             button1.TabIndex = 18;
@@ -519,16 +621,17 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(118, 305);
+            textBox1.BorderStyle = BorderStyle.FixedSingle;
+            textBox1.Location = new Point(95, 338);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(385, 30);
+            textBox1.Size = new Size(408, 30);
             textBox1.TabIndex = 17;
             textBox1.Text = "This_is_a_rcon_message.";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(25, 305);
+            label2.Location = new Point(25, 340);
             label2.Name = "label2";
             label2.Size = new Size(64, 24);
             label2.TabIndex = 16;
@@ -538,9 +641,9 @@
             // 
             groupBox5.Controls.Add(verisionLabel);
             groupBox5.Controls.Add(linkLabel1);
-            groupBox5.Location = new Point(19, 824);
+            groupBox5.Location = new Point(19, 917);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(602, 86);
+            groupBox5.Size = new Size(592, 86);
             groupBox5.TabIndex = 17;
             groupBox5.TabStop = false;
             groupBox5.Text = "Version";
@@ -569,7 +672,7 @@
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1309, 931);
+            ClientSize = new Size(1309, 1016);
             Controls.Add(groupBox5);
             Controls.Add(groupBox4);
             Controls.Add(groupBox3);
@@ -580,6 +683,7 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Palworld Server Protector";
+            FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)rebootSecondbox).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkSecondbox).EndInit();
@@ -641,6 +745,14 @@
         private Label versionLabel;
         private LinkLabel linkLabel1;
         private Label verisionLabel;
-        private CheckBox checkBox_cServer;
+        private CheckBox checkBox_args;
+        private TextBox arguments;
+        private Button selectCustombutton;
+        private TextBox gamedataBox;
+        private Label label3;
+        private Button banbutton;
+        private Button kickbutton;
+        private TextBox UIDBox;
+        private Label label5;
     }
 }
