@@ -19,7 +19,7 @@
 - 旧GUI版（electron）由于占用内存过高已弃用并不再维护
 
 ## 效果图
-![预览](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/screenshot2.1.1.png)
+![预览](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/screenshot2.2.0.png)
 
 ## 直接下载（懒人专属）
 
