@@ -22,6 +22,14 @@
 ![预览](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/screenshot2.2.0.png)
 
 ## 直接下载（懒人专属）
+更新时间：2024-01-08 
+
+版本：V2.2.0
+
+- 新增配置保存功能，不用每次打开重新配置了
+- 新增Rcon的kick和ban命令
+- 新增错误日志输出
+- 修改了参数启动的方式，现在可以自由修改
 
 [https://github.com/KirosHan/Palworld-server-protector-DotNet/releases](https://github.com/KirosHan/Palworld-server-protector-DotNet/releases)
 
