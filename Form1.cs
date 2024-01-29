@@ -205,7 +205,18 @@ namespace Palworld_server_protector_DotNet
                     return;
                 }
 
-                ZipFile.CreateFromDirectory(gamedataPath, backupFilePath);
+                string tempGameDataPath = Path.Combine(Path.GetTempPath(), "TempGameData");
+                Directory.CreateDirectory(tempGameDataPath);
+                string tempGameDataCopyPath = Path.Combine(tempGameDataPath, "GameData");
+
+                // Copy the game data to the temporary directory
+                DirectoryCopy(gamedataPath, tempGameDataCopyPath, true);
+
+                // Create the backup file from the temporary game data directory
+                ZipFile.CreateFromDirectory(tempGameDataCopyPath, backupFilePath);
+
+                // Delete the temporary game data directory
+                Directory.Delete(tempGameDataPath, true);
 
                 OutputMessageAsync($"游戏存档已成功备份");
                 SendWebhookAsync("存档备份", $"游戏存档已成功备份。");
@@ -215,6 +226,43 @@ namespace Palworld_server_protector_DotNet
                 OutputMessageAsync($"备份存档失败");
                 AppendToErrorLog($"备份存档失败：{ex.Message}");
                 SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。");
+            }
+        }
+
+        private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // If the source directory does not exist, throw an exception
+            if (!dir.Exists)
+            {
+                OutputMessageAsync($"游戏存档路径不存在：{sourceDirName}");
+                AppendToErrorLog($"游戏存档路径不存在：{sourceDirName}");
+            }
+
+            // If the destination directory does not exist, create it
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+
+            // Get the files in the directory and copy them to the new location
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
             }
         }
 
