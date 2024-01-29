@@ -11,6 +11,7 @@ namespace Palworld_server_protector_DotNet
     using System.Runtime.InteropServices;
     using System.Text;
     using static System.Windows.Forms.LinkLabel;
+    using System.Net;
 
     public partial class Form1 : Form
     {
@@ -97,7 +98,7 @@ namespace Palworld_server_protector_DotNet
 
 
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         OutputMessageAsync($"发送指令失败，请检查配置。");
                         AppendToErrorLog($"发送指令失败，请检查配置。{ex.Message}");
@@ -171,7 +172,7 @@ namespace Palworld_server_protector_DotNet
                     playersView.Items.Add(item);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 AppendToErrorLog($"获取在线玩家失败：{ex.Message}");
             }
@@ -277,7 +278,7 @@ namespace Palworld_server_protector_DotNet
             });
         }
 
-   
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -303,7 +304,7 @@ namespace Palworld_server_protector_DotNet
 
             OutputMessageAsync($"请先配置好信息，再勾选功能启动");
 
-   
+
         }
         private void LoadConfig()
         {
@@ -818,5 +819,122 @@ namespace Palworld_server_protector_DotNet
                 writer.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {content}");
             }
         }
+
+        private configForm configForm; // Declare a field to hold the instance of ConfigForm
+
+        private void settingButton_Click(object sender, EventArgs e)
+        {
+            if (configForm == null || configForm.IsDisposed) // Check if the configForm is null or disposed
+            {
+                configForm = new configForm(); // Create a new instance of ConfigForm
+                configForm.Show(); // Show the configForm
+            }
+            else
+            {
+                configForm.BringToFront(); // Bring the existing configForm to the front
+            }
+        }
+
+        /**  HTTP功能已弃用
+        private Thread httpThread;
+        private bool isHttpServerRunning;
+
+        private void checkBox_host_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_host.Checked)
+            {
+                StartHttpServer();
+            }
+            else
+            {
+                StopHttpServer();
+            }
+        }
+
+        private void StartHttpServer()
+        {
+            if (!isHttpServerRunning)
+            {
+                httpThread = new Thread(HttpServerThread);
+                httpThread.Start();
+                isHttpServerRunning = true;
+            }
+        }
+
+        private void StopHttpServer()
+        {
+            if (isHttpServerRunning)
+            {
+                httpThread.Abort();
+                isHttpServerRunning = false;
+            }
+        }
+
+        private void HttpServerThread()
+        {
+            string folderPath = Path.Combine(Application.StartupPath, "list");
+            string filePath = Path.Combine(folderPath, "banlist.txt");
+          
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Create(filePath).Close();
+            }
+            using (HttpListener listener = new HttpListener())
+            {
+                listener.Prefixes.Add("http://127.0.0.1:8080/");
+                listener.Start();
+
+                while (true)
+                {
+                    try
+                    {
+                        HttpListenerContext context = listener.GetContext();
+                        HttpListenerRequest request = context.Request;
+                        HttpListenerResponse response = context.Response;
+
+                        if (request.Url.LocalPath == "/banlist.txt")
+                        {
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+                                //response.ContentType = "text/plain"; 
+                                response.ContentType = "text/html; charset = UTF - 8";
+
+                                response.ContentLength64 = fileBytes.Length;
+                                response.OutputStream.Write(fileBytes, 0, fileBytes.Length);
+                                response.OutputStream.Close();
+                            }
+                            else
+                            {
+                                response.StatusCode = (int)HttpStatusCode.NotFound;
+                                response.Close();
+                            }
+                        }
+                        else
+                        {
+                            response.StatusCode = (int)HttpStatusCode.NotFound;
+                            response.Close();
+                        }
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions here
+                    }
+                }
+
+                listener.Stop();
+            }
+        }
+      **/
     }
 }
