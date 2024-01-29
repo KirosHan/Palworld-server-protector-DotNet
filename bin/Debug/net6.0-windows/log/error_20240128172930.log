@@ -1,2 +1,0 @@
-[2024-01-28 17:29:30] 这是一些错误“Palworld-server-protector-DotNet.exe”(CoreCLR: clrhost): 已加载“C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.26\System.Collections.NonGeneric.dll”。已跳过加载符号。模块进行了优化，并且调试器选项“仅我的代码”已启用。
-“Palworld-server-protector-DotNet.exe”(CoreCLR: clrhost): 已加载“C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.26\System.Threading.ThreadPool.dll”。已跳过加载符号。模块进行了优化，并且调试器选项“仅我的代码”已启用。
