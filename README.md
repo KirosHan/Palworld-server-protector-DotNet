@@ -16,7 +16,8 @@
 - 自动备份存档
 - 轮询获取在线玩家
 - Rcon指令
-- 新功能待添加
+- 服务器配置文档(.ini)可视化编辑【New】
+- Webhoot通知推送(企业微信机器人)【New】
 
 ## 注意
 - 本GUI版本复刻了命令行版本（[https://github.com/KirosHan/Palworld-server-protector](https://github.com/KirosHan/Palworld-server-protector)）所有功能
