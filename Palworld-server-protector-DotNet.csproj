@@ -8,15 +8,19 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyVersion>2.3.0</AssemblyVersion>
+    <AssemblyVersion>2.4.0</AssemblyVersion>
     <Copyright>Kiros @ONBETA</Copyright>
-    <Version>$(VersionPrefix)2.3.0</Version>
+    <Version>$(VersionPrefix)2.4.0</Version>
     <Company>$(Authors)@ONBETA</Company>
-    <FileVersion>2.3.0</FileVersion>
+    <FileVersion>2.4.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

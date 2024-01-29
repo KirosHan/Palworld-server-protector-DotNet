@@ -94,6 +94,7 @@ namespace Palworld_server_protector_DotNet
                             var result = RconUtils.SendMsg($"Shutdown {rebootSeconds} The_server_will_restart_in_{rebootSeconds}_seconds.");
 
                             OutputMessageAsync($"{result}");
+                            SendWebhookAsync("内存达到警戒阈值", $"内存使用率：{memoryUsage}%,已尝试关闭服务器。");
                         }
 
 
@@ -102,6 +103,7 @@ namespace Palworld_server_protector_DotNet
                     {
                         OutputMessageAsync($"发送指令失败，请检查配置。");
                         AppendToErrorLog($"发送指令失败，请检查配置。{ex.Message}");
+                        SendWebhookAsync("Rcon失败", $"发送关服指令失败，请及时检查。");
 
                     }
 
@@ -141,7 +143,9 @@ namespace Palworld_server_protector_DotNet
                         {
                             OutputMessageAsync($"服务端启动失败。");
                             AppendToErrorLog($"服务端启动失败：{ex.Message}");
+                            SendWebhookAsync("服务端启动失败", $"服务端启动失败，请及时检查。");
                         }
+                        SendWebhookAsync("启动服务端", $"已尝试启动服务端。");
                     }
 
                 }
@@ -204,11 +208,13 @@ namespace Palworld_server_protector_DotNet
                 ZipFile.CreateFromDirectory(gamedataPath, backupFilePath);
 
                 OutputMessageAsync($"游戏存档已成功备份");
+                SendWebhookAsync("存档备份", $"游戏存档已成功备份。");
             }
             catch (Exception ex)
             {
                 OutputMessageAsync($"备份存档失败");
                 AppendToErrorLog($"备份存档失败：{ex.Message}");
+                SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。");
             }
         }
 
@@ -370,6 +376,14 @@ namespace Palworld_server_protector_DotNet
                             {
                                 arguments.Text = line.Substring("Parameters=".Length);
                             }
+                            else if(line.StartsWith("WebhookUrl="))
+                            {
+                                webhookBox.Text = line.Substring("WebhookUrl=".Length);
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
                     }
                 }
@@ -411,6 +425,7 @@ namespace Palworld_server_protector_DotNet
                     writer.WriteLine("RebootSeconds=" + rebootSeconds);
                     writer.WriteLine("CheckSeconds=" + memTimer.Interval / 1000);
                     writer.WriteLine("BackupSeconds=" + saveTimer.Interval / 1000);
+                    writer.WriteLine("WebhookUrl=" + webhookBox.Text);
                 }
             }
             catch (Exception ex)
@@ -832,6 +847,63 @@ namespace Palworld_server_protector_DotNet
             else
             {
                 configForm.BringToFront(); // Bring the existing configForm to the front
+            }
+        }
+
+        private void testWebhookbutton_Click(object sender, EventArgs e)
+        {
+
+            SendWebhookAsync("测试标题", "这是一条测试推送通知。");
+
+        }
+        private async Task SendWebhookAsync(string title, string message)
+        {
+            if (!checkBox_webhook.Checked)
+            {
+                return;
+            }
+            if (webhookBox.Text == "")
+            {
+                OutputMessageAsync($"Webhook地址为空。");
+                return;
+            }
+            if (!webhookBox.Text.Contains("http"))
+            {
+                OutputMessageAsync($"Webhook格式不正确。");
+                return;
+            }
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string webhookUrl = webhookBox.Text;
+                    var webhook = new WebhookJson();
+                    string json = webhook.GenerateJson(webhookUrl, title, message);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    await client.PostAsync(webhookUrl, content);
+                    OutputMessageAsync($"Webhook发送成功。");
+                }
+            }
+            catch (Exception ex)
+            {
+                OutputMessageAsync($"Webhook发送失败。");
+                AppendToErrorLog($"Webhook发送失败：{ex.Message}");
+            }
+
+        }
+
+        private void checkBox_webhook_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_webhook.Checked) {
+                webhookBox.Enabled = true;
+                testWebhookbutton.Enabled = true;
+                OutputMessageAsync($"已启用Webhook推送。");
+            }
+            else
+            {
+                webhookBox.Enabled = false;
+                testWebhookbutton.Enabled = false;
+                OutputMessageAsync($"已停用Webhook推送。");
             }
         }
 

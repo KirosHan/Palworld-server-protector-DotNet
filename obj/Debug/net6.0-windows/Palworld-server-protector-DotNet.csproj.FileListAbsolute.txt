@@ -16,3 +16,6 @@ C:\Users\kiros\Desktop\Palworld-server-protector-DotNet\obj\Debug\net6.0-windows
 C:\Users\kiros\Desktop\Palworld-server-protector-DotNet\obj\Debug\net6.0-windows\Palworld-server-protector-DotNet.genruntimeconfig.cache
 C:\Users\kiros\Desktop\Palworld-server-protector-DotNet\obj\Debug\net6.0-windows\ref\Palworld-server-protector-DotNet.dll
 C:\Users\kiros\Desktop\Palworld-server-protector-DotNet\obj\Debug\net6.0-windows\Palworld_server_protector_DotNet.configForm.resources
+C:\Users\kiros\Desktop\Palworld-server-protector-DotNet\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\kiros\Desktop\Palworld-server-protector-DotNet\obj\Debug\net6.0-windows\Palworld-server-protector-DotNet.csproj.AssemblyReference.cache
+C:\Users\kiros\Desktop\Palworld-server-protector-DotNet\obj\Debug\net6.0-windows\Palworld-server-protector-DotNet.csproj.CopyComplete

@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\kiros\\Desktop\\Palworld-server-protector-DotNet\\Palworld-server-protector-DotNet.csproj": {
-      "version": "2.3.0",
+      "version": "2.4.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\kiros\\Desktop\\Palworld-server-protector-DotNet\\Palworld-server-protector-DotNet.csproj",
         "projectName": "Palworld-server-protector-DotNet",
@@ -39,6 +39,12 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
