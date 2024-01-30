@@ -27,6 +27,9 @@ namespace Palworld_server_protector_DotNet
         private string rconPassword;
         private Int32 rebootSeconds;
         private string errorLogname = $"error_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log";
+        private string projectUrl = $"https://github.com/KirosHan/Palworld-server-protector-DotNet";
+        private Int32 playersTimercounter = 0;
+        private Int32 playersTimerthreshold = 600;//每小时触发600次
 
         private const string ConfigFilePath = "config.ini";
 
@@ -120,6 +123,7 @@ namespace Palworld_server_protector_DotNet
             { //监控&自启
               // 检查进程是否在运行
                 var isProcessRunning = IsProcessRunning(cmdPath);
+                labelForprogram.Text = $"{(isProcessRunning ? "运行中" : "未运行")}";
                 OutputMessageAsync($"进程运行状态：{(isProcessRunning ? "运行中" : "未运行")}");
                 if (!isProcessRunning)
                 {
@@ -128,17 +132,30 @@ namespace Palworld_server_protector_DotNet
                         try
                         {
 
-
+                            Process process;
+                            int processId;
                             if (checkBox_args.Checked && arguments.Text != "")
                             {
                                 OutputMessageAsync($"正在尝试启动服务端({arguments.Text})...");
-                                Process.Start(cmdPath, arguments.Text);
+                                process = Process.Start(cmdPath, arguments.Text);
+                                processId = process.Id;
                             }
                             else
                             {
                                 OutputMessageAsync($"正在尝试启动服务端...");
 
-                                Process.Start(cmdPath);
+                                process = Process.Start(cmdPath);
+                                processId = process.Id;
+                            }
+                            if (processId > 0)
+                            {
+                                labelForPid.Text = processId.ToString();
+                                labelForpidText.Visible = true;
+                                labelForPid.Visible = true;
+                                OutputMessageAsync($"服务端启动成功。");
+                                SendWebhookAsync("服务端启动成功", $"服务端启动成功。");
+                                ShowNotification($"服务端启动成功。");
+
                             }
                         }
                         catch (Exception ex)
@@ -179,6 +196,11 @@ namespace Palworld_server_protector_DotNet
                 {
                     var item = new ListViewItem(new[] { player.name, player.uid, player.steam_id });
                     playersView.Items.Add(item);
+                }
+                playersTimercounter += 1;
+                if (playersTimercounter >= playersTimerthreshold) {
+                    playersTimercounter = 0;
+                    SendWebhookAsync("在线玩家统计", $"当前在线玩家：{players.Count}人。");
                 }
             }
             catch (Exception ex)
@@ -354,19 +376,54 @@ namespace Palworld_server_protector_DotNet
             playersView.MultiSelect = false;
             playersView.HideSelection = false;
 
+            tabControl1.TabPages[0].Text = "服务监控";
+            tabControl1.TabPages[1].Text = "自动存档";
+            tabControl1.TabPages[2].Text = "Rcon";
+            tabControl1.TabPages[3].Text = "通知";
+            tabControl1.TabPages[4].Text = "测试功能";
+
             LoadConfig();
             memTimer.Start();
             string buildVersion = Application.ProductVersion;
-            int endIndex = buildVersion.IndexOf('+'); 
+            int endIndex = buildVersion.IndexOf('+');
             string version = buildVersion.Substring(0, endIndex); //去掉构建标识符
             verisionLabel.Text = $"当前版本：{version}";
-
+            checkVersion(version);
             OutputMessageAsync($"当前构建版本号：{version}");
-            OutputMessageAsync($"本项目开源地址：https://github.com/KirosHan/Palworld-server-protector-DotNet");
 
             OutputMessageAsync($"请先配置好信息，再勾选功能启动");
 
 
+        }
+        private void checkVersion(string myversion)
+        {
+            try
+            {
+                string url = $"http://127.0.0.1/version?v={myversion}";
+                using (WebClient client = new WebClient())
+                {
+                    string json = client.DownloadString(url);
+                    dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    string latestVersion = data[0].version;
+
+                    if (IsVersionNewer(latestVersion, myversion))
+                    {
+                        linkLabel2.Text = $"点击下载最新版本(v{latestVersion})";
+                        projectUrl = data[0].url;
+                        linkLabel2.Visible = true;
+                    }
+                }
+            }
+            catch
+            { }
+        
+        }
+
+        private bool IsVersionNewer(string latestVersion, string myVersion)
+        {
+            Version latest = new Version(latestVersion);
+            Version current = new Version(myVersion);
+            return latest > current;
         }
         private void LoadConfig()
         {
@@ -436,6 +493,83 @@ namespace Palworld_server_protector_DotNet
                             {
                                 webhookBox.Text = line.Substring("WebhookUrl=".Length);
                             }
+                            else if(line.StartsWith("isReboot="))
+                            {
+                                if (line.Substring("isReboot=".Length) == "True")
+                                {
+                                    checkBox_reboot.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_reboot.Checked = false;
+                                }
+                            }
+                            else if (line.StartsWith("isStartProcess="))
+                            {
+                                if (line.Substring("isStartProcess=".Length) == "True")
+                                {
+                                    checkBox_startprocess.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_startprocess.Checked = false;
+                                }
+                            }
+                            else if (line.StartsWith("isParameters="))
+                            {
+                                if (line.Substring("isParameters=".Length) == "True")
+                                {
+                                    checkBox_args.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_args.Checked = false;
+                                }
+                            }
+                            else if (line.StartsWith("isNoti="))
+                            {
+                                if (line.Substring("isNoti=".Length) == "True")
+                                {
+                                    checkBox_Noti.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_Noti.Checked = false;
+                                }
+                            }
+                            else if (line.StartsWith("isSave="))
+                            {
+                                if (line.Substring("isSave=".Length) == "True")
+                                {
+                                    checkBox_save.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_save.Checked = false;
+                                }
+                            }
+                            else if (line.StartsWith("isGetPlayers="))
+                            {
+                                if (line.Substring("isGetPlayers=".Length) == "True")
+                                {
+                                    checkBox_geplayers.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_geplayers.Checked = false;
+                                }
+                            }
+                            else if (line.StartsWith("isWebhook="))
+                            {
+                                if (line.Substring("isWebhook=".Length) == "True")
+                                {
+                                    checkBox_webhook.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_webhook.Checked = false;
+                                }
+                            }   
                             else
                             {
                                 continue;
@@ -484,6 +618,14 @@ namespace Palworld_server_protector_DotNet
                     writer.WriteLine("CheckSeconds=" + memTimer.Interval / 1000);
                     writer.WriteLine("BackupSeconds=" + saveTimer.Interval / 1000);
                     writer.WriteLine("WebhookUrl=" + webhookBox.Text);
+                    if (checkBox_reboot.Checked){writer.WriteLine("isReboot=True");}else { writer.WriteLine("isReboot=False"); }
+                    if (checkBox_startprocess.Checked) { writer.WriteLine("isStartProcess=True");}else { writer.WriteLine("isStartProcess=False"); }
+                    if(checkBox_args.Checked) { writer.WriteLine("isParameters=True"); } else { writer.WriteLine("isParameters=False"); }
+                    if(checkBox_Noti.Checked) { writer.WriteLine("isNoti=True"); } else { writer.WriteLine("isNoti=False"); }
+                    if(checkBox_save.Checked) { writer.WriteLine("isSave=True"); } else { writer.WriteLine("isSave=False"); }
+                    if(checkBox_geplayers.Checked) { writer.WriteLine("isGetPlayers=True"); } else { writer.WriteLine("isGetPlayers=False"); }
+                    if(checkBox_webhook.Checked) { writer.WriteLine("isWebhook=True"); } else { writer.WriteLine("isWebhook=False"); }
+
                 }
             }
             catch (Exception ex)
@@ -519,16 +661,25 @@ namespace Palworld_server_protector_DotNet
         {
             if (cmdPath == "")
             {
+                labelForstart.Text = "[ 关闭 ]";
                 OutputMessageAsync($"请先设置服务端路径。");
+                labelForPid.Visible = false;
+                labelForpidText.Visible = false;
                 checkBox_startprocess.Checked = false;
+
 
             }
             else if (checkBox_startprocess.Checked)
             {
+                labelForstart.Text = "[ 开启 ]";
                 OutputMessageAsync($"已开始监控服务端。");
             }
             else
             {
+                labelForprogram.Text = "未知";
+                labelForstart.Text = "[ 关闭 ]";
+                labelForPid.Visible = false;
+                labelForpidText.Visible = false;
                 OutputMessageAsync($"已停止监控服务端。");
             }
 
@@ -541,24 +692,31 @@ namespace Palworld_server_protector_DotNet
                 if (gamedataPath == "")
                 {
                     OutputMessageAsync($"请先选择游戏存档路径。");
+                    labelForsave.Text = "[ 关闭 ]";
                     checkBox_save.Checked = false;
                 }
                 else if (backupPath == "")
                 {
                     OutputMessageAsync($"请先选择存档备份路径。");
+                    labelForsave.Text = "[ 关闭 ]";
                     checkBox_save.Checked = false;
                 }
                 else
                 {
                     saveTimer.Interval = Convert.ToInt32(backupSecondsbox.Value) * 1000;
                     saveTimer.Start();
+                    labelForsave.Text = "[ 开启 ]";
                     OutputMessageAsync($"已启用自动备份存档。");
+                    OutputMessageAsync($"自动存档中...");
+                    CopyGameDataToBackupPath();
+                   
                 }
 
             }
             else
             {
                 saveTimer.Stop();
+                labelForsave.Text = "[ 关闭 ]";
                 OutputMessageAsync($"已停用自动备份存档。");
             }
 
@@ -606,15 +764,18 @@ namespace Palworld_server_protector_DotNet
             if (cmdPath == "")
             {
                 checkBox_reboot.Checked = false;
+                labelForreboot.Text = "[ 关闭 ]";
                 OutputMessageAsync($"请先选择服务端路径。");
             }
 
             else if (checkBox_reboot.Checked)
             {
+                labelForreboot.Text = "[ 开启 ]";
                 OutputMessageAsync($"已启用自动关服。");
             }
             else
             {
+                labelForreboot.Text = "[ 关闭 ]";
                 OutputMessageAsync($"已停用自动关服。");
             }
         }
@@ -623,12 +784,15 @@ namespace Palworld_server_protector_DotNet
         {
             if (checkBox_geplayers.Checked)
             {
+                playersTimercounter = 0;
                 getplayerTimer.Start();
+                labelForgetplayers.Text = "[ 开启 ]";
                 OutputMessageAsync($"已启用自动获取在线玩家。");
             }
             else
             {
                 getplayerTimer.Stop();
+                labelForgetplayers.Text = "[ 关闭 ]";
                 OutputMessageAsync($"已停用自动获取在线玩家。");
                 playersCounterLabel.Text = $"当前在线：未知";
             }
@@ -957,12 +1121,14 @@ namespace Palworld_server_protector_DotNet
             {
                 webhookBox.Enabled = true;
                 testWebhookbutton.Enabled = true;
+                labelForwebhook.Text = "[ 开启 ]";
                 OutputMessageAsync($"已启用Webhook推送。");
             }
             else
             {
                 webhookBox.Enabled = false;
                 testWebhookbutton.Enabled = false;
+                labelForwebhook.Text = "[ 关闭 ]";
                 OutputMessageAsync($"已停用Webhook推送。");
             }
         }
@@ -985,12 +1151,23 @@ namespace Palworld_server_protector_DotNet
         }
         private void ShowNotification(string message)
         {
-            if(checkBox_Noti.Checked)
+            if (checkBox_Noti.Checked)
             {
                 notifyIcon1.BalloonTipText = message;
                 notifyIcon1.ShowBalloonTip(2000);
             }
-            
+
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(projectUrl) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         /**  HTTP功能已弃用

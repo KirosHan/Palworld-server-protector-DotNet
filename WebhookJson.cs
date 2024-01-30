@@ -43,7 +43,12 @@ namespace Palworld_server_protector_DotNet
             {
                 var unknownObject = new
                 {
-                    msgtype = "unknown"
+                    msgtype = "normal",
+                    data =new
+                    {
+                        title = jsontitle,
+                        content = message
+                    }
                 };
 
                 return JsonConvert.SerializeObject(unknownObject);
