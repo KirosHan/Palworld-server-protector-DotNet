@@ -191,16 +191,20 @@ namespace Palworld_server_protector_DotNet
                 // Clear the playersView
                 playersView.Items.Clear();
 
+                var playerList = "";
                 // Add the players information to the playersView
                 foreach (var player in players)
                 {
                     var item = new ListViewItem(new[] { player.name, player.uid, player.steam_id });
                     playersView.Items.Add(item);
+                    playerList = playerList + player.name + ",";
                 }
                 playersTimercounter += 1;
-                if (playersTimercounter >= playersTimerthreshold) {
+                if (playersTimercounter >= playersTimerthreshold)
+                {
                     playersTimercounter = 0;
-                    SendWebhookAsync("在线玩家统计", $"当前在线玩家：{players.Count}人。");
+                    playerList = playerList.TrimEnd(',');
+                    SendWebhookAsync("在线玩家统计", $"当前在线玩家：{players.Count}人。\r\n{playerList}");
                 }
             }
             catch (Exception ex)
@@ -784,7 +788,7 @@ namespace Palworld_server_protector_DotNet
         {
             if (checkBox_geplayers.Checked)
             {
-                playersTimercounter = 0;
+                playersTimercounter = playersTimerthreshold;//启动即触发一次
                 getplayerTimer.Start();
                 labelForgetplayers.Text = "[ 开启 ]";
                 OutputMessageAsync($"已启用自动获取在线玩家。");
