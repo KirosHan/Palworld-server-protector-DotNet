@@ -10,14 +10,18 @@
 ![Qrcode](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/qrcode.jpg)
 
 ## 功能
+
+- 服务器配置文档(.ini)可视化编辑【New】
+- Webhoot通知推送(企业微信机器人)【New】
+
+
 - 内存监控（自定义阈值触发）
 - 进程守护（当前如果没有服务端运行就自动重启）
 - 优雅重启（内存占用达到阈值后自动发送公告并关服等待重启）
 - 自动备份存档
 - 轮询获取在线玩家
 - Rcon指令
-- 服务器配置文档(.ini)可视化编辑【New】
-- Webhoot通知推送(企业微信机器人)【New】
+
 
 ## 注意
 - 本GUI版本复刻了命令行版本（[https://github.com/KirosHan/Palworld-server-protector](https://github.com/KirosHan/Palworld-server-protector)）所有功能
@@ -28,9 +32,13 @@
 ![预览](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/screenshot2.2.0.png)
 
 ## 直接下载（懒人专属）
-更新时间：2024-01-29 
+更新时间：2024-01-30
 
-版本：V2.4.0
+版本：V2.5.1
+
+
+
+=-=-=-=-=
 
 - 添加Webhook推送功能，目前仅支持企业微信群机器人，其他数据格式正在收集中，欢迎提供。
 
