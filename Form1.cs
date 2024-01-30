@@ -95,6 +95,7 @@ namespace Palworld_server_protector_DotNet
 
                             OutputMessageAsync($"{result}");
                             SendWebhookAsync("内存达到警戒阈值", $"内存使用率：{memoryUsage}%,已尝试关闭服务器。");
+                            ShowNotification($"内存使用率：{memoryUsage}%,已尝试关闭服务器。");
                         }
 
 
@@ -104,6 +105,7 @@ namespace Palworld_server_protector_DotNet
                         OutputMessageAsync($"发送指令失败，请检查配置。");
                         AppendToErrorLog($"发送指令失败，请检查配置。{ex.Message}");
                         SendWebhookAsync("Rcon失败", $"发送关服指令失败，请及时检查。");
+                        ShowNotification($"发送关服指令失败，请及时检查。");
 
                     }
 
@@ -144,8 +146,11 @@ namespace Palworld_server_protector_DotNet
                             OutputMessageAsync($"服务端启动失败。");
                             AppendToErrorLog($"服务端启动失败：{ex.Message}");
                             SendWebhookAsync("服务端启动失败", $"服务端启动失败，请及时检查。");
+                            ShowNotification($"服务端启动失败，请及时检查。");
                         }
                         SendWebhookAsync("启动服务端", $"已尝试启动服务端。");
+                        ShowNotification($"已尝试启动服务端。");
+
                     }
 
                 }
@@ -220,12 +225,14 @@ namespace Palworld_server_protector_DotNet
 
                 OutputMessageAsync($"游戏存档已成功备份");
                 SendWebhookAsync("存档备份", $"游戏存档已成功备份。");
+                ShowNotification($"游戏存档已成功备份。");
             }
             catch (Exception ex)
             {
                 OutputMessageAsync($"备份存档失败");
                 AppendToErrorLog($"备份存档失败：{ex.Message}");
                 SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。");
+                ShowNotification($"存档备份失败，请及时检查。");
             }
         }
 
@@ -239,6 +246,7 @@ namespace Palworld_server_protector_DotNet
             {
                 OutputMessageAsync($"游戏存档路径不存在：{sourceDirName}");
                 AppendToErrorLog($"游戏存档路径不存在：{sourceDirName}");
+                ShowNotification($"游戏存档路径不存在：{sourceDirName}");
             }
 
             // If the destination directory does not exist, create it
@@ -349,8 +357,8 @@ namespace Palworld_server_protector_DotNet
             LoadConfig();
             memTimer.Start();
             string buildVersion = Application.ProductVersion;
-            int endIndex = buildVersion.IndexOf('+'); // 找到版本号中的"+"符号的索引位置
-            string version = buildVersion.Substring(0, endIndex); // 使用Substring方法提取从0到endIndex之间的子字符串
+            int endIndex = buildVersion.IndexOf('+'); 
+            string version = buildVersion.Substring(0, endIndex); //去掉构建标识符
             verisionLabel.Text = $"当前版本：{version}";
 
             OutputMessageAsync($"当前构建版本号：{version}");
@@ -424,7 +432,7 @@ namespace Palworld_server_protector_DotNet
                             {
                                 arguments.Text = line.Substring("Parameters=".Length);
                             }
-                            else if(line.StartsWith("WebhookUrl="))
+                            else if (line.StartsWith("WebhookUrl="))
                             {
                                 webhookBox.Text = line.Substring("WebhookUrl=".Length);
                             }
@@ -438,12 +446,14 @@ namespace Palworld_server_protector_DotNet
                 else
                 {
                     OutputMessageAsync($"未找到配置文件，已加载默认配置。");
+                    ShowNotification($"未找到配置文件，已加载默认配置。");
                     dataInit();
                 }
             }
             catch (Exception ex)
             {
                 OutputMessageAsync($"读取配置文件失败。");
+                ShowNotification($"读取配置文件失败。");
                 AppendToErrorLog($"读取配置文件失败：{ex.Message}");
             }
         }
@@ -480,6 +490,7 @@ namespace Palworld_server_protector_DotNet
             {
                 OutputMessageAsync($"保存配置文件失败。");
                 AppendToErrorLog($"保存配置文件失败：{ex.Message}");
+
             }
         }
 
@@ -942,7 +953,8 @@ namespace Palworld_server_protector_DotNet
 
         private void checkBox_webhook_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox_webhook.Checked) {
+            if (checkBox_webhook.Checked)
+            {
                 webhookBox.Enabled = true;
                 testWebhookbutton.Enabled = true;
                 OutputMessageAsync($"已启用Webhook推送。");
@@ -953,6 +965,32 @@ namespace Palworld_server_protector_DotNet
                 testWebhookbutton.Enabled = false;
                 OutputMessageAsync($"已停用Webhook推送。");
             }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+                ShowInTaskbar = true; // Add this line to show the form in the taskbar
+            }
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                ShowInTaskbar = false; // Add this line to show the form in the taskbar
+            }
+        }
+        private void ShowNotification(string message)
+        {
+            if(checkBox_Noti.Checked)
+            {
+                notifyIcon1.BalloonTipText = message;
+                notifyIcon1.ShowBalloonTip(2000);
+            }
+            
         }
 
         /**  HTTP功能已弃用
