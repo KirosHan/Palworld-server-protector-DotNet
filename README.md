@@ -29,8 +29,8 @@
 - 本工具大部分功能基于Rcon实现，所以使用需要提前配置服务端启用Rcon和管理员密码（如果配置不生效，也请留意steamapps/common/PalServer/Pal/Saved/SaveGames/0/.../WorldOption.sav）
 
 ## 效果图
-![预览](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/screenshot2.2.0.png)
-
+![预览1](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_1.png)
+![预览2](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_2.png)
 ## 直接下载（懒人专属）
 更新时间：2024-01-30
 
