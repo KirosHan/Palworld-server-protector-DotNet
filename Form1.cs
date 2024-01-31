@@ -22,7 +22,7 @@ namespace Palworld_server_protector_DotNet
         private string backupPath;
         private string gamedataPath;
         private Int32 memTarget;
-        private string rconHost;
+        private string rconHost{get => rconHostbox.Text;set=>rconHostbox.Text = value;}
         private Int32 rconPort;
         private string rconPassword;
         private Int32 rebootSeconds;
@@ -324,7 +324,7 @@ namespace Palworld_server_protector_DotNet
         {
             var processName = Path.GetFileNameWithoutExtension(processPath);
             var processes = Process.GetProcessesByName(processName);
-            return processes.Length > 0;
+            return processes.Any(p=>p.MainModule.FileName == processPath);
         }
 
 
