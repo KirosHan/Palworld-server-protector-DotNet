@@ -19,7 +19,7 @@ namespace Palworld_server_protector_DotNet
                     msgtype = "markdown",
                     markdown = new
                     {
-                        content = $"<font color=\"warning\">通知 </font>{jsontitle}\n ><font color=\"comment\">{message}</font>"
+                        content = $"<font color=\"warning\">服务端监控 </font>{jsontitle}\n ><font color=\"comment\">{message}</font>"
                     }
                 };
 
@@ -33,7 +33,7 @@ namespace Palworld_server_protector_DotNet
                     markdown = new
                     {
                         title = jsontitle,
-                        text = $"#### {jsontitle} \n > {message}\n > \n "
+                        text = $"#### 服务端监控：{jsontitle} \n > {message}\n > \n "
                     }
                 };
 
