@@ -99,6 +99,10 @@
             linkLabel1 = new LinkLabel();
             groupBox6 = new GroupBox();
             groupBox7 = new GroupBox();
+            checkBox_web_getplayers = new CheckBox();
+            checkbox_web_reboot = new CheckBox();
+            checkBox_web_startprocess = new CheckBox();
+            checkBox_web_save = new CheckBox();
             label4 = new Label();
             testWebhookbutton = new Button();
             webhookBox = new TextBox();
@@ -113,6 +117,8 @@
             checkBox_Noti = new CheckBox();
             tabPage5 = new TabPage();
             notifyIcon1 = new NotifyIcon(components);
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            toolStripMenuItem1 = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)rebootSecondbox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkSecondbox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)memTargetbox).BeginInit();
@@ -130,6 +136,7 @@
             groupBox4.SuspendLayout();
             groupBox2.SuspendLayout();
             tabPage5.SuspendLayout();
+            contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // checkBox_reboot
@@ -175,6 +182,7 @@
             outPutbox.Margin = new Padding(5, 4, 5, 4);
             outPutbox.Name = "outPutbox";
             outPutbox.ReadOnly = true;
+            outPutbox.ScrollBars = RichTextBoxScrollBars.None;
             outPutbox.Size = new Size(619, 225);
             outPutbox.TabIndex = 0;
             outPutbox.Text = "";
@@ -850,16 +858,60 @@
             // 
             // groupBox7
             // 
+            groupBox7.Controls.Add(checkBox_web_getplayers);
+            groupBox7.Controls.Add(checkbox_web_reboot);
+            groupBox7.Controls.Add(checkBox_web_startprocess);
+            groupBox7.Controls.Add(checkBox_web_save);
             groupBox7.Controls.Add(label4);
             groupBox7.Controls.Add(testWebhookbutton);
             groupBox7.Controls.Add(webhookBox);
             groupBox7.Controls.Add(checkBox_webhook);
             groupBox7.Location = new Point(8, 7);
             groupBox7.Name = "groupBox7";
-            groupBox7.Size = new Size(579, 145);
+            groupBox7.Size = new Size(579, 250);
             groupBox7.TabIndex = 19;
             groupBox7.TabStop = false;
             groupBox7.Text = "Webhook";
+            // 
+            // checkBox_web_getplayers
+            // 
+            checkBox_web_getplayers.AutoSize = true;
+            checkBox_web_getplayers.Location = new Point(231, 197);
+            checkBox_web_getplayers.Name = "checkBox_web_getplayers";
+            checkBox_web_getplayers.Size = new Size(310, 28);
+            checkBox_web_getplayers.TabIndex = 7;
+            checkBox_web_getplayers.Text = "推送在线玩家信息（30分钟一次）";
+            checkBox_web_getplayers.UseVisualStyleBackColor = true;
+            // 
+            // checkbox_web_reboot
+            // 
+            checkbox_web_reboot.AutoSize = true;
+            checkbox_web_reboot.Location = new Point(25, 147);
+            checkbox_web_reboot.Name = "checkbox_web_reboot";
+            checkbox_web_reboot.Size = new Size(180, 28);
+            checkbox_web_reboot.TabIndex = 6;
+            checkbox_web_reboot.Text = "内存阈值触发通知";
+            checkbox_web_reboot.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_web_startprocess
+            // 
+            checkBox_web_startprocess.AutoSize = true;
+            checkBox_web_startprocess.Location = new Point(231, 147);
+            checkBox_web_startprocess.Name = "checkBox_web_startprocess";
+            checkBox_web_startprocess.Size = new Size(162, 28);
+            checkBox_web_startprocess.TabIndex = 5;
+            checkBox_web_startprocess.Text = "服务端启动通知";
+            checkBox_web_startprocess.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_web_save
+            // 
+            checkBox_web_save.AutoSize = true;
+            checkBox_web_save.Location = new Point(25, 197);
+            checkBox_web_save.Name = "checkBox_web_save";
+            checkBox_web_save.Size = new Size(108, 28);
+            checkBox_web_save.TabIndex = 4;
+            checkBox_web_save.Text = "存档通知";
+            checkBox_web_save.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -1005,7 +1057,7 @@
             // groupBox4
             // 
             groupBox4.Controls.Add(checkBox_mem);
-            groupBox4.Location = new Point(8, 280);
+            groupBox4.Location = new Point(8, 385);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(579, 120);
             groupBox4.TabIndex = 21;
@@ -1015,7 +1067,7 @@
             // groupBox2
             // 
             groupBox2.Controls.Add(checkBox_Noti);
-            groupBox2.Location = new Point(8, 158);
+            groupBox2.Location = new Point(8, 263);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(579, 116);
             groupBox2.TabIndex = 20;
@@ -1046,10 +1098,25 @@
             // 
             // notifyIcon1
             // 
+            notifyIcon1.ContextMenuStrip = contextMenuStrip1;
             notifyIcon1.Icon = (Icon)resources.GetObject("notifyIcon1.Icon");
-            notifyIcon1.Text = "notifyIcon1";
+            notifyIcon1.Text = "Palworld Server Protector";
             notifyIcon1.Visible = true;
             notifyIcon1.MouseDoubleClick += notifyIcon1_MouseDoubleClick;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.ImageScalingSize = new Size(24, 24);
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(117, 34);
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(116, 30);
+            toolStripMenuItem1.Text = "退出";
+            toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
             // Form1
             // 
@@ -1067,7 +1134,6 @@
             Text = "Palworld Server Protector";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
-            Resize += Form1_Resize;
             ((System.ComponentModel.ISupportInitialize)rebootSecondbox).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkSecondbox).EndInit();
             ((System.ComponentModel.ISupportInitialize)memTargetbox).EndInit();
@@ -1093,6 +1159,7 @@
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             tabPage5.ResumeLayout(false);
+            contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1180,5 +1247,11 @@
         private Label labelForPid;
         private GroupBox groupBox4;
         private GroupBox groupBox2;
+        private CheckBox checkBox_web_save;
+        private CheckBox checkBox_web_startprocess;
+        private CheckBox checkbox_web_reboot;
+        private CheckBox checkBox_web_getplayers;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem toolStripMenuItem1;
     }
 }
