@@ -32,9 +32,9 @@
 ![预览1](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_1.png)
 ![预览2](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_2.png)
 ## 直接下载（懒人专属）
-更新时间：2024-01-30
+更新时间：2024-02-01
 
-Latest版本：V2.5.4(2)
+Latest版本：V2.5.5(2)
 
 =-=-V2.5.3(2) -=-=
 
