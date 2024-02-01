@@ -18,6 +18,7 @@ namespace Palworld_server_protector_DotNet
         private Timer memTimer;
         private Timer saveTimer;
         private Timer getplayerTimer;
+        private Timer getversionTimer;
         private string cmdPath;
         private string backupPath;
         private string gamedataPath;
@@ -30,7 +31,8 @@ namespace Palworld_server_protector_DotNet
         private string projectUrl = $"https://github.com/KirosHan/Palworld-server-protector-DotNet";
         private Int32 playersTimercounter = 0;
         private Int32 playersTimerthreshold = 600;//每小时触发600次
-
+        private Int32 getversionErrorCounter = 0;
+        private string versionChcekUrl = $"http://127.0.0.1/version?v=";
         private const string ConfigFilePath = "config.ini";
 
         [DllImport("kernel32")]
@@ -62,6 +64,10 @@ namespace Palworld_server_protector_DotNet
             getplayerTimer = new Timer();
             getplayerTimer.Interval = 3000; // 设置定时器间隔为s秒
             getplayerTimer.Tick += getplayerTimer_Tick;
+
+            getversionTimer = new Timer();
+            getversionTimer.Interval = 10000; // 设置定时器间隔为s秒
+            getversionTimer.Tick += getversionTimer_Tick;
         }
 
 
@@ -72,6 +78,8 @@ namespace Palworld_server_protector_DotNet
             var memoryUsage = Math.Round(GetSystemMemoryUsagePercentage(), 2);
             memProcessbar.Value = (int)memoryUsage;
             memOutput.Text = $"{memoryUsage}%";
+
+
             if (checkBox_mem.Checked)
             {
                 //OutputMessageAsync($"当前时间：{DateTime.Now}");
@@ -95,9 +103,12 @@ namespace Palworld_server_protector_DotNet
                             var info = RconUtils.SendMsg("save");
 
                             OutputMessageAsync($"{info}");
+                            
                             var result = RconUtils.SendMsg($"Shutdown {rebootSeconds} The_server_will_restart_in_{rebootSeconds}_seconds.");
 
                             OutputMessageAsync($"{result}");
+                            OutputMessageAsync($"紧急存档中...");
+                            CopyGameDataToBackupPath();
                             if (checkbox_web_reboot.Checked == true) { SendWebhookAsync("内存达到警戒阈值", $"内存使用率：{memoryUsage}%,已尝试关闭服务器。"); }
 
                             ShowNotification($"内存使用率：{memoryUsage}%,已尝试关闭服务器。");
@@ -327,7 +338,8 @@ namespace Palworld_server_protector_DotNet
 
             return memoryUsage * 100;
         }
-
+ 
+      
 
 
         private bool IsProcessRunning(string processPath)
@@ -376,9 +388,15 @@ namespace Palworld_server_protector_DotNet
             });
         }
 
+        private void getversionTimer_Tick(object sender, EventArgs e) //获取版本信息
+        {
+            string buildVersion = Application.ProductVersion;
+            int endIndex = buildVersion.IndexOf('+');
+            string version = buildVersion.Substring(0, endIndex); //去掉构建标识符
+            checkVersion(version);
+        }
 
-
-        private void Form1_Load(object sender, EventArgs e)
+            private void Form1_Load(object sender, EventArgs e)
         {
 
             playersView.View = View.Details;
@@ -405,7 +423,7 @@ namespace Palworld_server_protector_DotNet
             checkVersion(version);
             OutputMessageAsync($"当前构建版本号：{version}");
 
-            OutputMessageAsync($"请先配置好信息，再勾选功能启动");
+    
 
 
         }
@@ -413,10 +431,10 @@ namespace Palworld_server_protector_DotNet
         {
             try
             {
-                string url = $"http://127.0.0.1/version?v={myversion}";
+
                 using (WebClient client = new WebClient())
                 {
-                    string json = client.DownloadString(url);
+                    string json = client.DownloadString(versionChcekUrl+myversion);
                     dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
                     string latestVersion = data[0].version;
                     string notice = data[0].notice;
@@ -433,15 +451,28 @@ namespace Palworld_server_protector_DotNet
 
                     if (IsVersionNewer(latestVersion, myversion))
                     {
+
                         linkLabel2.Text = $"点击下载最新版本(v{latestVersion})";
                         projectUrl = data[0].url;
                         linkLabel2.Visible = true;
+                        OutputMessageAsync($"【更新】新版本v{latestVersion}已经发布，请点击最下方链接前往下载更新。");
                     }
 
                 }
+                getversionTimer.Stop();
             }
             catch
-            { }
+            {
+                if (getversionErrorCounter == 0) {
+                    getversionTimer.Start();
+                }
+                getversionErrorCounter++;
+                if (getversionErrorCounter >= 5)
+                {
+                    getversionTimer.Stop();
+                }
+                
+            }
 
         }
 
@@ -669,6 +700,7 @@ namespace Palworld_server_protector_DotNet
             {
                 e.Cancel = true; // 取消关闭事件
                 this.Hide(); // 隐藏窗体
+                ShowNotification($"程序已最小化到托盘。",true);
                 notifyIcon1.Visible = true; // 显示托盘图标
             }
         }
@@ -1258,6 +1290,8 @@ namespace Palworld_server_protector_DotNet
    
             Application.Exit();
         }
+
+       
 
    
 
