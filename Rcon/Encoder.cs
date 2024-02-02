@@ -13,7 +13,7 @@ public class Encoder
         bytes.AddRange(BitConverter.GetBytes(msg.Length));
         bytes.AddRange(BitConverter.GetBytes(msg.ID));
         bytes.AddRange(BitConverter.GetBytes((int)msg.Type));
-        bytes.AddRange(Encoding.UTF8.GetBytes(msg.Body)); // Modified to use UTF-8 encoding
+        bytes.AddRange(Encoding.ASCII.GetBytes(msg.Body));
         bytes.AddRange(new byte[] { 0, 0 });
 
         return bytes.ToArray();
@@ -31,7 +31,7 @@ public class Encoder
             byte[] bodyBytes = new byte[bodyLen];
             Array.Copy(bytes, 12, bodyBytes, 0, bodyLen);
             Array.Resize(ref bodyBytes, bodyLen);
-            return new RconMessage(len, id, (RconMessageType)type, Encoding.UTF8.GetString(bodyBytes)); // Modified to use UTF-8 encoding
+            return new RconMessage(len, id, (RconMessageType)type, Encoding.UTF8.GetString(bodyBytes));
         }
         else
         {

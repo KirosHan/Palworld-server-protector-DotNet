@@ -6,9 +6,23 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Security.Permissions;
+using System.Net;
 namespace Palworld_server_protector_DotNet
 {
+    public class PalUserInfo
+    {
+        public string name;
+        public string uid;
+        public string steam_id;
 
+        public PalUserInfo(string row)
+        {
+            var splits = row.Split(',');
+            name = splits[0];
+            uid = splits[1];
+            steam_id = splits[2];
+        }
+    }
     internal class Rcon
     {
         internal static TcpClient Client;
@@ -27,24 +41,26 @@ namespace Palworld_server_protector_DotNet
             AppDomain.CurrentDomain.ProcessExit += ProcessExit;
         }
 
-        public static async Task<string> Connect(string address, string port, string pass)
+        public static async Task<string> Connect(string address, Int32 port, string pass)
         {
             Client = new TcpClient();
 
             try
             {
-                await Client.ConnectAsync(address, int.Parse(port));
+                await Client.ConnectAsync(address, port);
             }
-            catch
+            catch(Exception e)
             {
-                return "Rcon连接失败";
+                Task.Run(() => Logger.AppendToErrorLog($"连接时发生错误: {e.Message}"));
+                return "连接失败";
             }
+        
 
             if (!Client.Connected)
             {
                 Client.Dispose();
                 Client = null;
-                return "Rcon连接失败";
+                return "连接失败";
             }
 
             networkStream = Client.GetStream();
@@ -68,7 +84,7 @@ namespace Palworld_server_protector_DotNet
                     }
                     Client.Dispose();
                 }
-                return "认证失败";
+                return "密码认证失败";
             }
 
             var output = await SInfo();
@@ -78,30 +94,43 @@ namespace Palworld_server_protector_DotNet
 
         public static async Task<string> SInfo(bool keep = false)
         {
+
             if (Client != null)
             {
-                while (networkStream.DataAvailable) { _ = networkStream.ReadByte(); }
-                Pck pck = new Pck(0x1f, PacketType.EXECCOMMAND, Encoding.ASCII.GetBytes("info"));
-                networkStream.Write(pck.ToBytes(), 0, pck.Len);
-
-                int size = networkStream.ReadByte();
-                var data = new byte[size];
-                await networkStream.ReadAsync(data, 0, size);
-
-                if (!keep)
+                try
                 {
-                    return Encoding.UTF8.GetString(data.Skip(11).ToArray());
+                    while (networkStream.DataAvailable) { _ = networkStream.ReadByte(); }
+                    Pck pck = new Pck(0x1f, PacketType.EXECCOMMAND, Encoding.ASCII.GetBytes("info"));
+                    networkStream.Write(pck.ToBytes(), 0, pck.Len);
+
+                    int size = networkStream.ReadByte();
+                    var data = new byte[size];
+                    await networkStream.ReadAsync(data, 0, size);
+
+                    if (!keep)
+                    {
+                        return Encoding.UTF8.GetString(data.Skip(11).ToArray());
+                    }
+                }
+                catch
+                {
+                    return "获取失败";
                 }
             }
 
             return "";
         }
 
-        public static async Task<string> GetPlayers()
+        public static async Task<List<PalUserInfo>> GetPlayers(string address, Int32 port, string pass)
         {
-            if (Client != null)
+            var result = new List<PalUserInfo>();
+            var ensureConnectedResult = await EnsureConnected(address, port, pass);
+            if (ensureConnectedResult != "连接成功")
             {
-                try
+                return result; // 如果连接失败，返回失败消息
+            }
+
+            try
                 {
                     if (networkStream != null)
                     {
@@ -115,7 +144,26 @@ namespace Palworld_server_protector_DotNet
                         await networkStream.ReadAsync(data, 0, size);
 
                         string resstring = Encoding.UTF8.GetString(data.Skip(34).ToArray());
-                        string[] players = resstring.Split('\n');
+                    
+                    var lines = resstring.Split('\n');
+
+                    if (lines.Length < 1)
+                    {
+                        return result;
+                    }
+
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        var line = lines[i];
+
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            continue;
+                        }
+
+                        result.Add(new PalUserInfo(line));
+                    }
+            /*            string[] players = resstring.Split('\n');
 
                         string output = "";
 
@@ -124,23 +172,27 @@ namespace Palworld_server_protector_DotNet
                             output += $"{i}:" + players[i - 1] + Environment.NewLine;
                         }
 
-                        return resstring;
+                        return output;*/
                     }
-                    return "";
+                    return result;
                 }
-                catch (NullReferenceException)
+                catch (Exception ex)
                 {
-                    return "获取玩家失败";
+                    Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误: {ex.Message}"));
+                    return result;
                 }
-            }
-            return "获取玩家失败";
+            
+            return result;
         }
 
-        public static async Task<string> Broadcast(string text)
+        public static async Task<string> Broadcast(string address, Int32 port, string pass, string text)
         {
-            if (Client != null)
+            var ensureConnectedResult = await EnsureConnected(address, port, pass);
+            if (ensureConnectedResult != "连接成功")
             {
-                try
+                return ensureConnectedResult; // 如果连接失败，返回失败消息
+            }
+            try
                 {
                     if (networkStream != null)
                     {
@@ -159,12 +211,13 @@ namespace Palworld_server_protector_DotNet
                     }
                     return "";
                 }
-                catch (NullReferenceException)
+                catch (Exception ex)
                 {
-                    return "广播失败";
+                    Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误: {ex.Message}"));
+                    return "发送失败";
                 }
-            }
-            return "广播失败";
+            
+            return "发送失败";
         }
 
         public static async Task Reload()
@@ -175,10 +228,91 @@ namespace Palworld_server_protector_DotNet
             }
         }
 
-        /*public static async Task<string> ShutDown(string time, string text)
+        public static async Task<string> ShutDown(string address, Int32 port, string pass, string time, string text)
         {
+            var ensureConnectedResult = await EnsureConnected(address, port, pass);
+            if (ensureConnectedResult != "连接成功")
+            {
+                return ensureConnectedResult; // 如果连接失败，返回失败消息
+            }
 
-        }*/
+            try
+            {
+                    if (networkStream != null)
+                    {
+                        while (networkStream.DataAvailable) { _ = networkStream.ReadByte(); }
+                        Pck packet = new Pck(0x1f, PacketType.EXECCOMMAND, Encoding.ASCII.GetBytes("shutdown " + time + " " + text));
+                        networkStream.Write(packet.ToBytes(), 0, packet.Len);
+
+                        int size = networkStream.ReadByte();
+                        byte[] data = new byte[size];
+
+                        await networkStream.ReadAsync(data, 0, size);
+
+                        string resstring = Encoding.UTF8.GetString(data.Skip(11).ToArray());
+
+                        return resstring;
+                    }
+                    return "";
+                }
+                catch (Exception ex)
+                {
+                    Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误: {ex.Message}"));
+                    return "发送失败";
+                }
+            
+            return "发送失败";
+        }
+
+        public static async Task<string> SendCommand(string address, Int32 port, string pass,string command)
+        {
+            // 检查客户端是否已连接
+            var ensureConnectedResult = await EnsureConnected(address, port, pass);
+
+
+            try
+            {
+                // 清除可用数据，以避免读取残留数据
+                while (networkStream.DataAvailable) { _ = networkStream.ReadByte(); }
+
+                // 创建自定义命令的数据包
+                Pck packet = new Pck(0x1f, PacketType.EXECCOMMAND, Encoding.UTF8.GetBytes(command));
+                networkStream.Write(packet.ToBytes(), 0, packet.Len);
+
+                // 读取响应大小
+                int size = networkStream.ReadByte();
+                if (size == -1) // 检查是否成功读取到数据
+                {
+                    return "未能接收到命令响应"; // 未能接收到命令的响应
+                }
+                byte[] data = new byte[size];
+
+                // 异步读取服务器响应
+                await networkStream.ReadAsync(data, 0, size);
+
+                // 将响应转换为字符串并返回
+                string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
+                return responseString;
+            }
+            catch (Exception ex)
+            {
+                // 异常处理，返回错误信息
+                Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误: {ex.Message}"));
+                return $"发送命令时发生错误。"; // 发送命令时发生错误
+            }
+        }
+
+        // 这个函数尝试确保客户端连接到服务器。如果客户端未连接，它会尝试建立连接。
+        public static async Task<string> EnsureConnected(string address, Int32 port, string pass)
+        {
+            if (Client == null || !Client.Connected)
+            {
+                // 尝试连接
+                return await Connect(address, port, pass);
+            }
+            return "连接成功"; // 如果已连接，返回成功消息
+        }
+
 
         [Serializable]
         public class Pck

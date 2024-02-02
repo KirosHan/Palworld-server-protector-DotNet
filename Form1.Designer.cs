@@ -111,6 +111,7 @@
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
             tabPage3 = new TabPage();
+            labelForservername = new Label();
             tabPage4 = new TabPage();
             groupBox4 = new GroupBox();
             groupBox2 = new GroupBox();
@@ -740,7 +741,7 @@
             // versionLabel
             // 
             versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(153, 324);
+            versionLabel.Location = new Point(20, 300);
             versionLabel.Margin = new Padding(2, 0, 2, 0);
             versionLabel.Name = "versionLabel";
             versionLabel.Size = new Size(104, 17);
@@ -749,10 +750,10 @@
             // 
             // button4
             // 
-            button4.Location = new Point(20, 322);
+            button4.Location = new Point(20, 340);
             button4.Margin = new Padding(2);
             button4.Name = "button4";
-            button4.Size = new Size(115, 23);
+            button4.Size = new Size(104, 23);
             button4.TabIndex = 20;
             button4.Text = "获取服本号";
             button4.UseVisualStyleBackColor = true;
@@ -760,10 +761,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(20, 286);
+            button3.Location = new Point(260, 340);
             button3.Margin = new Padding(2);
             button3.Name = "button3";
-            button3.Size = new Size(115, 23);
+            button3.Size = new Size(104, 23);
             button3.TabIndex = 20;
             button3.Text = "10s安全关服";
             button3.UseVisualStyleBackColor = true;
@@ -771,10 +772,10 @@
             // 
             // button2
             // 
-            button2.Location = new Point(20, 251);
+            button2.Location = new Point(140, 340);
             button2.Margin = new Padding(2);
             button2.Name = "button2";
-            button2.Size = new Size(115, 23);
+            button2.Size = new Size(104, 23);
             button2.TabIndex = 19;
             button2.Text = "服务端存档";
             button2.UseVisualStyleBackColor = true;
@@ -782,7 +783,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(302, 216);
+            button1.Location = new Point(302, 217);
             button1.Margin = new Padding(2);
             button1.Name = "button1";
             button1.Size = new Size(71, 23);
@@ -794,7 +795,7 @@
             // textBox1
             // 
             textBox1.BorderStyle = BorderStyle.FixedSingle;
-            textBox1.Location = new Point(66, 216);
+            textBox1.Location = new Point(65, 217);
             textBox1.Margin = new Padding(2);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(233, 23);
@@ -804,7 +805,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(22, 215);
+            label2.Location = new Point(20, 220);
             label2.Margin = new Padding(2, 0, 2, 0);
             label2.Name = "label2";
             label2.Size = new Size(44, 17);
@@ -1038,6 +1039,7 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(labelForservername);
             tabPage3.Controls.Add(UIDBox);
             tabPage3.Controls.Add(playersView);
             tabPage3.Controls.Add(label5);
@@ -1059,6 +1061,15 @@
             tabPage3.TabIndex = 2;
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // labelForservername
+            // 
+            labelForservername.AutoSize = true;
+            labelForservername.Location = new Point(20, 260);
+            labelForservername.Name = "labelForservername";
+            labelForservername.Size = new Size(104, 17);
+            labelForservername.TabIndex = 26;
+            labelForservername.Text = "服务器名称：未知";
             // 
             // tabPage4
             // 
@@ -1275,5 +1286,6 @@
         private CheckBox checkBox_web_getplayers;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem toolStripMenuItem1;
+        private Label labelForservername;
     }
 }

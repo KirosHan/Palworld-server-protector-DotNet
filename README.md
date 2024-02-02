@@ -32,9 +32,12 @@
 ![预览1](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_1.png)
 ![预览2](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_2.png)
 ## 直接下载（懒人专属）
-更新时间：2024-02-01
+更新时间：2024-02-03
 
-Latest版本：V2.5.5(2)
+Latest版本：V2.6.1(1)
+
+* 重构了Rcon模块
+* 更多采用异步方法，避免阻塞UI线程造成界面卡顿
 
 =-=-V2.5.3(2) -=-=
 
@@ -80,6 +83,8 @@ Latest版本：V2.5.5(2)
 ## 编译运行
 Visual studio 2022
 
+## Rcon
+本项目Rcon功能模块改编自https://github.com/KTTI465/PalWorld-RCON-GUI
 
 ## 运行逻辑
 

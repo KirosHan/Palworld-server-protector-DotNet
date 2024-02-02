@@ -30,7 +30,7 @@ namespace Palworld_server_protector_DotNet
         private string errorLogname = $"error_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log";
         private string projectUrl = $"https://github.com/KirosHan/Palworld-server-protector-DotNet";
         private Int32 playersTimercounter = 0;
-        private Int32 playersTimerthreshold = 600;//每小时触发600次
+        private Int32 playersTimerthreshold = 600;//每半小时触发600次
         private Int32 getversionErrorCounter = 0;
         private string versionChcekUrl = $"http://127.0.0.1/version?v=";
         private const string ConfigFilePath = "config.ini";
@@ -72,7 +72,7 @@ namespace Palworld_server_protector_DotNet
 
 
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private async void Timer_Tick(object sender, EventArgs e)
         {
             // 获取系统内存使用百分比
             var memoryUsage = Math.Round(GetSystemMemoryUsagePercentage(), 2);
@@ -99,12 +99,12 @@ namespace Palworld_server_protector_DotNet
                         {
                             OutputMessageAsync($"内存达到警戒阈值！！！");
                             // 使用rcon向服务端发送指令
-                            RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
-                            var info = RconUtils.SendMsg("save");
+
+                            var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "save");
 
                             OutputMessageAsync($"{info}");
-                            
-                            var result = RconUtils.SendMsg($"Shutdown {rebootSeconds} The_server_will_restart_in_{rebootSeconds}_seconds.");
+
+                            var result = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"Shutdown {rebootSeconds} The_server_will_restart_in_{rebootSeconds}_seconds.");
 
                             OutputMessageAsync($"{result}");
                             OutputMessageAsync($"紧急存档中...");
@@ -119,7 +119,9 @@ namespace Palworld_server_protector_DotNet
                     catch (Exception ex)
                     {
                         OutputMessageAsync($"发送指令失败，请检查配置。");
-                        AppendToErrorLog($"发送指令失败，请检查配置。{ex.Message}");
+                        Task.Run(() => Logger.AppendToErrorLog($"发送指令失败，请检查配置。{ex.Message}"));
+           
+
                         if (checkbox_web_reboot.Checked == true) { SendWebhookAsync("Rcon失败", $"发送关服指令失败，请及时检查。"); }
 
                         ShowNotification($"发送关服指令失败，请及时检查。");
@@ -181,7 +183,7 @@ namespace Palworld_server_protector_DotNet
                     catch (Exception ex)
                     {
                         OutputMessageAsync($"服务端启动失败。");
-                        AppendToErrorLog($"服务端启动失败：{ex.Message}");
+                        Task.Run(() => Logger.AppendToErrorLog($"服务端启动失败：{ex.Message}"));
                         if (checkBox_web_startprocess.Checked) { SendWebhookAsync("服务端启动失败", $"服务端启动失败，请及时检查。"); }
                         ShowNotification($"服务端启动失败，请及时检查。");
                     }
@@ -194,7 +196,7 @@ namespace Palworld_server_protector_DotNet
 
         }
 
-        private void getplayerTimer_Tick(object sender, EventArgs e) //获取在线玩家
+        private async void getplayerTimer_Tick(object sender, EventArgs e) //获取在线玩家
         {
             try
             {
@@ -203,8 +205,8 @@ namespace Palworld_server_protector_DotNet
                     return;
                 }
 
-                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
-                var players = RconUtils.ShowPlayers();
+                //var players = RconUtils.ShowPlayers(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
+                var players = await Rcon.GetPlayers(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
                 playersCounterLabel.Text = $"当前在线：{players.Count}人";
                 // Clear the playersView
@@ -229,61 +231,70 @@ namespace Palworld_server_protector_DotNet
             }
             catch (Exception ex)
             {
-                AppendToErrorLog($"获取在线玩家失败：{ex.Message}");
+                Task.Run(() => Logger.AppendToErrorLog($"获取在线玩家失败：{ex.Message}"));
             }
         }
-        private void CopyGameDataToBackupPath()
+        private async void CopyGameDataToBackupPath()
         {
-            try
+            await Task.Run(() =>
             {
-                if (backupPath == "")
+                try
                 {
-                    OutputMessageAsync($"未设置备份存放目录。无法备份。");
-                    return;
-                }
-                string backupFolderName = $"SaveGames-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.zip";
-                string backupFilePath = Path.Combine(backupPath, backupFolderName);
+                    if (backupPath == "")
+                    {
+                        // 注意：从后台线程更新UI时必须使用Invoke
+                        Invoke(new Action(() => OutputMessageAsync($"未设置备份存放目录。无法备份。")));
+                        return;
+                    }
+                    string backupFolderName = $"SaveGames-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.zip";
+                    string backupFilePath = Path.Combine(backupPath, backupFolderName);
 
-                if (!Directory.Exists(gamedataPath))
+                    if (!Directory.Exists(gamedataPath))
+                    {
+                        Invoke(new Action(() => OutputMessageAsync($"游戏存档路径不存在：{gamedataPath}")));
+                        return;
+                    }
+
+                    if (!Directory.Exists(backupPath))
+                    {
+                        Invoke(new Action(() => OutputMessageAsync($"存档备份路径不存在：{backupPath}")));
+                        return;
+                    }
+
+                    string tempGameDataPath = Path.Combine(Path.GetTempPath(), "TempGameData");
+                    Directory.CreateDirectory(tempGameDataPath);
+                    string tempGameDataCopyPath = Path.Combine(tempGameDataPath, "GameData");
+
+                    // Copy the game data to the temporary directory
+                    DirectoryCopy(gamedataPath, tempGameDataCopyPath, true);
+
+                    // Create the backup file from the temporary game data directory
+                    ZipFile.CreateFromDirectory(tempGameDataCopyPath, backupFilePath);
+
+                    // Delete the temporary game data directory
+                    Directory.Delete(tempGameDataPath, true);
+
+                    Invoke(new Action(() => OutputMessageAsync($"游戏存档已成功备份")));
+
+                    
+                    if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份", $"游戏存档已成功备份。"); }
+                    ShowNotification($"游戏存档已成功备份。");
+                }
+                catch (Exception ex)
                 {
-                    OutputMessageAsync($"游戏存档路径不存在：{gamedataPath}");
-                    return;
+                    Invoke(new Action(() => OutputMessageAsync($"备份存档失败")));
+
+                    Task.Run(() => Logger.AppendToErrorLog($"备份存档失败：{ex.Message}"));
+                    if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。"); }
+
+                    ShowNotification($"存档备份失败，请及时检查。");
                 }
 
-                if (!Directory.Exists(backupPath))
-                {
-                    OutputMessageAsync($"存档备份路径不存在：{backupPath}");
-                    return;
-                }
+            });
 
-                string tempGameDataPath = Path.Combine(Path.GetTempPath(), "TempGameData");
-                Directory.CreateDirectory(tempGameDataPath);
-                string tempGameDataCopyPath = Path.Combine(tempGameDataPath, "GameData");
-
-                // Copy the game data to the temporary directory
-                DirectoryCopy(gamedataPath, tempGameDataCopyPath, true);
-
-                // Create the backup file from the temporary game data directory
-                ZipFile.CreateFromDirectory(tempGameDataCopyPath, backupFilePath);
-
-                // Delete the temporary game data directory
-                Directory.Delete(tempGameDataPath, true);
-
-                OutputMessageAsync($"游戏存档已成功备份");
-                if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份", $"游戏存档已成功备份。"); }
-                ShowNotification($"游戏存档已成功备份。");
-            }
-            catch (Exception ex)
-            {
-                OutputMessageAsync($"备份存档失败");
-                AppendToErrorLog($"备份存档失败：{ex.Message}");
-                if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。"); }
-
-                ShowNotification($"存档备份失败，请及时检查。");
-            }
         }
 
-        private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+    private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
             DirectoryInfo[] dirs = dir.GetDirectories();
@@ -292,7 +303,7 @@ namespace Palworld_server_protector_DotNet
             if (!dir.Exists)
             {
                 OutputMessageAsync($"游戏存档路径不存在：{sourceDirName}");
-                AppendToErrorLog($"游戏存档路径不存在：{sourceDirName}");
+                Task.Run(() => Logger.AppendToErrorLog($"游戏存档路径不存在：{sourceDirName}"));
                 ShowNotification($"游戏存档路径不存在：{sourceDirName}");
             }
 
@@ -338,8 +349,8 @@ namespace Palworld_server_protector_DotNet
 
             return memoryUsage * 100;
         }
- 
-      
+
+
 
 
         private bool IsProcessRunning(string processPath)
@@ -396,7 +407,7 @@ namespace Palworld_server_protector_DotNet
             checkVersion(version);
         }
 
-            private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
 
             playersView.View = View.Details;
@@ -420,21 +431,21 @@ namespace Palworld_server_protector_DotNet
             int endIndex = buildVersion.IndexOf('+');
             string version = buildVersion.Substring(0, endIndex); //去掉构建标识符
             verisionLabel.Text = $"当前版本：{version}";
-            checkVersion(version);
+            checkVersion(version) ;
             OutputMessageAsync($"当前构建版本号：{version}");
 
-    
+
 
 
         }
-        private void checkVersion(string myversion)
+        private async void checkVersion(string myversion)
         {
             try
             {
 
                 using (WebClient client = new WebClient())
                 {
-                    string json = client.DownloadString(versionChcekUrl+myversion);
+                    string json = await client.DownloadStringTaskAsync(new Uri(versionChcekUrl + myversion));
                     dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
                     string latestVersion = data[0].version;
                     string notice = data[0].notice;
@@ -442,7 +453,7 @@ namespace Palworld_server_protector_DotNet
                     if (notice != "")
                     {
                         OutputMessageAsync($"{notice}");
-                        ShowNotification($"{notice}",true);
+                        ShowNotification($"{notice}", true);
                     }
                     if (news != "")
                     {
@@ -452,9 +463,13 @@ namespace Palworld_server_protector_DotNet
                     if (IsVersionNewer(latestVersion, myversion))
                     {
 
-                        linkLabel2.Text = $"点击下载最新版本(v{latestVersion})";
-                        projectUrl = data[0].url;
-                        linkLabel2.Visible = true;
+                        this.Invoke(new Action(() =>
+                        {
+                            linkLabel2.Text = $"点击下载最新版本(v{latestVersion})";
+                            projectUrl = data[0].url;
+                            linkLabel2.Visible = true;
+                        }));
+                        
                         OutputMessageAsync($"【更新】新版本v{latestVersion}已经发布，请点击最下方链接前往下载更新。");
                     }
 
@@ -463,7 +478,8 @@ namespace Palworld_server_protector_DotNet
             }
             catch
             {
-                if (getversionErrorCounter == 0) {
+                if (getversionErrorCounter == 0)
+                {
                     getversionTimer.Start();
                 }
                 getversionErrorCounter++;
@@ -471,7 +487,7 @@ namespace Palworld_server_protector_DotNet
                 {
                     getversionTimer.Stop();
                 }
-                
+
             }
 
         }
@@ -690,7 +706,7 @@ namespace Palworld_server_protector_DotNet
             {
                 OutputMessageAsync($"读取配置文件失败。");
                 ShowNotification($"读取配置文件失败。");
-                AppendToErrorLog($"读取配置文件失败：{ex.Message}");
+                Task.Run(() => Logger.AppendToErrorLog($"读取配置文件失败：{ex.Message}"));
             }
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -700,7 +716,7 @@ namespace Palworld_server_protector_DotNet
             {
                 e.Cancel = true; // 取消关闭事件
                 this.Hide(); // 隐藏窗体
-                ShowNotification($"程序已最小化到托盘。",true);
+                ShowNotification($"程序已最小化到托盘。", true);
                 notifyIcon1.Visible = true; // 显示托盘图标
             }
         }
@@ -745,7 +761,7 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"保存配置文件失败。");
-                AppendToErrorLog($"保存配置文件失败：{ex.Message}");
+                Task.Run(() => Logger.AppendToErrorLog($"保存配置文件失败：{ex.Message}"));
 
             }
         }
@@ -917,25 +933,22 @@ namespace Palworld_server_protector_DotNet
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
 
-            RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
-
-
-            var info = RconUtils.SendMsg("save");
+            var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "save");
             OutputMessageAsync($"{info}");
 
 
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
             try
             {
-                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
-                var result = RconUtils.SendMsg($"Shutdown 10 The_server_will_restart_in_10econds.");
+
+                var result = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"Shutdown 10 The_server_will_restart_in_10econds.");
 
                 OutputMessageAsync($"{result}");
 
@@ -943,51 +956,54 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"关服指令发送失败。");
-                AppendToErrorLog($"关服指令发送失败：{ex.Message}");
+                Task.Run(() => Logger.AppendToErrorLog($"关服指令发送失败：{ex.Message}"));
             }
 
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private async void button4_Click(object sender, EventArgs e)
         {
             try
             {
-                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
-                var info = RconUtils.SendMsg("info");
+
+                var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "info");
 
                 int startIndex = info.IndexOf("[") + 1;
                 int endIndex = info.IndexOf("]");
                 string version = info.Substring(startIndex, endIndex - startIndex);
+                int lastSpaceIndex = info.LastIndexOf(" ");
+                string serverName = info.Substring(lastSpaceIndex + 1);
+                labelForservername.Text = $"服务器名称：{serverName}";
                 versionLabel.Text = $"服务端版本：{version}";
                 OutputMessageAsync($"当前服务端版本：{version}");
 
             }
             catch (Exception ex)
             {
-                OutputMessageAsync($"info指令发送失败。");
-                AppendToErrorLog($"info指令发送失败：{ex.Message}");
+                OutputMessageAsync($"发送命令时发生错误。");
+                Task.Run(() => Logger.AppendToErrorLog($"{ex.Message}"));
             }
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
+
 
                 textBox1.Text = textBox1.Text.Replace(" ", "_");
-                var info = RconUtils.SendMsg($"broadcast {textBox1.Text.Trim()}");
+                var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"broadcast {textBox1.Text.Trim()}");
 
-                OutputMessageAsync($"已发送：{info}");
+                OutputMessageAsync($"{info}");
 
             }
 
             catch (Exception ex)
             {
                 OutputMessageAsync($"broadcast指令发送失败。");
-                AppendToErrorLog($"broadcast指令发送失败：{ex.Message}");
+                Task.Run(() => Logger.AppendToErrorLog($"broadcast指令发送失败：{ex.Message}"));
             }
         }
 
@@ -1119,13 +1135,14 @@ namespace Palworld_server_protector_DotNet
             }
         }
 
-        private void kickbutton_Click(object sender, EventArgs e)
+        private async void kickbutton_Click(object sender, EventArgs e)
         {
             try
             {
-                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
-                var info = RconUtils.SendMsg($"KickPlayer {UIDBox.Text.Trim()}");
+
+                //var info = RconUtils.SendMsg(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"KickPlayer {UIDBox.Text.Trim()}");
+                var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"KickPlayer {UIDBox.Text.Trim()}");
 
                 OutputMessageAsync($"{info}");
 
@@ -1134,17 +1151,18 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"Kickplayer指令发送失败。");
-                AppendToErrorLog($"Kickplayer指令发送失败：{ex.Message}");
+                Task.Run(() => Logger.AppendToErrorLog($"Kickplayer指令发送失败：{ex.Message}"));
             }
         }
 
-        private void banbutton_Click(object sender, EventArgs e)
+        private async void banbutton_Click(object sender, EventArgs e)
         {
             try
             {
-                RconUtils.TestConnection(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text);
 
-                var info = RconUtils.SendMsg($"BanPlayer {UIDBox.Text.Trim()}");
+
+               // var info = RconUtils.SendMsg(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"BanPlayer {UIDBox.Text.Trim()}");
+                var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"BanPlayer {UIDBox.Text.Trim()}");
 
                 OutputMessageAsync($"{info}");
 
@@ -1153,7 +1171,7 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"BanPlayer指令发送失败。{ex.Message}");
-                AppendToErrorLog($"BanPlayer指令发送失败。");
+                Task.Run(() => Logger.AppendToErrorLog($"BanPlayer指令发送失败。"));
             }
         }
         private void AppendToErrorLog(string content)
@@ -1224,7 +1242,7 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"Webhook发送失败。");
-                AppendToErrorLog($"Webhook发送失败：{ex.Message}");
+                Task.Run(() => Logger.AppendToErrorLog($"Webhook发送失败：{ex.Message}"));
             }
 
         }
@@ -1251,11 +1269,11 @@ namespace Palworld_server_protector_DotNet
         {
             this.Show(); // 显示窗体
             this.WindowState = FormWindowState.Normal;
-      
+
         }
 
 
-        private void ShowNotification(string message,Boolean forced = false)
+        private void ShowNotification(string message, Boolean forced = false)
         {
             if (!forced)
             {
@@ -1265,11 +1283,12 @@ namespace Palworld_server_protector_DotNet
                     notifyIcon1.ShowBalloonTip(2000);
                 }
             }
-            else {
+            else
+            {
                 notifyIcon1.BalloonTipText = message;
                 notifyIcon1.ShowBalloonTip(2000);
             }
-            
+
 
         }
 
@@ -1287,114 +1306,9 @@ namespace Palworld_server_protector_DotNet
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             SaveConfig();
-   
+
             Application.Exit();
         }
 
-       
-
-   
-
-        /**  HTTP功能已弃用
-        private Thread httpThread;
-        private bool isHttpServerRunning;
-
-        private void checkBox_host_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox_host.Checked)
-            {
-                StartHttpServer();
-            }
-            else
-            {
-                StopHttpServer();
-            }
-        }
-
-        private void StartHttpServer()
-        {
-            if (!isHttpServerRunning)
-            {
-                httpThread = new Thread(HttpServerThread);
-                httpThread.Start();
-                isHttpServerRunning = true;
-            }
-        }
-
-        private void StopHttpServer()
-        {
-            if (isHttpServerRunning)
-            {
-                httpThread.Abort();
-                isHttpServerRunning = false;
-            }
-        }
-
-        private void HttpServerThread()
-        {
-            string folderPath = Path.Combine(Application.StartupPath, "list");
-            string filePath = Path.Combine(folderPath, "banlist.txt");
-          
-
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            if (!System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Create(filePath).Close();
-            }
-            using (HttpListener listener = new HttpListener())
-            {
-                listener.Prefixes.Add("http://127.0.0.1:8080/");
-                listener.Start();
-
-                while (true)
-                {
-                    try
-                    {
-                        HttpListenerContext context = listener.GetContext();
-                        HttpListenerRequest request = context.Request;
-                        HttpListenerResponse response = context.Response;
-
-                        if (request.Url.LocalPath == "/banlist.txt")
-                        {
-                            if (System.IO.File.Exists(filePath))
-                            {
-                                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
-                                //response.ContentType = "text/plain"; 
-                                response.ContentType = "text/html; charset = UTF - 8";
-
-                                response.ContentLength64 = fileBytes.Length;
-                                response.OutputStream.Write(fileBytes, 0, fileBytes.Length);
-                                response.OutputStream.Close();
-                            }
-                            else
-                            {
-                                response.StatusCode = (int)HttpStatusCode.NotFound;
-                                response.Close();
-                            }
-                        }
-                        else
-                        {
-                            response.StatusCode = (int)HttpStatusCode.NotFound;
-                            response.Close();
-                        }
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle any exceptions here
-                    }
-                }
-
-                listener.Stop();
-            }
-        }
-      **/
     }
 }
