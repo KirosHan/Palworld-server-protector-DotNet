@@ -125,6 +125,7 @@ namespace Palworld_server_protector_DotNet
         {
             var result = new List<PalUserInfo>();
             var ensureConnectedResult = await EnsureConnected(address, port, pass);
+            string resstring = "";
             if (ensureConnectedResult != "连接成功")
             {
                 return result; // 如果连接失败，返回失败消息
@@ -143,8 +144,8 @@ namespace Palworld_server_protector_DotNet
 
                         await networkStream.ReadAsync(data, 0, size);
 
-                        string resstring = Encoding.UTF8.GetString(data.Skip(34).ToArray());
-                    
+                        resstring = Encoding.UTF8.GetString(data.Skip(34).ToArray());
+
                     var lines = resstring.Split('\n');
 
                     if (lines.Length < 1)
@@ -152,9 +153,9 @@ namespace Palworld_server_protector_DotNet
                         return result;
                     }
 
-                    for (int i = 0; i < lines.Length; i++)
+                    for (int i = 1; i <= lines.Length; i++)
                     {
-                        var line = lines[i];
+                        var line = lines[i-1];
 
                         if (string.IsNullOrEmpty(line))
                         {
@@ -178,7 +179,7 @@ namespace Palworld_server_protector_DotNet
                 }
                 catch (Exception ex)
                 {
-                    Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误: {ex.Message}"));
+                    Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x66>>>发送命令时发生错误>>>返回值为[{resstring}]>>>错误信息：{ex.Message}"));
                     return result;
                 }
             
@@ -213,7 +214,7 @@ namespace Palworld_server_protector_DotNet
                 }
                 catch (Exception ex)
                 {
-                    Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误: {ex.Message}"));
+                    Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误：{ex.Message}"));
                     return "发送失败";
                 }
             
@@ -297,7 +298,8 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 // 异常处理，返回错误信息
-                Task.Run(() => Logger.AppendToErrorLog($"发送命令时发生错误: {ex.Message}"));
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x65>>>发送命令时发生错误>>>错误信息：{ex.Message}"));
+
                 return $"发送命令时发生错误。"; // 发送命令时发生错误
             }
         }

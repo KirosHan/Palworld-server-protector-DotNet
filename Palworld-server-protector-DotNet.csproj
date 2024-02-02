@@ -8,11 +8,11 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyVersion>2.6.1.1</AssemblyVersion>
+    <AssemblyVersion>2.6.2.1</AssemblyVersion>
     <Copyright>Kiros @ONBETA</Copyright>
-    <Version>$(VersionPrefix)2.6.1.1</Version>
+    <Version>$(VersionPrefix)2.6.2.1</Version>
     <Company>$(Authors)@ONBETA</Company>
-    <FileVersion>2.6.1.1</FileVersion>
+    <FileVersion>2.6.2.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

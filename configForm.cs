@@ -72,6 +72,8 @@ namespace Palworld_server_protector_DotNet
             {
                 // Handle the exception or display an error message
                 MessageBox.Show($"读取文件失败: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0xB1>>>服务端配置文件读取错误>>>错误信息：{ex.Message}"));
+
             }
             return content;
         }
@@ -102,6 +104,8 @@ namespace Palworld_server_protector_DotNet
             catch (IOException ex)
             {
                 MessageBox.Show($"配置文件保存失败: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0xB2>>>服务端配置文件保存错误>>>错误信息：{ex.Message}"));
+
             }
         }
 

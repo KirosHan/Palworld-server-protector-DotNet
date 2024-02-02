@@ -32,7 +32,7 @@ namespace Palworld_server_protector_DotNet
         private Int32 playersTimercounter = 0;
         private Int32 playersTimerthreshold = 600;//每半小时触发600次
         private Int32 getversionErrorCounter = 0;
-        private string versionChcekUrl = $"http://127.0.0.1/version?v=";
+        private string versionChcekUrl = $"http://127.0.0.1:4000/version?v=";
         private const string ConfigFilePath = "config.ini";
 
         [DllImport("kernel32")]
@@ -119,8 +119,10 @@ namespace Palworld_server_protector_DotNet
                     catch (Exception ex)
                     {
                         OutputMessageAsync($"发送指令失败，请检查配置。");
-                        Task.Run(() => Logger.AppendToErrorLog($"发送指令失败，请检查配置。{ex.Message}"));
-           
+                     
+                        Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+
+
 
                         if (checkbox_web_reboot.Checked == true) { SendWebhookAsync("Rcon失败", $"发送关服指令失败，请及时检查。"); }
 
@@ -183,7 +185,8 @@ namespace Palworld_server_protector_DotNet
                     catch (Exception ex)
                     {
                         OutputMessageAsync($"服务端启动失败。");
-                        Task.Run(() => Logger.AppendToErrorLog($"服务端启动失败：{ex.Message}"));
+                        Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x71>>>服务端启动错误>>>错误信息：{ex.Message}"));
+
                         if (checkBox_web_startprocess.Checked) { SendWebhookAsync("服务端启动失败", $"服务端启动失败，请及时检查。"); }
                         ShowNotification($"服务端启动失败，请及时检查。");
                     }
@@ -231,7 +234,8 @@ namespace Palworld_server_protector_DotNet
             }
             catch (Exception ex)
             {
-                Task.Run(() => Logger.AppendToErrorLog($"获取在线玩家失败：{ex.Message}"));
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x67>>>获取在线玩家失败>>>错误信息：{ex.Message}"));
+
             }
         }
         private async void CopyGameDataToBackupPath()
@@ -284,7 +288,9 @@ namespace Palworld_server_protector_DotNet
                 {
                     Invoke(new Action(() => OutputMessageAsync($"备份存档失败")));
 
-                    Task.Run(() => Logger.AppendToErrorLog($"备份存档失败：{ex.Message}"));
+              
+                    Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x92>>>备份存档错误>>>错误信息：{ex.Message}"));
+
                     if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。"); }
 
                     ShowNotification($"存档备份失败，请及时检查。");
@@ -303,7 +309,9 @@ namespace Palworld_server_protector_DotNet
             if (!dir.Exists)
             {
                 OutputMessageAsync($"游戏存档路径不存在：{sourceDirName}");
-                Task.Run(() => Logger.AppendToErrorLog($"游戏存档路径不存在：{sourceDirName}"));
+              
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x91>>>游戏存档路径不存在>>>错误信息：{sourceDirName}"));
+
                 ShowNotification($"游戏存档路径不存在：{sourceDirName}");
             }
 
@@ -706,7 +714,9 @@ namespace Palworld_server_protector_DotNet
             {
                 OutputMessageAsync($"读取配置文件失败。");
                 ShowNotification($"读取配置文件失败。");
-                Task.Run(() => Logger.AppendToErrorLog($"读取配置文件失败：{ex.Message}"));
+                
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0xA1>>>读取配置文件错误>>>错误信息：{ex.Message}"));
+
             }
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -761,7 +771,9 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"保存配置文件失败。");
-                Task.Run(() => Logger.AppendToErrorLog($"保存配置文件失败：{ex.Message}"));
+              
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0xA2>>>保存配置文件错误>>>错误信息：{ex.Message}"));
+
 
             }
         }
@@ -956,18 +968,20 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"关服指令发送失败。");
-                Task.Run(() => Logger.AppendToErrorLog($"关服指令发送失败：{ex.Message}"));
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+
             }
 
         }
 
         private async void button4_Click(object sender, EventArgs e)
         {
+            var info = "";
             try
             {
 
 
-                var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "info");
+                info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "info");
 
                 int startIndex = info.IndexOf("[") + 1;
                 int endIndex = info.IndexOf("]");
@@ -982,7 +996,9 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"发送命令时发生错误。");
-                Task.Run(() => Logger.AppendToErrorLog($"{ex.Message}"));
+              
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x68>>>处理服务端版本信息错误>>>返回值为[{info}]>>>错误信息：{ex.Message}"));
+
             }
 
         }
@@ -1003,7 +1019,8 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"broadcast指令发送失败。");
-                Task.Run(() => Logger.AppendToErrorLog($"broadcast指令发送失败：{ex.Message}"));
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+
             }
         }
 
@@ -1151,7 +1168,8 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"Kickplayer指令发送失败。");
-                Task.Run(() => Logger.AppendToErrorLog($"Kickplayer指令发送失败：{ex.Message}"));
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+
             }
         }
 
@@ -1171,25 +1189,11 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"BanPlayer指令发送失败。{ex.Message}");
-                Task.Run(() => Logger.AppendToErrorLog($"BanPlayer指令发送失败。"));
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+
             }
         }
-        private void AppendToErrorLog(string content)
-        {
-            string logFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "log");
-            string errorLogPath = Path.Combine(logFolderPath, errorLogname);
-
-            if (!Directory.Exists(logFolderPath))
-            {
-                Directory.CreateDirectory(logFolderPath);
-            }
-
-            using (StreamWriter writer = System.IO.File.AppendText(errorLogPath))
-            {
-                writer.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {content}");
-            }
-        }
-
+    
         private configForm configForm; // Declare a field to hold the instance of ConfigForm
 
         private void settingButton_Click(object sender, EventArgs e)
@@ -1242,7 +1246,9 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"Webhook发送失败。");
-                Task.Run(() => Logger.AppendToErrorLog($"Webhook发送失败：{ex.Message}"));
+
+                Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x71>>>Webhook发送错误>>>相关参数：title=[{title}],message=[{message}]>>>错误信息：{ex.Message}"));
+
             }
 
         }
