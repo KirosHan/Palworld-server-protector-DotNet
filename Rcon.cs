@@ -7,20 +7,35 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Security.Permissions;
 using System.Net;
+using System.Security.Cryptography;
+using System.Xml.Linq;
 namespace Palworld_server_protector_DotNet
 {
     public class PalUserInfo
     {
-        public string name;
-        public string uid;
-        public string steam_id;
+        public string Name { get; set; }
+        public string Uid { get; set; }
+        public string SteamId { get; set; }
 
         public PalUserInfo(string row)
         {
             var splits = row.Split(',');
-            name = splits[0];
-            uid = splits[1];
-            steam_id = splits[2];
+            Name = splits[0];
+            Uid = splits[1];
+            SteamId = splits[2];
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PalUserInfo info &&
+                   Name == info.Name &&
+                   Uid == info.Uid &&
+                   SteamId == info.SteamId;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Uid, SteamId);
         }
     }
     internal class Rcon

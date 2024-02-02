@@ -12,6 +12,7 @@ namespace Palworld_server_protector_DotNet
     using System.Text;
     using static System.Windows.Forms.LinkLabel;
     using System.Net;
+    using System.Globalization;
 
     public partial class Form1 : Form
     {
@@ -32,8 +33,12 @@ namespace Palworld_server_protector_DotNet
         private Int32 playersTimercounter = 0;
         private Int32 playersTimerthreshold = 600;//每半小时触发600次
         private Int32 getversionErrorCounter = 0;
-        private string versionChcekUrl = $"http://127.0.0.1:4000/version?v=";
+        private string versionChcekUrl = $"http://127.0.0.1/version?v=";
         private const string ConfigFilePath = "config.ini";
+        private Dictionary<string, DateTime> playerNotificationTimes = new Dictionary<string, DateTime>();//记录玩家触发通知时间
+
+
+        private List<PalUserInfo> lastPlayerlist = new List<PalUserInfo>();
 
         [DllImport("kernel32")]
         private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
@@ -219,10 +224,61 @@ namespace Palworld_server_protector_DotNet
                 // Add the players information to the playersView
                 foreach (var player in players)
                 {
-                    var item = new ListViewItem(new[] { player.name, player.uid, player.steam_id });
+                    var item = new ListViewItem(new[] { player.Name, player.Uid, player.SteamId });
                     playersView.Items.Add(item);
-                    playerList = playerList + player.name + ",";
+                    playerList = playerList + player.Name + ",";
                 }
+
+                DateTime now = DateTime.Now;
+                List<string> toNotifyNewPlayers = new List<string>();
+                List<string> toNotifyOffPlayers = new List<string>();
+
+
+                var newPlayerlist = "";
+               
+              
+                List<PalUserInfo> newPlayers = players.Except(lastPlayerlist).ToList();
+                foreach (var p in newPlayers)
+                {
+                    if (!playerNotificationTimes.ContainsKey(p.Name) || (now - playerNotificationTimes[p.Name]).TotalSeconds >= 5)
+                    {
+                        toNotifyNewPlayers.Add(p.Name);
+                        playerNotificationTimes[p.Name] = now; 
+                    }
+                }
+
+
+                var offPlayerlist = "";
+                List<PalUserInfo> offPlayers = lastPlayerlist.Except(players).ToList();
+                foreach (var p in offPlayers)
+                {
+                    if (!playerNotificationTimes.ContainsKey(p.Name) || (now - playerNotificationTimes[p.Name]).TotalSeconds >= 5)
+                    {
+                        toNotifyOffPlayers.Add(p.Name);
+                        playerNotificationTimes[p.Name] = now; 
+                    }
+                }
+                newPlayerlist = string.Join(",", toNotifyNewPlayers.Select(p => $"[{p}]"));
+                offPlayerlist = string.Join(",", toNotifyOffPlayers.Select(p => $"[{p}]"));
+                /*f发不了中文，qnmd
+                var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"Broadcast {newPlayerlist.Replace(" ", "_")}_join_the_game.");
+                OutputMessageAsync($"{info}");
+                */
+                if (checkBox_playerStatus.Checked == true) {
+                    if (newPlayerlist != "") {
+                        OutputMessageAsync($"{newPlayerlist.TrimEnd(',')}加入了游戏。");
+                        SendWebhookAsync("玩家加入游戏", $"{newPlayerlist.TrimEnd(',')}加入了游戏。");
+                    }
+                    if (offPlayerlist != "") { 
+                        OutputMessageAsync($"{offPlayerlist.TrimEnd(',')}离开了游戏。");
+                        SendWebhookAsync("玩家离开游戏", $"{offPlayerlist.TrimEnd(',')}离开了游戏。");
+                    }
+                    
+                }
+
+
+                lastPlayerlist = players;
+
                 playersTimercounter += 1;
                 if (playersTimercounter >= playersTimerthreshold)
                 {
@@ -458,6 +514,8 @@ namespace Palworld_server_protector_DotNet
                     string latestVersion = data[0].version;
                     string notice = data[0].notice;
                     string news = data[0].news;
+                    string updatetime = data[0].date.ToString("yyyy/MM/dd");
+       
                     if (notice != "")
                     {
                         OutputMessageAsync($"{notice}");
@@ -478,7 +536,7 @@ namespace Palworld_server_protector_DotNet
                             linkLabel2.Visible = true;
                         }));
                         
-                        OutputMessageAsync($"【更新】新版本v{latestVersion}已经发布，请点击最下方链接前往下载更新。");
+                        OutputMessageAsync($"【更新】新版本v{latestVersion}（{updatetime}）已经发布，请点击最下方链接前往下载更新。");
                     }
 
                 }
@@ -695,6 +753,17 @@ namespace Palworld_server_protector_DotNet
                                     checkBox_web_startprocess.Checked = false;
                                 }
                             }
+                            else if (line.StartsWith("isWebPlayerStatus="))
+                            {
+                                if (line.Substring("isWebPlayerStatus=".Length) == "True")
+                                {
+                                    checkBox_playerStatus.Checked = true;
+                                }
+                                else
+                                {
+                                    checkBox_playerStatus.Checked = false;
+                                }
+                            }
                             else
                             {
                                 continue;
@@ -764,7 +833,7 @@ namespace Palworld_server_protector_DotNet
                     if (checkbox_web_reboot.Checked) { writer.WriteLine("isWebReboot=True"); } else { writer.WriteLine("isWebReboot=False"); }
                     if (checkBox_web_save.Checked) { writer.WriteLine("isWebSave=True"); } else { writer.WriteLine("isWebSave=False"); }
                     if (checkBox_web_startprocess.Checked) { writer.WriteLine("isWebStartProcess=True"); } else { writer.WriteLine("isWebStartProcess=False"); }
-
+                    if (checkBox_playerStatus.Checked) { writer.WriteLine("isWebPlayerStatus=True"); } else { writer.WriteLine("isWebPlayerStatus=False"); }
 
                 }
             }
