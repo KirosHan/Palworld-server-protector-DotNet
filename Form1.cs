@@ -124,7 +124,7 @@ namespace Palworld_server_protector_DotNet
                     catch (Exception ex)
                     {
                         OutputMessageAsync($"发送指令失败，请检查配置。");
-                     
+
                         Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
 
 
@@ -235,15 +235,15 @@ namespace Palworld_server_protector_DotNet
 
 
                 var newPlayerlist = "";
-               
-              
+
+
                 List<PalUserInfo> newPlayers = players.Except(lastPlayerlist).ToList();
                 foreach (var p in newPlayers)
                 {
                     if (!playerNotificationTimes.ContainsKey(p.Name) || (now - playerNotificationTimes[p.Name]).TotalSeconds >= 5)
                     {
                         toNotifyNewPlayers.Add(p.Name);
-                        playerNotificationTimes[p.Name] = now; 
+                        playerNotificationTimes[p.Name] = now;
                     }
                 }
 
@@ -255,7 +255,7 @@ namespace Palworld_server_protector_DotNet
                     if (!playerNotificationTimes.ContainsKey(p.Name) || (now - playerNotificationTimes[p.Name]).TotalSeconds >= 5)
                     {
                         toNotifyOffPlayers.Add(p.Name);
-                        playerNotificationTimes[p.Name] = now; 
+                        playerNotificationTimes[p.Name] = now;
                     }
                 }
                 newPlayerlist = string.Join(",", toNotifyNewPlayers.Select(p => $"[{p}]"));
@@ -264,16 +264,19 @@ namespace Palworld_server_protector_DotNet
                 var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"Broadcast {newPlayerlist.Replace(" ", "_")}_join_the_game.");
                 OutputMessageAsync($"{info}");
                 */
-                if (checkBox_playerStatus.Checked == true) {
-                    if (newPlayerlist != "") {
+                if (checkBox_playerStatus.Checked == true)
+                {
+                    if (newPlayerlist != "")
+                    {
                         OutputMessageAsync($"{newPlayerlist.TrimEnd(',')}加入了游戏。");
                         SendWebhookAsync("玩家加入游戏", $"{newPlayerlist.TrimEnd(',')}加入了游戏。");
                     }
-                    if (offPlayerlist != "") { 
+                    if (offPlayerlist != "")
+                    {
                         OutputMessageAsync($"{offPlayerlist.TrimEnd(',')}离开了游戏。");
                         SendWebhookAsync("玩家离开游戏", $"{offPlayerlist.TrimEnd(',')}离开了游戏。");
                     }
-                    
+
                 }
 
 
@@ -336,7 +339,7 @@ namespace Palworld_server_protector_DotNet
 
                     Invoke(new Action(() => OutputMessageAsync($"游戏存档已成功备份")));
 
-                    
+
                     if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份", $"游戏存档已成功备份。"); }
                     ShowNotification($"游戏存档已成功备份。");
                 }
@@ -344,7 +347,7 @@ namespace Palworld_server_protector_DotNet
                 {
                     Invoke(new Action(() => OutputMessageAsync($"备份存档失败")));
 
-              
+
                     Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x92>>>备份存档错误>>>错误信息：{ex.Message}"));
 
                     if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。"); }
@@ -356,7 +359,7 @@ namespace Palworld_server_protector_DotNet
 
         }
 
-    private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
             DirectoryInfo[] dirs = dir.GetDirectories();
@@ -365,7 +368,7 @@ namespace Palworld_server_protector_DotNet
             if (!dir.Exists)
             {
                 OutputMessageAsync($"游戏存档路径不存在：{sourceDirName}");
-              
+
                 Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x91>>>游戏存档路径不存在>>>错误信息：{sourceDirName}"));
 
                 ShowNotification($"游戏存档路径不存在：{sourceDirName}");
@@ -495,7 +498,7 @@ namespace Palworld_server_protector_DotNet
             int endIndex = buildVersion.IndexOf('+');
             string version = buildVersion.Substring(0, endIndex); //去掉构建标识符
             verisionLabel.Text = $"当前版本：{version}";
-            checkVersion(version) ;
+            checkVersion(version);
             OutputMessageAsync($"当前构建版本号：{version}");
 
 
@@ -515,7 +518,7 @@ namespace Palworld_server_protector_DotNet
                     string notice = data[0].notice;
                     string news = data[0].news;
                     string updatetime = data[0].date.ToString("yyyy/MM/dd");
-       
+
                     if (notice != "")
                     {
                         OutputMessageAsync($"{notice}");
@@ -535,7 +538,7 @@ namespace Palworld_server_protector_DotNet
                             projectUrl = data[0].url;
                             linkLabel2.Visible = true;
                         }));
-                        
+
                         OutputMessageAsync($"【更新】新版本v{latestVersion}（{updatetime}）已经发布，请点击最下方链接前往下载更新。");
                     }
 
@@ -783,7 +786,7 @@ namespace Palworld_server_protector_DotNet
             {
                 OutputMessageAsync($"读取配置文件失败。");
                 ShowNotification($"读取配置文件失败。");
-                
+
                 Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0xA1>>>读取配置文件错误>>>错误信息：{ex.Message}"));
 
             }
@@ -840,7 +843,7 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"保存配置文件失败。");
-              
+
                 Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0xA2>>>保存配置文件错误>>>错误信息：{ex.Message}"));
 
 
@@ -1065,7 +1068,7 @@ namespace Palworld_server_protector_DotNet
             catch (Exception ex)
             {
                 OutputMessageAsync($"发送命令时发生错误。");
-              
+
                 Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x68>>>处理服务端版本信息错误>>>返回值为[{info}]>>>错误信息：{ex.Message}"));
 
             }
@@ -1248,7 +1251,7 @@ namespace Palworld_server_protector_DotNet
             {
 
 
-               // var info = RconUtils.SendMsg(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"BanPlayer {UIDBox.Text.Trim()}");
+                // var info = RconUtils.SendMsg(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"BanPlayer {UIDBox.Text.Trim()}");
                 var info = await Rcon.SendCommand(rconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"BanPlayer {UIDBox.Text.Trim()}");
 
                 OutputMessageAsync($"{info}");
@@ -1262,7 +1265,7 @@ namespace Palworld_server_protector_DotNet
 
             }
         }
-    
+
         private configForm configForm; // Declare a field to hold the instance of ConfigForm
 
         private void settingButton_Click(object sender, EventArgs e)
@@ -1385,5 +1388,6 @@ namespace Palworld_server_protector_DotNet
             Application.Exit();
         }
 
+      
     }
 }
