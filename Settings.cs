@@ -17,7 +17,7 @@ namespace Palworld_server_protector_DotNet
         public string GameDataPath { get; set; } = "";
         public int MemTarget { get; set; } = 90;
         public string RconHost { get; set; } = "127.0.0.1";
-        public string RconPort { get; set; } = "25575";
+        public int RconPort { get; set; } = 25575;
         public string RconPassword { get; set; } = "admin";
         public int RebootSeconds { get; set; } = 10;
         public int CheckSeconds { get; set; } = 20;
@@ -37,6 +37,7 @@ namespace Palworld_server_protector_DotNet
         public bool IsWebSave { get; set; } = false;
         public bool IsWebStartProcess { get; set; } = false;
         public bool IsWebPlayerStatus { get; set; } = false;
+        public bool IsOutputMemInfo {  get; set; } = false;
 
         public Settings()
         {

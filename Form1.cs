@@ -78,7 +78,7 @@ namespace Palworld_server_protector_DotNet
             memOutput.Text = $"{memoryUsage}%";
 
 
-            if (checkBox_mem.Checked)
+            if (Settings.IsOutputMemInfo)
             {
                 //OutputMessageAsync($"当前时间：{DateTime.Now}");
                 OutputMessageAsync($"内存使用百分比：{memoryUsage}%");
@@ -428,10 +428,8 @@ namespace Palworld_server_protector_DotNet
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 cmdbox.Text = openFileDialog.FileName;
-                Settings.CmdPath = cmdbox.Text;
                 OutputMessageAsync($"已选择服务端路径为：{Settings.CmdPath}");
-                Settings.GameDataPath = Path.Combine(Path.GetDirectoryName(Settings.CmdPath), "Pal", "Saved", "SaveGames");
-                gamedataBox.Text = Settings.GameDataPath;
+                gamedataBox.Text = Path.Combine(Path.GetDirectoryName(Settings.CmdPath), "Pal", "Saved", "SaveGames");
                 OutputMessageAsync($"游戏存档路径修改为：{Settings.GameDataPath}");
             }
         }
@@ -460,7 +458,7 @@ namespace Palworld_server_protector_DotNet
         {
             string buildVersion = Application.ProductVersion;
             int endIndex = buildVersion.IndexOf('+');
-            string version = endIndex > 0 ? buildVersion.Substring(0, endIndex): buildVersion; //去掉构建标识符
+            string version = endIndex > 0 ? buildVersion.Substring(0, endIndex) : buildVersion; //去掉构建标识符
             checkVersion(version);
         }
 
@@ -473,7 +471,11 @@ namespace Palworld_server_protector_DotNet
             string version = endIndex > 0 ? buildVersion.Substring(0, endIndex) : buildVersion;
             this.Text = $"Palworld Server Protector v{version}";
 
+            // 加载配置文件，处理配置文件和UI之间数据绑定
             LoadConfig();
+            SyncUIWithSettings(Settings);
+            SetupDataBindings(Settings);
+
             memTimer.Start();
             verisionLabel.Text = $"当前版本：{version}";
             checkVersion(version);
@@ -572,8 +574,71 @@ namespace Palworld_server_protector_DotNet
             checkBox_web_save.Checked = settings.IsWebSave;
             checkBox_web_startprocess.Checked = settings.IsWebStartProcess;
             checkBox_playerStatus.Checked = settings.IsWebPlayerStatus;
+            checkBox_mem.Checked = settings.IsOutputMemInfo;
         }
 
+        private void SetupDataBindings(Settings settings)
+        {
+            // 清除现有的绑定
+            ClearDataBindings();
+
+            // 字符串和数值属性的绑定
+            cmdbox.DataBindings.Add("Text", settings, nameof(Settings.CmdPath), false, DataSourceUpdateMode.OnPropertyChanged);
+            backupPathbox.DataBindings.Add("Text", settings, nameof(Settings.BackupPath), false, DataSourceUpdateMode.OnPropertyChanged);
+            gamedataBox.DataBindings.Add("Text", settings, nameof(Settings.GameDataPath), false, DataSourceUpdateMode.OnPropertyChanged);
+            memTargetbox.DataBindings.Add("Value", settings, nameof(Settings.MemTarget), false, DataSourceUpdateMode.OnPropertyChanged);
+            rconPortbox.DataBindings.Add("Text", settings, nameof(Settings.RconPort), false, DataSourceUpdateMode.OnPropertyChanged);
+            passWordbox.DataBindings.Add("Text", settings, nameof(Settings.RconPassword), false, DataSourceUpdateMode.OnPropertyChanged);
+            rebootSecondbox.DataBindings.Add("Value", settings, nameof(Settings.RebootSeconds), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkSecondbox.DataBindings.Add("Value", settings, nameof(Settings.CheckSeconds), false, DataSourceUpdateMode.OnPropertyChanged);
+            backupSecondsbox.DataBindings.Add("Value", settings, nameof(Settings.BackupSeconds), false, DataSourceUpdateMode.OnPropertyChanged);
+            arguments.DataBindings.Add("Text", settings, nameof(Settings.Parameters), false, DataSourceUpdateMode.OnPropertyChanged);
+            webhookBox.DataBindings.Add("Text", settings, nameof(Settings.WebhookUrl), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            // 布尔属性（复选框）的绑定
+            checkBox_reboot.DataBindings.Add("Checked", settings, nameof(Settings.IsReboot), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_startprocess.DataBindings.Add("Checked", settings, nameof(Settings.IsStartProcess), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_args.DataBindings.Add("Checked", settings, nameof(Settings.IsParameters), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_Noti.DataBindings.Add("Checked", settings, nameof(Settings.IsNoti), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_save.DataBindings.Add("Checked", settings, nameof(Settings.IsSave), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_geplayers.DataBindings.Add("Checked", settings, nameof(Settings.IsGetPlayers), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_webhook.DataBindings.Add("Checked", settings, nameof(Settings.IsWebhook), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_web_getplayers.DataBindings.Add("Checked", settings, nameof(Settings.IsWebGetPlayers), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkbox_web_reboot.DataBindings.Add("Checked", settings, nameof(Settings.IsWebReboot), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_web_save.DataBindings.Add("Checked", settings, nameof(Settings.IsWebSave), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_web_startprocess.DataBindings.Add("Checked", settings, nameof(Settings.IsWebStartProcess), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_playerStatus.DataBindings.Add("Checked", settings, nameof(Settings.IsWebPlayerStatus), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_mem.DataBindings.Add("Checked", settings, nameof(Settings.IsOutputMemInfo), false, DataSourceUpdateMode.OnPropertyChanged);
+        }
+
+        private void ClearDataBindings()
+        {
+            cmdbox.DataBindings.Clear();
+            backupPathbox.DataBindings.Clear();
+            gamedataBox.DataBindings.Clear();
+            memTargetbox.DataBindings.Clear();
+            rconPortbox.DataBindings.Clear();
+            passWordbox.DataBindings.Clear();
+            rebootSecondbox.DataBindings.Clear();
+            checkSecondbox.DataBindings.Clear();
+            backupSecondsbox.DataBindings.Clear();
+            arguments.DataBindings.Clear();
+            webhookBox.DataBindings.Clear();
+
+            checkBox_reboot.DataBindings.Clear();
+            checkBox_startprocess.DataBindings.Clear();
+            checkBox_args.DataBindings.Clear();
+            checkBox_Noti.DataBindings.Clear();
+            checkBox_save.DataBindings.Clear();
+            checkBox_geplayers.DataBindings.Clear();
+            checkBox_webhook.DataBindings.Clear();
+            checkBox_web_getplayers.DataBindings.Clear();
+            checkbox_web_reboot.DataBindings.Clear();
+            checkBox_web_save.DataBindings.Clear();
+            checkBox_web_startprocess.DataBindings.Clear();
+            checkBox_playerStatus.DataBindings.Clear();
+            checkBox_mem.DataBindings.Clear();
+        }
 
         private void LoadConfig()
         {
@@ -596,9 +661,7 @@ namespace Palworld_server_protector_DotNet
                         OutputMessageAsync($"未找到配置文件，已加载默认配置。");
                         ShowNotification($"未找到配置文件，已加载默认配置。");
                     }
-                    SaveConfig();
                 }
-                SyncUIWithSettings(Settings);
             }
             catch (Exception ex)
             {
@@ -637,8 +700,6 @@ namespace Palworld_server_protector_DotNet
                 labelForPid.Visible = false;
                 labelForpidText.Visible = false;
                 checkBox_startprocess.Checked = false;
-
-
             }
             else if (checkBox_startprocess.Checked)
             {
@@ -653,7 +714,6 @@ namespace Palworld_server_protector_DotNet
                 labelForpidText.Visible = false;
                 OutputMessageAsync($"已停止监控服务端。");
             }
-
         }
 
         private void checkBox_save_CheckedChanged(object sender, EventArgs e)
@@ -690,7 +750,6 @@ namespace Palworld_server_protector_DotNet
                 labelForsave.Text = "[ 关闭 ]";
                 OutputMessageAsync($"已停用自动备份存档。");
             }
-
         }
 
         private void selectBackuppathButton_Click(object sender, EventArgs e)
@@ -699,14 +758,9 @@ namespace Palworld_server_protector_DotNet
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 backupPathbox.Text = folderBrowserDialog.SelectedPath;
-                Settings.BackupPath = backupPathbox.Text;
-                OutputMessageAsync($"已选择存档备份路径为：{Settings.BackupPath}");
+                OutputMessageAsync($"已选择存档备份路径为：{backupPathbox.Text}");
             }
         }
-
-
-
-
 
         private void rconPortbox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -714,14 +768,6 @@ namespace Palworld_server_protector_DotNet
             {
                 e.Handled = true;
             }
-        }
-
-
-
-        private void rebootSecondbox_ValueChanged(object sender, EventArgs e)
-        {
-
-
         }
 
         private void checkBox_reboot_CheckedChanged(object sender, EventArgs e)
@@ -770,11 +816,8 @@ namespace Palworld_server_protector_DotNet
 
         private async void button2_Click(object sender, EventArgs e)
         {
-
             var info = await Rcon.SendCommand(Settings.RconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "save");
             OutputMessageAsync($"{info}");
-
-
         }
 
         private async void button3_Click(object sender, EventArgs e)
@@ -802,8 +845,6 @@ namespace Palworld_server_protector_DotNet
             var info = "";
             try
             {
-
-
                 info = await Rcon.SendCommand(Settings.RconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "info");
 
                 int startIndex = info.IndexOf("[") + 1;
@@ -879,10 +920,10 @@ namespace Palworld_server_protector_DotNet
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 gamedataBox.Text = folderBrowserDialog.SelectedPath;
-                Settings.GameDataPath = gamedataBox.Text;
                 OutputMessageAsync($"已选择游戏存档路径为：{Settings.GameDataPath}");
             }
         }
+
         private bool isKeyUpEvent_backupSecond = false;
         private void backupSecondsbox_KeyUp(object sender, KeyEventArgs e)
         {
@@ -891,6 +932,7 @@ namespace Palworld_server_protector_DotNet
             isKeyUpEvent_backupSecond = true;
             OutputMessageAsync($"存档周期已调整为：{newBackupSecond / 1000}秒");
         }
+
         private void backupSecondsbox_ValueChanged(object sender, EventArgs e)
         {
             if (isKeyUpEvent_backupSecond)
@@ -903,22 +945,8 @@ namespace Palworld_server_protector_DotNet
             OutputMessageAsync($"存档周期已调整为：{newBackupSecond / 1000}秒");
         }
 
-        private bool isKeyUpEvent_rebootSecond = false;
-        private void rebootSecondbox_KeyUp(object sender, KeyEventArgs e)
+        private void rebootSecondbox_ValueChanged(object sender, EventArgs e)
         {
-            Settings.RebootSeconds = Convert.ToInt32(rebootSecondbox.Value);
-            isKeyUpEvent_rebootSecond = true;
-            OutputMessageAsync($"重启延迟已设置为：{Settings.RebootSeconds}秒");
-        }
-
-        private void rebootSecondbox_ValueChanged_1(object sender, EventArgs e)
-        {
-            if (isKeyUpEvent_rebootSecond)
-            {
-                isKeyUpEvent_rebootSecond = false;
-                return;
-            }
-            Settings.RebootSeconds = Convert.ToInt32(rebootSecondbox.Value);
             OutputMessageAsync($"重启延迟已设置为：{Settings.RebootSeconds}秒");
         }
 
@@ -946,8 +974,7 @@ namespace Palworld_server_protector_DotNet
 
         private void memTargetbox_ValueChanged(object sender, EventArgs e)
         {
-            Settings.MemTarget = (int)memTargetbox.Value;
-            OutputMessageAsync($"内存阈值已调整为：{Settings.MemTarget}%");
+            OutputMessageAsync($"内存阈值已调整为：{memTargetbox.Value}%");
         }
 
         private void playersView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -965,20 +992,14 @@ namespace Palworld_server_protector_DotNet
         {
             try
             {
-
-
                 //var info = RconUtils.SendMsg(Settings.RconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"KickPlayer {UIDBox.Text.Trim()}");
                 var info = await Rcon.SendCommand(Settings.RconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, $"KickPlayer {UIDBox.Text.Trim()}");
-
                 OutputMessageAsync($"{info}");
-
             }
-
             catch (Exception ex)
             {
                 OutputMessageAsync($"Kickplayer指令发送失败。");
                 Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
-
             }
         }
 
@@ -1124,6 +1145,16 @@ namespace Palworld_server_protector_DotNet
             Application.Exit();
         }
 
-      
+        private void checkBox_mem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_mem.Checked)
+            {
+                OutputMessageAsync($"已启用输出内存占用数据到回显。");
+            }
+            else
+            {
+                OutputMessageAsync($"已停用输出内存占用数据到回显。");
+            }
+        }
     }
 }

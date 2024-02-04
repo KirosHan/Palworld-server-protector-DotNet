@@ -208,8 +208,7 @@
             rebootSecondbox.Size = new Size(244, 23);
             rebootSecondbox.TabIndex = 2;
             rebootSecondbox.Value = new decimal(new int[] { 10, 0, 0, 0 });
-            rebootSecondbox.ValueChanged += rebootSecondbox_ValueChanged_1;
-            rebootSecondbox.KeyUp += rebootSecondbox_KeyUp;
+            rebootSecondbox.ValueChanged += rebootSecondbox_ValueChanged;
             // 
             // labelForpassword
             // 
