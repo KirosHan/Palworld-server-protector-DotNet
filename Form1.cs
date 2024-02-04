@@ -305,7 +305,6 @@ namespace Palworld_server_protector_DotNet
                 {
                     if (backupPath == "")
                     {
-                        // 注意：从后台线程更新UI时必须使用Invoke
                         Invoke(new Action(() => OutputMessageAsync($"未设置备份存放目录。无法备份。")));
                         return;
                     }
@@ -324,21 +323,27 @@ namespace Palworld_server_protector_DotNet
                         return;
                     }
 
-                    string tempGameDataPath = Path.Combine(Path.GetTempPath(), "TempGameData");
+                    // 使用唯一标识符确保每次都创建一个新的临时目录
+                    string tempGameDataPath = Path.Combine(Path.GetTempPath(), $"TempGameData-{Guid.NewGuid()}");
                     Directory.CreateDirectory(tempGameDataPath);
                     string tempGameDataCopyPath = Path.Combine(tempGameDataPath, "GameData");
 
-                    // Copy the game data to the temporary directory
                     DirectoryCopy(gamedataPath, tempGameDataCopyPath, true);
 
-                    // Create the backup file from the temporary game data directory
                     ZipFile.CreateFromDirectory(tempGameDataCopyPath, backupFilePath);
 
-                    // Delete the temporary game data directory
-                    Directory.Delete(tempGameDataPath, true);
+                    try
+                    {
+                        Directory.Delete(tempGameDataPath, true);
+                    }
+                    catch (IOException)
+                    {
+                        // 如果删除失败，可能需要重试或记录错误
+                        Task.Delay(1000).Wait(); // 稍等一会儿再次尝试
+                        Directory.Delete(tempGameDataPath, true); // 重新尝试删除
+                    }
 
                     Invoke(new Action(() => OutputMessageAsync($"游戏存档已成功备份")));
-
 
                     if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份", $"游戏存档已成功备份。"); }
                     ShowNotification($"游戏存档已成功备份。");
@@ -346,18 +351,14 @@ namespace Palworld_server_protector_DotNet
                 catch (Exception ex)
                 {
                     Invoke(new Action(() => OutputMessageAsync($"备份存档失败")));
-
-
                     Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x92>>>备份存档错误>>>错误信息：{ex.Message}"));
 
                     if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。"); }
-
                     ShowNotification($"存档备份失败，请及时检查。");
                 }
-
             });
-
         }
+
 
         private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
