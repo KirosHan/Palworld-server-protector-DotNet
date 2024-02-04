@@ -128,19 +128,6 @@ graph LR
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://kiros.onbeta.com"><img src="https://avatars.githubusercontent.com/u/22515170?v=4" width="100px;" alt=""/><br /><sub><b>Kiros</b></sub></a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Vincentzyx"><img src="https://avatars.githubusercontent.com/u/8458250?v=4" width="100px;" alt=""/><br /><sub><b>Vincentzyx</b></sub></a></td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-     
-    </tr>
-  </tfoot>
-</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
