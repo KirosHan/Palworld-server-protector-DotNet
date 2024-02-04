@@ -121,4 +121,8 @@ graph LR
 
 2.受服务端限制，rcon无法发送中文
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date)](https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date)
+
 
