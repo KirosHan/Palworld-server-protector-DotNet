@@ -7,6 +7,8 @@
   "imageSize": 100,
   "commit": true,
   "contributorsPerLine": 7,
+  "contributorTemplate": "<a href=\"<%= contributor.profile %>\"><img src=\"<%= contributor.avatar_url %>\" width=\"<%= options.imageSize %>px;\" alt=\"\"/><br /><sub><b><%= contributor.name %></b></sub></a>",
+
   "contributorsSortAlphabetically": false,
   "linkToUsage": true,
   "skipCi": true,
