@@ -32,9 +32,15 @@
 ![预览1](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_1.png)
 ![预览2](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_2.png)
 ## 直接下载（懒人专属）
-更新时间：2024-02-02
+更新时间：2024-02-04
 
-Latest版本：V2.6.3(1)
+Latest版本：V2.6.5(1)
+
+* Bug fixed：修复了由于缓存文件占用导致备份失败的问题（包括备份内容错误）
+
+* Fixed：当获取不到玩家steamid的情况下，也会统计到在线列表中（steamid留空）
+
+=-=-V2.6.3(1) -=-=
 
 - 添加了webhook玩家动态(上线/下线)通知，需配置并开启Rcon以及webhook功能
 
@@ -116,5 +122,9 @@ graph LR
 1.受服务端限制，rcon发送的文本中无法保留空格，已自动替换为下划线
 
 2.受服务端限制，rcon无法发送中文
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date)](https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date)
 
 

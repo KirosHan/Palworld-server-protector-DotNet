@@ -22,7 +22,8 @@ namespace Palworld_server_protector_DotNet
             var splits = row.Split(',');
             Name = splits[0];
             Uid = splits[1];
-            SteamId = splits[2];
+
+            SteamId = splits.Length > 2 ? splits[2] : "";
         }
 
         public override bool Equals(object obj)
