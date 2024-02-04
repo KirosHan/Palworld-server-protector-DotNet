@@ -123,6 +123,17 @@ graph LR
 
 2.受服务端限制，rcon无法发送中文
 
+## 	:two_hearts:Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 ## :chart_with_upwards_trend:Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date)](https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date)
