@@ -10,6 +10,6 @@
   "contributorsSortAlphabetically": false,
   "linkToUsage": true,
   "skipCi": true,
-  "commitConvention": "gitmoji",
+  "commitConvention": "angular",
   "contributors": []
 }
