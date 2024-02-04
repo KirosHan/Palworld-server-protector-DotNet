@@ -9,7 +9,7 @@
 
 ![Qrcode](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/qrcode.jpg)
 
-## 功能
+## 	:beers:功能
 
 - 服务器配置文档(.ini)可视化编辑【New】
 - Webhoot通知推送(企业微信机器人)【New】
@@ -23,15 +23,15 @@
 - Rcon指令
 
 
-## 注意
+## 	:bangbang:注意
 - 本GUI版本复刻了命令行版本（[https://github.com/KirosHan/Palworld-server-protector](https://github.com/KirosHan/Palworld-server-protector)）所有功能
 - 旧GUI版（electron）由于占用内存过高已弃用并不再维护
 - 本工具大部分功能基于Rcon实现，所以使用需要提前配置服务端启用Rcon和管理员密码（如果配置不生效，也请留意steamapps/common/PalServer/Pal/Saved/SaveGames/0/.../WorldOption.sav）
 
-## 效果图
+## :eyes:效果图
 ![预览1](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_1.png)
 ![预览2](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_2.png)
-## 直接下载（懒人专属）
+## 	:airplane:直接下载（懒人专属）
 更新时间：2024-02-04
 
 Latest版本：V2.6.5(1)
@@ -81,7 +81,7 @@ Latest版本：V2.6.5(1)
 
 如无法运行，请安装.net 6.0运行环境
 
-## Star and a Coffee
+## 	:coffee:Star and a Coffee
 
 如果这个仓库对你有用，欢迎点个Star⭐︎
 
@@ -89,13 +89,13 @@ Latest版本：V2.6.5(1)
 
 ![BuyMeACoffee](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/buymeacoffee.png)
 
-## 编译运行
+## 	:computer:编译运行
 Visual studio 2022
 
-## Rcon
+## 	:crystal_ball:Rcon
 本项目Rcon功能模块改编自https://github.com/KTTI465/PalWorld-RCON-GUI
 
-## 运行逻辑
+## :sparkles:运行逻辑
 
 ```mermaid
 graph LR
@@ -118,12 +118,12 @@ graph LR
     N --> O[结束]
 
 ```
-## 已知问题
+## :pill:已知问题
 1.受服务端限制，rcon发送的文本中无法保留空格，已自动替换为下划线
 
 2.受服务端限制，rcon无法发送中文
 
-## Star History
+## :chart_with_upwards_trend:Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date)](https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date)
 
