@@ -3,7 +3,9 @@
   "projectOwner": "KirosHan",
   "repoType": "github",
   "repoHost": "https://github.com/",
-  "files": ["README.md"],
+  "files": [
+    "README.md"
+  ],
   "imageSize": 100,
   "commit": true,
   "contributorsPerLine": 7,
@@ -11,5 +13,18 @@
   "linkToUsage": true,
   "skipCi": true,
   "commitConvention": "angular",
-  "contributors": []
+  "contributors": [
+    {
+      "login": "KirosHan",
+      "name": "Kiros",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22515170?v=4",
+      "profile": "https://kiros.onbeta.com",
+      "contributions": [
+        "infra",
+        "test",
+        "code"
+      ]
+    }
+  ],
+  "commitType": "docs"
 }
