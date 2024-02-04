@@ -121,6 +121,9 @@
             notifyIcon1 = new NotifyIcon(components);
             contextMenuStrip1 = new ContextMenuStrip(components);
             toolStripMenuItem1 = new ToolStripMenuItem();
+            columnHeader_name = new ColumnHeader();
+            columnHeader_uid = new ColumnHeader();
+            columnHeader_steamId = new ColumnHeader();
             ((System.ComponentModel.ISupportInitialize)rebootSecondbox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkSecondbox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)memTargetbox).BeginInit();
@@ -144,10 +147,10 @@
             // checkBox_reboot
             // 
             checkBox_reboot.AutoSize = true;
-            checkBox_reboot.Location = new Point(30, 32);
-            checkBox_reboot.Margin = new Padding(5, 4, 5, 4);
+            checkBox_reboot.Location = new Point(38, 41);
+            checkBox_reboot.Margin = new Padding(6, 5, 6, 5);
             checkBox_reboot.Name = "checkBox_reboot";
-            checkBox_reboot.Size = new Size(288, 28);
+            checkBox_reboot.Size = new Size(382, 35);
             checkBox_reboot.TabIndex = 0;
             checkBox_reboot.Text = "自动关服（内存过载自动关服）";
             checkBox_reboot.UseVisualStyleBackColor = true;
@@ -156,10 +159,10 @@
             // checkBox_save
             // 
             checkBox_save.AutoSize = true;
-            checkBox_save.Location = new Point(30, 32);
-            checkBox_save.Margin = new Padding(5, 4, 5, 4);
+            checkBox_save.Location = new Point(38, 41);
+            checkBox_save.Margin = new Padding(6, 5, 6, 5);
             checkBox_save.Name = "checkBox_save";
-            checkBox_save.Size = new Size(252, 28);
+            checkBox_save.Size = new Size(334, 35);
             checkBox_save.TabIndex = 0;
             checkBox_save.Text = "自动存档（定时自动存档）";
             checkBox_save.UseVisualStyleBackColor = true;
@@ -168,10 +171,10 @@
             // checkBox_mem
             // 
             checkBox_mem.AutoSize = true;
-            checkBox_mem.Location = new Point(25, 42);
-            checkBox_mem.Margin = new Padding(5, 4, 5, 4);
+            checkBox_mem.Location = new Point(32, 54);
+            checkBox_mem.Margin = new Padding(6, 5, 6, 5);
             checkBox_mem.Name = "checkBox_mem";
-            checkBox_mem.Size = new Size(234, 28);
+            checkBox_mem.Size = new Size(310, 35);
             checkBox_mem.TabIndex = 0;
             checkBox_mem.Text = "输出内存占用数据到回显";
             checkBox_mem.UseVisualStyleBackColor = true;
@@ -180,21 +183,21 @@
             // 
             outPutbox.BorderStyle = BorderStyle.None;
             outPutbox.Dock = DockStyle.Fill;
-            outPutbox.Location = new Point(3, 26);
-            outPutbox.Margin = new Padding(5, 4, 5, 4);
+            outPutbox.Location = new Point(4, 35);
+            outPutbox.Margin = new Padding(6, 5, 6, 5);
             outPutbox.Name = "outPutbox";
             outPutbox.ReadOnly = true;
             outPutbox.ScrollBars = RichTextBoxScrollBars.None;
-            outPutbox.Size = new Size(619, 225);
+            outPutbox.Size = new Size(787, 289);
             outPutbox.TabIndex = 0;
             outPutbox.Text = "";
             // 
             // selectCmdbutton
             // 
-            selectCmdbutton.Location = new Point(500, 179);
-            selectCmdbutton.Margin = new Padding(5, 4, 5, 4);
+            selectCmdbutton.Location = new Point(636, 231);
+            selectCmdbutton.Margin = new Padding(6, 5, 6, 5);
             selectCmdbutton.Name = "selectCmdbutton";
-            selectCmdbutton.Size = new Size(63, 32);
+            selectCmdbutton.Size = new Size(80, 41);
             selectCmdbutton.TabIndex = 3;
             selectCmdbutton.Text = "选择";
             selectCmdbutton.UseVisualStyleBackColor = true;
@@ -203,12 +206,12 @@
             // rebootSecondbox
             // 
             rebootSecondbox.BorderStyle = BorderStyle.FixedSingle;
-            rebootSecondbox.Location = new Point(178, 330);
-            rebootSecondbox.Margin = new Padding(5, 4, 5, 4);
+            rebootSecondbox.Location = new Point(227, 426);
+            rebootSecondbox.Margin = new Padding(6, 5, 6, 5);
             rebootSecondbox.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
             rebootSecondbox.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             rebootSecondbox.Name = "rebootSecondbox";
-            rebootSecondbox.Size = new Size(383, 30);
+            rebootSecondbox.Size = new Size(487, 38);
             rebootSecondbox.TabIndex = 2;
             rebootSecondbox.Value = new decimal(new int[] { 10, 0, 0, 0 });
             rebootSecondbox.ValueChanged += rebootSecondbox_ValueChanged_1;
@@ -217,22 +220,22 @@
             // labelForpassword
             // 
             labelForpassword.AutoSize = true;
-            labelForpassword.Location = new Point(30, 432);
-            labelForpassword.Margin = new Padding(5, 0, 5, 0);
+            labelForpassword.Location = new Point(38, 558);
+            labelForpassword.Margin = new Padding(6, 0, 6, 0);
             labelForpassword.Name = "labelForpassword";
-            labelForpassword.Size = new Size(100, 24);
+            labelForpassword.Size = new Size(134, 31);
             labelForpassword.TabIndex = 6;
             labelForpassword.Text = "管理员密码";
             // 
             // checkSecondbox
             // 
             checkSecondbox.BorderStyle = BorderStyle.FixedSingle;
-            checkSecondbox.Location = new Point(178, 281);
-            checkSecondbox.Margin = new Padding(5, 4, 5, 4);
+            checkSecondbox.Location = new Point(227, 363);
+            checkSecondbox.Margin = new Padding(6, 5, 6, 5);
             checkSecondbox.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
             checkSecondbox.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             checkSecondbox.Name = "checkSecondbox";
-            checkSecondbox.Size = new Size(383, 30);
+            checkSecondbox.Size = new Size(487, 38);
             checkSecondbox.TabIndex = 2;
             checkSecondbox.Value = new decimal(new int[] { 20, 0, 0, 0 });
             checkSecondbox.ValueChanged += checkSecondbox_ValueChanged;
@@ -241,94 +244,92 @@
             // labelForrconport
             // 
             labelForrconport.AutoSize = true;
-            labelForrconport.Location = new Point(30, 383);
-            labelForrconport.Margin = new Padding(5, 0, 5, 0);
+            labelForrconport.Location = new Point(38, 495);
+            labelForrconport.Margin = new Padding(6, 0, 6, 0);
             labelForrconport.Name = "labelForrconport";
-            labelForrconport.Size = new Size(89, 24);
+            labelForrconport.Size = new Size(120, 31);
             labelForrconport.TabIndex = 6;
             labelForrconport.Text = "Rcon端口";
             // 
             // memTargetbox
             // 
             memTargetbox.BorderStyle = BorderStyle.FixedSingle;
-            memTargetbox.Location = new Point(178, 232);
-            memTargetbox.Margin = new Padding(5, 4, 5, 4);
+            memTargetbox.Location = new Point(227, 300);
+            memTargetbox.Margin = new Padding(6, 5, 6, 5);
             memTargetbox.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             memTargetbox.Name = "memTargetbox";
-            memTargetbox.Size = new Size(383, 30);
+            memTargetbox.Size = new Size(487, 38);
             memTargetbox.TabIndex = 2;
             memTargetbox.Value = new decimal(new int[] { 90, 0, 0, 0 });
             memTargetbox.ValueChanged += memTargetbox_ValueChanged;
-            memTargetbox.KeyUp += memTargetbox_KeyUp;
             // 
             // labelForrebootsecond
             // 
             labelForrebootsecond.AutoSize = true;
-            labelForrebootsecond.Location = new Point(30, 330);
-            labelForrebootsecond.Margin = new Padding(5, 0, 5, 0);
+            labelForrebootsecond.Location = new Point(38, 426);
+            labelForrebootsecond.Margin = new Padding(6, 0, 6, 0);
             labelForrebootsecond.Name = "labelForrebootsecond";
-            labelForrebootsecond.Size = new Size(136, 24);
+            labelForrebootsecond.Size = new Size(182, 31);
             labelForrebootsecond.TabIndex = 1;
             labelForrebootsecond.Text = "重启延迟（秒）";
             // 
             // labelForchecksecond
             // 
             labelForchecksecond.AutoSize = true;
-            labelForchecksecond.Location = new Point(30, 282);
-            labelForchecksecond.Margin = new Padding(5, 0, 5, 0);
+            labelForchecksecond.Location = new Point(38, 364);
+            labelForchecksecond.Margin = new Padding(6, 0, 6, 0);
             labelForchecksecond.Name = "labelForchecksecond";
-            labelForchecksecond.Size = new Size(136, 24);
+            labelForchecksecond.Size = new Size(182, 31);
             labelForchecksecond.TabIndex = 1;
             labelForchecksecond.Text = "检测周期（秒）";
             // 
             // labelFotmemtarget
             // 
             labelFotmemtarget.AutoSize = true;
-            labelFotmemtarget.Location = new Point(30, 233);
-            labelFotmemtarget.Margin = new Padding(5, 0, 5, 0);
+            labelFotmemtarget.Location = new Point(38, 301);
+            labelFotmemtarget.Margin = new Padding(6, 0, 6, 0);
             labelFotmemtarget.Name = "labelFotmemtarget";
-            labelFotmemtarget.Size = new Size(82, 24);
+            labelFotmemtarget.Size = new Size(110, 31);
             labelFotmemtarget.TabIndex = 1;
             labelFotmemtarget.Text = "内存阈值";
             // 
             // labelForcmd
             // 
             labelForcmd.AutoSize = true;
-            labelForcmd.Location = new Point(30, 182);
-            labelForcmd.Margin = new Padding(5, 0, 5, 0);
+            labelForcmd.Location = new Point(38, 235);
+            labelForcmd.Margin = new Padding(6, 0, 6, 0);
             labelForcmd.Name = "labelForcmd";
-            labelForcmd.Size = new Size(82, 24);
+            labelForcmd.Size = new Size(110, 31);
             labelForcmd.TabIndex = 1;
             labelForcmd.Text = "启动路径";
             // 
             // passWordbox
             // 
             passWordbox.BorderStyle = BorderStyle.FixedSingle;
-            passWordbox.Location = new Point(178, 426);
-            passWordbox.Margin = new Padding(5, 4, 5, 4);
+            passWordbox.Location = new Point(227, 550);
+            passWordbox.Margin = new Padding(6, 5, 6, 5);
             passWordbox.Name = "passWordbox";
-            passWordbox.Size = new Size(384, 30);
+            passWordbox.Size = new Size(488, 38);
             passWordbox.TabIndex = 1;
             passWordbox.Text = "admin";
-            passWordbox.KeyPress += passWordbox_KeyPress;
             // 
             // cmdbox
             // 
             cmdbox.BorderStyle = BorderStyle.FixedSingle;
-            cmdbox.Location = new Point(178, 179);
-            cmdbox.Margin = new Padding(5, 4, 5, 4);
+            cmdbox.Location = new Point(227, 231);
+            cmdbox.Margin = new Padding(6, 5, 6, 5);
             cmdbox.Name = "cmdbox";
             cmdbox.ReadOnly = true;
-            cmdbox.Size = new Size(315, 30);
+            cmdbox.Size = new Size(400, 38);
             cmdbox.TabIndex = 1;
             // 
             // rconPortbox
             // 
             rconPortbox.BorderStyle = BorderStyle.FixedSingle;
-            rconPortbox.Location = new Point(178, 378);
-            rconPortbox.Margin = new Padding(5, 4, 5, 4);
+            rconPortbox.Location = new Point(227, 488);
+            rconPortbox.Margin = new Padding(6, 5, 6, 5);
             rconPortbox.Name = "rconPortbox";
-            rconPortbox.Size = new Size(384, 30);
+            rconPortbox.Size = new Size(488, 38);
             rconPortbox.TabIndex = 1;
             rconPortbox.Text = "25575";
             rconPortbox.KeyPress += rconPortbox_KeyPress;
@@ -336,10 +337,10 @@
             // checkBox_startprocess
             // 
             checkBox_startprocess.AutoSize = true;
-            checkBox_startprocess.Location = new Point(30, 82);
-            checkBox_startprocess.Margin = new Padding(5, 4, 5, 4);
+            checkBox_startprocess.Location = new Point(38, 106);
+            checkBox_startprocess.Margin = new Padding(6, 5, 6, 5);
             checkBox_startprocess.Name = "checkBox_startprocess";
-            checkBox_startprocess.Size = new Size(324, 28);
+            checkBox_startprocess.Size = new Size(430, 35);
             checkBox_startprocess.TabIndex = 0;
             checkBox_startprocess.Text = "服务端监控（监控服务端运行状态）";
             checkBox_startprocess.UseVisualStyleBackColor = true;
@@ -347,9 +348,10 @@
             // 
             // selectBackuppathButton
             // 
-            selectBackuppathButton.Location = new Point(500, 254);
+            selectBackuppathButton.Location = new Point(636, 328);
+            selectBackuppathButton.Margin = new Padding(4, 4, 4, 4);
             selectBackuppathButton.Name = "selectBackuppathButton";
-            selectBackuppathButton.Size = new Size(63, 32);
+            selectBackuppathButton.Size = new Size(80, 41);
             selectBackuppathButton.TabIndex = 4;
             selectBackuppathButton.Text = "选择";
             selectBackuppathButton.UseVisualStyleBackColor = true;
@@ -358,11 +360,12 @@
             // backupSecondsbox
             // 
             backupSecondsbox.BorderStyle = BorderStyle.FixedSingle;
-            backupSecondsbox.Location = new Point(182, 80);
+            backupSecondsbox.Location = new Point(232, 103);
+            backupSecondsbox.Margin = new Padding(4, 4, 4, 4);
             backupSecondsbox.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
             backupSecondsbox.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             backupSecondsbox.Name = "backupSecondsbox";
-            backupSecondsbox.Size = new Size(377, 30);
+            backupSecondsbox.Size = new Size(480, 38);
             backupSecondsbox.TabIndex = 3;
             backupSecondsbox.Value = new decimal(new int[] { 1800, 0, 0, 0 });
             backupSecondsbox.ValueChanged += backupSecondsbox_ValueChanged;
@@ -371,47 +374,49 @@
             // labelForbackuppath
             // 
             labelForbackuppath.AutoSize = true;
-            labelForbackuppath.Location = new Point(30, 251);
-            labelForbackuppath.Margin = new Padding(5, 0, 5, 0);
+            labelForbackuppath.Location = new Point(38, 324);
+            labelForbackuppath.Margin = new Padding(6, 0, 6, 0);
             labelForbackuppath.Name = "labelForbackuppath";
-            labelForbackuppath.Size = new Size(118, 24);
+            labelForbackuppath.Size = new Size(158, 31);
             labelForbackuppath.TabIndex = 2;
             labelForbackuppath.Text = "备份存放目录";
             // 
             // backupPathbox
             // 
             backupPathbox.BorderStyle = BorderStyle.FixedSingle;
-            backupPathbox.Location = new Point(182, 250);
-            backupPathbox.Margin = new Padding(5, 4, 5, 4);
+            backupPathbox.Location = new Point(232, 323);
+            backupPathbox.Margin = new Padding(6, 5, 6, 5);
             backupPathbox.Name = "backupPathbox";
             backupPathbox.ReadOnly = true;
-            backupPathbox.Size = new Size(307, 30);
+            backupPathbox.Size = new Size(390, 38);
             backupPathbox.TabIndex = 1;
             // 
             // labelForbackupsecond
             // 
             labelForbackupsecond.AutoSize = true;
-            labelForbackupsecond.Location = new Point(30, 82);
-            labelForbackupsecond.Margin = new Padding(5, 0, 5, 0);
+            labelForbackupsecond.Location = new Point(38, 106);
+            labelForbackupsecond.Margin = new Padding(6, 0, 6, 0);
             labelForbackupsecond.Name = "labelForbackupsecond";
-            labelForbackupsecond.Size = new Size(136, 24);
+            labelForbackupsecond.Size = new Size(182, 31);
             labelForbackupsecond.TabIndex = 1;
             labelForbackupsecond.Text = "存档周期（秒）";
             // 
             // memProcessbar
             // 
-            memProcessbar.Location = new Point(310, 34);
+            memProcessbar.Location = new Point(395, 44);
+            memProcessbar.Margin = new Padding(4, 4, 4, 4);
             memProcessbar.Name = "memProcessbar";
-            memProcessbar.Size = new Size(288, 24);
+            memProcessbar.Size = new Size(367, 31);
             memProcessbar.Style = ProgressBarStyle.Continuous;
             memProcessbar.TabIndex = 7;
             // 
             // memOutput
             // 
             memOutput.AutoSize = true;
-            memOutput.Location = new Point(451, 85);
+            memOutput.Location = new Point(574, 110);
+            memOutput.Margin = new Padding(4, 0, 4, 0);
             memOutput.Name = "memOutput";
-            memOutput.Size = new Size(37, 24);
+            memOutput.Size = new Size(49, 31);
             memOutput.TabIndex = 8;
             memOutput.Text = "0%";
             memOutput.Click += memOutput_Click;
@@ -419,9 +424,10 @@
             // checkBox_geplayers
             // 
             checkBox_geplayers.AutoSize = true;
-            checkBox_geplayers.Location = new Point(31, 203);
+            checkBox_geplayers.Location = new Point(39, 262);
+            checkBox_geplayers.Margin = new Padding(4, 4, 4, 4);
             checkBox_geplayers.Name = "checkBox_geplayers";
-            checkBox_geplayers.Size = new Size(180, 28);
+            checkBox_geplayers.Size = new Size(238, 35);
             checkBox_geplayers.TabIndex = 10;
             checkBox_geplayers.Text = "自动获取在线玩家";
             checkBox_geplayers.UseVisualStyleBackColor = true;
@@ -447,9 +453,11 @@
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(memOutput);
             groupBox1.Controls.Add(memProcessbar);
-            groupBox1.Location = new Point(13, 11);
+            groupBox1.Location = new Point(17, 14);
+            groupBox1.Margin = new Padding(4, 4, 4, 4);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(625, 280);
+            groupBox1.Padding = new Padding(4, 4, 4, 4);
+            groupBox1.Size = new Size(795, 362);
             groupBox1.TabIndex = 11;
             groupBox1.TabStop = false;
             groupBox1.Text = "监控台";
@@ -457,9 +465,10 @@
             // labelForPid
             // 
             labelForPid.AutoSize = true;
-            labelForPid.Location = new Point(451, 184);
+            labelForPid.Location = new Point(574, 238);
+            labelForPid.Margin = new Padding(4, 0, 4, 0);
             labelForPid.Name = "labelForPid";
-            labelForPid.Size = new Size(21, 24);
+            labelForPid.Size = new Size(28, 31);
             labelForPid.TabIndex = 22;
             labelForPid.Text = "0";
             labelForPid.Visible = false;
@@ -467,9 +476,10 @@
             // labelForpidText
             // 
             labelForpidText.AutoSize = true;
-            labelForpidText.Location = new Point(387, 184);
+            labelForpidText.Location = new Point(493, 238);
+            labelForpidText.Margin = new Padding(4, 0, 4, 0);
             labelForpidText.Name = "labelForpidText";
-            labelForpidText.Size = new Size(58, 24);
+            labelForpidText.Size = new Size(78, 31);
             labelForpidText.TabIndex = 21;
             labelForpidText.Text = "PID：";
             labelForpidText.Visible = false;
@@ -477,72 +487,80 @@
             // labelForprogram
             // 
             labelForprogram.AutoSize = true;
-            labelForprogram.Location = new Point(451, 134);
+            labelForprogram.Location = new Point(574, 173);
+            labelForprogram.Margin = new Padding(4, 0, 4, 0);
             labelForprogram.Name = "labelForprogram";
-            labelForprogram.Size = new Size(46, 24);
+            labelForprogram.Size = new Size(62, 31);
             labelForprogram.TabIndex = 20;
             labelForprogram.Text = "未知";
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(310, 134);
+            label12.Location = new Point(395, 173);
+            label12.Margin = new Padding(4, 0, 4, 0);
             label12.Name = "label12";
-            label12.Size = new Size(136, 24);
+            label12.Size = new Size(182, 31);
             label12.TabIndex = 19;
             label12.Text = "程序运行状态：";
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(267, 34);
+            label11.Location = new Point(340, 44);
+            label11.Margin = new Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new Size(15, 216);
+            label11.Size = new Size(20, 279);
             label11.TabIndex = 18;
             label11.Text = "|\r\n|\r\n|\r\n|\r\n|\r\n|\r\n|\r\n|\r\n|";
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(16, 234);
+            label10.Location = new Point(20, 302);
+            label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
-            label10.Size = new Size(136, 24);
+            label10.Size = new Size(182, 31);
             label10.TabIndex = 17;
             label10.Text = "自动获取玩家：";
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(16, 184);
+            label9.Location = new Point(20, 238);
+            label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
-            label9.Size = new Size(111, 24);
+            label9.Size = new Size(149, 31);
             label9.TabIndex = 16;
             label9.Text = "Webhook：";
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(16, 134);
+            label8.Location = new Point(20, 173);
+            label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
-            label8.Size = new Size(82, 24);
+            label8.Size = new Size(110, 31);
             label8.TabIndex = 15;
             label8.Text = "自动存档";
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(16, 85);
+            label7.Location = new Point(20, 110);
+            label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
-            label7.Size = new Size(118, 24);
+            label7.Size = new Size(158, 31);
             label7.TabIndex = 14;
             label7.Text = "服务端监控：";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(16, 34);
+            label6.Location = new Point(20, 44);
+            label6.Margin = new Padding(4, 0, 4, 0);
             label6.Name = "label6";
-            label6.Size = new Size(100, 24);
+            label6.Size = new Size(134, 31);
             label6.TabIndex = 13;
             label6.Text = "自动关服：";
             // 
@@ -550,10 +568,10 @@
             // 
             labelForwebhook.AccessibleRole = AccessibleRole.None;
             labelForwebhook.AutoSize = true;
-            labelForwebhook.Location = new Point(160, 184);
-            labelForwebhook.Margin = new Padding(5, 0, 5, 0);
+            labelForwebhook.Location = new Point(204, 238);
+            labelForwebhook.Margin = new Padding(6, 0, 6, 0);
             labelForwebhook.Name = "labelForwebhook";
-            labelForwebhook.Size = new Size(68, 24);
+            labelForwebhook.Size = new Size(92, 31);
             labelForwebhook.TabIndex = 12;
             labelForwebhook.Text = "[ 关闭 ]";
             // 
@@ -561,10 +579,10 @@
             // 
             labelForgetplayers.AccessibleRole = AccessibleRole.None;
             labelForgetplayers.AutoSize = true;
-            labelForgetplayers.Location = new Point(160, 234);
-            labelForgetplayers.Margin = new Padding(5, 0, 5, 0);
+            labelForgetplayers.Location = new Point(204, 302);
+            labelForgetplayers.Margin = new Padding(6, 0, 6, 0);
             labelForgetplayers.Name = "labelForgetplayers";
-            labelForgetplayers.Size = new Size(68, 24);
+            labelForgetplayers.Size = new Size(92, 31);
             labelForgetplayers.TabIndex = 12;
             labelForgetplayers.Text = "[ 关闭 ]";
             // 
@@ -572,10 +590,10 @@
             // 
             labelForsave.AccessibleRole = AccessibleRole.None;
             labelForsave.AutoSize = true;
-            labelForsave.Location = new Point(160, 134);
-            labelForsave.Margin = new Padding(5, 0, 5, 0);
+            labelForsave.Location = new Point(204, 173);
+            labelForsave.Margin = new Padding(6, 0, 6, 0);
             labelForsave.Name = "labelForsave";
-            labelForsave.Size = new Size(68, 24);
+            labelForsave.Size = new Size(92, 31);
             labelForsave.TabIndex = 12;
             labelForsave.Text = "[ 关闭 ]";
             // 
@@ -583,10 +601,10 @@
             // 
             labelForstart.AccessibleRole = AccessibleRole.None;
             labelForstart.AutoSize = true;
-            labelForstart.Location = new Point(160, 85);
-            labelForstart.Margin = new Padding(5, 0, 5, 0);
+            labelForstart.Location = new Point(204, 110);
+            labelForstart.Margin = new Padding(6, 0, 6, 0);
             labelForstart.Name = "labelForstart";
-            labelForstart.Size = new Size(68, 24);
+            labelForstart.Size = new Size(92, 31);
             labelForstart.TabIndex = 12;
             labelForstart.Text = "[ 关闭 ]";
             // 
@@ -594,19 +612,20 @@
             // 
             labelForreboot.AccessibleRole = AccessibleRole.None;
             labelForreboot.AutoSize = true;
-            labelForreboot.Location = new Point(160, 34);
-            labelForreboot.Margin = new Padding(5, 0, 5, 0);
+            labelForreboot.Location = new Point(204, 44);
+            labelForreboot.Margin = new Padding(6, 0, 6, 0);
             labelForreboot.Name = "labelForreboot";
-            labelForreboot.Size = new Size(68, 24);
+            labelForreboot.Size = new Size(92, 31);
             labelForreboot.TabIndex = 12;
             labelForreboot.Text = "[ 关闭 ]";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(310, 85);
+            label1.Location = new Point(395, 110);
+            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(136, 24);
+            label1.Size = new Size(182, 31);
             label1.TabIndex = 9;
             label1.Text = "系统内存占用：";
             // 
@@ -614,18 +633,20 @@
             // 
             arguments.BorderStyle = BorderStyle.FixedSingle;
             arguments.Enabled = false;
-            arguments.Location = new Point(215, 133);
+            arguments.Location = new Point(274, 172);
+            arguments.Margin = new Padding(4, 4, 4, 4);
             arguments.Name = "arguments";
-            arguments.Size = new Size(345, 30);
+            arguments.Size = new Size(439, 38);
             arguments.TabIndex = 11;
             arguments.Text = "EpicApp=PalServer";
             // 
             // checkBox_args
             // 
             checkBox_args.AutoSize = true;
-            checkBox_args.Location = new Point(30, 133);
+            checkBox_args.Location = new Point(38, 172);
+            checkBox_args.Margin = new Padding(4, 4, 4, 4);
             checkBox_args.Name = "checkBox_args";
-            checkBox_args.Size = new Size(180, 28);
+            checkBox_args.Size = new Size(238, 35);
             checkBox_args.TabIndex = 10;
             checkBox_args.Text = "参数启动（可选）";
             checkBox_args.UseVisualStyleBackColor = true;
@@ -633,10 +654,10 @@
             // 
             // settingButton
             // 
-            settingButton.Location = new Point(25, 40);
-            settingButton.Margin = new Padding(5, 4, 5, 4);
+            settingButton.Location = new Point(32, 52);
+            settingButton.Margin = new Padding(6, 5, 6, 5);
             settingButton.Name = "settingButton";
-            settingButton.Size = new Size(212, 32);
+            settingButton.Size = new Size(270, 41);
             settingButton.TabIndex = 12;
             settingButton.Text = "服务端配置文件(测试)";
             settingButton.UseVisualStyleBackColor = true;
@@ -645,17 +666,19 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(30, 131);
+            label3.Location = new Point(38, 169);
+            label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new Size(118, 96);
+            label3.Size = new Size(158, 124);
             label3.TabIndex = 8;
             label3.Text = "游戏存档目录\r\n（根据服务端\r\n位置自动生成\r\n可手动选择）";
             // 
             // selectCustombutton
             // 
-            selectCustombutton.Location = new Point(500, 128);
+            selectCustombutton.Location = new Point(636, 165);
+            selectCustombutton.Margin = new Padding(4, 4, 4, 4);
             selectCustombutton.Name = "selectCustombutton";
-            selectCustombutton.Size = new Size(63, 32);
+            selectCustombutton.Size = new Size(80, 41);
             selectCustombutton.TabIndex = 7;
             selectCustombutton.Text = "选择";
             selectCustombutton.UseVisualStyleBackColor = true;
@@ -664,62 +687,74 @@
             // gamedataBox
             // 
             gamedataBox.BorderStyle = BorderStyle.FixedSingle;
-            gamedataBox.Location = new Point(182, 130);
+            gamedataBox.Location = new Point(232, 168);
+            gamedataBox.Margin = new Padding(4, 4, 4, 4);
             gamedataBox.Name = "gamedataBox";
             gamedataBox.ReadOnly = true;
-            gamedataBox.Size = new Size(307, 30);
+            gamedataBox.Size = new Size(390, 38);
             gamedataBox.TabIndex = 6;
             // 
             // groupBox3
             // 
             groupBox3.Controls.Add(outPutbox);
-            groupBox3.Location = new Point(13, 296);
+            groupBox3.Location = new Point(17, 382);
+            groupBox3.Margin = new Padding(4, 4, 4, 4);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(625, 254);
+            groupBox3.Padding = new Padding(4, 4, 4, 4);
+            groupBox3.Size = new Size(795, 328);
             groupBox3.TabIndex = 13;
             groupBox3.TabStop = false;
             groupBox3.Text = "Console";
             // 
             // playersView
             // 
-            playersView.Location = new Point(8, 7);
+            playersView.Columns.AddRange(new ColumnHeader[] { columnHeader_name, columnHeader_uid, columnHeader_steamId });
+            playersView.FullRowSelect = true;
+            playersView.Location = new Point(10, 9);
+            playersView.Margin = new Padding(4, 4, 4, 4);
+            playersView.MultiSelect = false;
             playersView.Name = "playersView";
-            playersView.Size = new Size(579, 173);
+            playersView.Size = new Size(736, 222);
             playersView.TabIndex = 14;
             playersView.UseCompatibleStateImageBehavior = false;
+            playersView.View = View.Details;
             playersView.ItemSelectionChanged += playersView_ItemSelectionChanged;
             // 
             // playersCounterLabel
             // 
             playersCounterLabel.AutoSize = true;
-            playersCounterLabel.Location = new Point(240, 205);
+            playersCounterLabel.Location = new Point(305, 265);
+            playersCounterLabel.Margin = new Padding(4, 0, 4, 0);
             playersCounterLabel.Name = "playersCounterLabel";
-            playersCounterLabel.Size = new Size(136, 24);
+            playersCounterLabel.Size = new Size(182, 31);
             playersCounterLabel.TabIndex = 15;
             playersCounterLabel.Text = "当前在线：未知";
             // 
             // UIDBox
             // 
             UIDBox.BorderStyle = BorderStyle.FixedSingle;
-            UIDBox.Location = new Point(101, 251);
+            UIDBox.Location = new Point(129, 324);
+            UIDBox.Margin = new Padding(4, 4, 4, 4);
             UIDBox.Name = "UIDBox";
-            UIDBox.Size = new Size(239, 30);
+            UIDBox.Size = new Size(304, 38);
             UIDBox.TabIndex = 25;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(31, 254);
+            label5.Location = new Point(39, 328);
+            label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new Size(60, 24);
+            label5.Size = new Size(81, 31);
             label5.TabIndex = 24;
             label5.Text = "UID：";
             // 
             // banbutton
             // 
-            banbutton.Location = new Point(475, 250);
+            banbutton.Location = new Point(605, 323);
+            banbutton.Margin = new Padding(4, 4, 4, 4);
             banbutton.Name = "banbutton";
-            banbutton.Size = new Size(112, 32);
+            banbutton.Size = new Size(143, 41);
             banbutton.TabIndex = 23;
             banbutton.Text = "Ban";
             banbutton.UseVisualStyleBackColor = true;
@@ -727,9 +762,10 @@
             // 
             // kickbutton
             // 
-            kickbutton.Location = new Point(357, 250);
+            kickbutton.Location = new Point(454, 323);
+            kickbutton.Margin = new Padding(4, 4, 4, 4);
             kickbutton.Name = "kickbutton";
-            kickbutton.Size = new Size(112, 32);
+            kickbutton.Size = new Size(143, 41);
             kickbutton.TabIndex = 23;
             kickbutton.Text = "Kick";
             kickbutton.UseVisualStyleBackColor = true;
@@ -738,17 +774,19 @@
             // versionLabel
             // 
             versionLabel.AutoSize = true;
-            versionLabel.Location = new Point(31, 424);
+            versionLabel.Location = new Point(39, 548);
+            versionLabel.Margin = new Padding(4, 0, 4, 0);
             versionLabel.Name = "versionLabel";
-            versionLabel.Size = new Size(154, 24);
+            versionLabel.Size = new Size(206, 31);
             versionLabel.TabIndex = 21;
             versionLabel.Text = "服务端版本：未知";
             // 
             // button4
             // 
-            button4.Location = new Point(31, 480);
+            button4.Location = new Point(39, 620);
+            button4.Margin = new Padding(4, 4, 4, 4);
             button4.Name = "button4";
-            button4.Size = new Size(163, 32);
+            button4.Size = new Size(207, 41);
             button4.TabIndex = 20;
             button4.Text = "获取服本号";
             button4.UseVisualStyleBackColor = true;
@@ -756,9 +794,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(409, 480);
+            button3.Location = new Point(521, 620);
+            button3.Margin = new Padding(4, 4, 4, 4);
             button3.Name = "button3";
-            button3.Size = new Size(163, 32);
+            button3.Size = new Size(207, 41);
             button3.TabIndex = 20;
             button3.Text = "10s安全关服";
             button3.UseVisualStyleBackColor = true;
@@ -766,9 +805,10 @@
             // 
             // button2
             // 
-            button2.Location = new Point(220, 480);
+            button2.Location = new Point(280, 620);
+            button2.Margin = new Padding(4, 4, 4, 4);
             button2.Name = "button2";
-            button2.Size = new Size(163, 32);
+            button2.Size = new Size(207, 41);
             button2.TabIndex = 19;
             button2.Text = "服务端存档";
             button2.UseVisualStyleBackColor = true;
@@ -776,9 +816,10 @@
             // 
             // button1
             // 
-            button1.Location = new Point(475, 306);
+            button1.Location = new Point(605, 395);
+            button1.Margin = new Padding(4, 4, 4, 4);
             button1.Name = "button1";
-            button1.Size = new Size(112, 32);
+            button1.Size = new Size(143, 41);
             button1.TabIndex = 18;
             button1.Text = "发送";
             button1.UseVisualStyleBackColor = true;
@@ -787,18 +828,20 @@
             // textBox1
             // 
             textBox1.BorderStyle = BorderStyle.FixedSingle;
-            textBox1.Location = new Point(102, 306);
+            textBox1.Location = new Point(130, 395);
+            textBox1.Margin = new Padding(4, 4, 4, 4);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(365, 30);
+            textBox1.Size = new Size(464, 38);
             textBox1.TabIndex = 17;
             textBox1.Text = "This_is_a_rcon_message.";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(31, 311);
+            label2.Location = new Point(39, 402);
+            label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(64, 24);
+            label2.Size = new Size(86, 31);
             label2.TabIndex = 16;
             label2.Text = "广播：";
             // 
@@ -807,9 +850,11 @@
             groupBox5.Controls.Add(linkLabel2);
             groupBox5.Controls.Add(verisionLabel);
             groupBox5.Controls.Add(linkLabel1);
-            groupBox5.Location = new Point(13, 558);
+            groupBox5.Location = new Point(17, 721);
+            groupBox5.Margin = new Padding(4, 4, 4, 4);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(625, 78);
+            groupBox5.Padding = new Padding(4, 4, 4, 4);
+            groupBox5.Size = new Size(795, 101);
             groupBox5.TabIndex = 17;
             groupBox5.TabStop = false;
             groupBox5.Text = "Version";
@@ -817,9 +862,10 @@
             // linkLabel2
             // 
             linkLabel2.AutoSize = true;
-            linkLabel2.Location = new Point(314, 31);
+            linkLabel2.Location = new Point(400, 40);
+            linkLabel2.Margin = new Padding(4, 0, 4, 0);
             linkLabel2.Name = "linkLabel2";
-            linkLabel2.Size = new Size(154, 24);
+            linkLabel2.Size = new Size(206, 31);
             linkLabel2.TabIndex = 2;
             linkLabel2.TabStop = true;
             linkLabel2.Text = "点击查看最新版本";
@@ -829,18 +875,20 @@
             // verisionLabel
             // 
             verisionLabel.AutoSize = true;
-            verisionLabel.Location = new Point(16, 31);
+            verisionLabel.Location = new Point(20, 40);
+            verisionLabel.Margin = new Padding(4, 0, 4, 0);
             verisionLabel.Name = "verisionLabel";
-            verisionLabel.Size = new Size(150, 24);
+            verisionLabel.Size = new Size(201, 31);
             verisionLabel.TabIndex = 1;
             verisionLabel.Text = "当前版本：v2.0.0";
             // 
             // linkLabel1
             // 
             linkLabel1.AutoSize = true;
-            linkLabel1.Location = new Point(190, 31);
+            linkLabel1.Location = new Point(242, 40);
+            linkLabel1.Margin = new Padding(4, 0, 4, 0);
             linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(83, 24);
+            linkLabel1.Size = new Size(112, 31);
             linkLabel1.TabIndex = 0;
             linkLabel1.TabStop = true;
             linkLabel1.Text = " By Kiros";
@@ -849,11 +897,11 @@
             // groupBox6
             // 
             groupBox6.Controls.Add(settingButton);
-            groupBox6.Location = new Point(5, 7);
-            groupBox6.Margin = new Padding(5, 4, 5, 4);
+            groupBox6.Location = new Point(6, 9);
+            groupBox6.Margin = new Padding(6, 5, 6, 5);
             groupBox6.Name = "groupBox6";
-            groupBox6.Padding = new Padding(5, 4, 5, 4);
-            groupBox6.Size = new Size(581, 92);
+            groupBox6.Padding = new Padding(6, 5, 6, 5);
+            groupBox6.Size = new Size(739, 119);
             groupBox6.TabIndex = 18;
             groupBox6.TabStop = false;
             groupBox6.Text = "配置文件";
@@ -869,9 +917,11 @@
             groupBox7.Controls.Add(testWebhookbutton);
             groupBox7.Controls.Add(webhookBox);
             groupBox7.Controls.Add(checkBox_webhook);
-            groupBox7.Location = new Point(8, 7);
+            groupBox7.Location = new Point(10, 9);
+            groupBox7.Margin = new Padding(4, 4, 4, 4);
             groupBox7.Name = "groupBox7";
-            groupBox7.Size = new Size(578, 310);
+            groupBox7.Padding = new Padding(4, 4, 4, 4);
+            groupBox7.Size = new Size(736, 400);
             groupBox7.TabIndex = 19;
             groupBox7.TabStop = false;
             groupBox7.Text = "Webhook";
@@ -879,9 +929,10 @@
             // checkBox_playerStatus
             // 
             checkBox_playerStatus.AutoSize = true;
-            checkBox_playerStatus.Location = new Point(25, 247);
+            checkBox_playerStatus.Location = new Point(32, 319);
+            checkBox_playerStatus.Margin = new Padding(4, 4, 4, 4);
             checkBox_playerStatus.Name = "checkBox_playerStatus";
-            checkBox_playerStatus.Size = new Size(144, 28);
+            checkBox_playerStatus.Size = new Size(190, 35);
             checkBox_playerStatus.TabIndex = 8;
             checkBox_playerStatus.Text = "玩家在线动态";
             checkBox_playerStatus.UseVisualStyleBackColor = true;
@@ -889,9 +940,10 @@
             // checkBox_web_getplayers
             // 
             checkBox_web_getplayers.AutoSize = true;
-            checkBox_web_getplayers.Location = new Point(231, 247);
+            checkBox_web_getplayers.Location = new Point(294, 319);
+            checkBox_web_getplayers.Margin = new Padding(4, 4, 4, 4);
             checkBox_web_getplayers.Name = "checkBox_web_getplayers";
-            checkBox_web_getplayers.Size = new Size(310, 28);
+            checkBox_web_getplayers.Size = new Size(410, 35);
             checkBox_web_getplayers.TabIndex = 7;
             checkBox_web_getplayers.Text = "推送在线玩家信息（30分钟一次）";
             checkBox_web_getplayers.UseVisualStyleBackColor = true;
@@ -899,9 +951,10 @@
             // checkbox_web_reboot
             // 
             checkbox_web_reboot.AutoSize = true;
-            checkbox_web_reboot.Location = new Point(25, 147);
+            checkbox_web_reboot.Location = new Point(32, 190);
+            checkbox_web_reboot.Margin = new Padding(4, 4, 4, 4);
             checkbox_web_reboot.Name = "checkbox_web_reboot";
-            checkbox_web_reboot.Size = new Size(180, 28);
+            checkbox_web_reboot.Size = new Size(238, 35);
             checkbox_web_reboot.TabIndex = 6;
             checkbox_web_reboot.Text = "内存阈值触发通知";
             checkbox_web_reboot.UseVisualStyleBackColor = true;
@@ -909,9 +962,10 @@
             // checkBox_web_startprocess
             // 
             checkBox_web_startprocess.AutoSize = true;
-            checkBox_web_startprocess.Location = new Point(231, 147);
+            checkBox_web_startprocess.Location = new Point(294, 190);
+            checkBox_web_startprocess.Margin = new Padding(4, 4, 4, 4);
             checkBox_web_startprocess.Name = "checkBox_web_startprocess";
-            checkBox_web_startprocess.Size = new Size(162, 28);
+            checkBox_web_startprocess.Size = new Size(214, 35);
             checkBox_web_startprocess.TabIndex = 5;
             checkBox_web_startprocess.Text = "服务端启动通知";
             checkBox_web_startprocess.UseVisualStyleBackColor = true;
@@ -919,9 +973,10 @@
             // checkBox_web_save
             // 
             checkBox_web_save.AutoSize = true;
-            checkBox_web_save.Location = new Point(25, 197);
+            checkBox_web_save.Location = new Point(32, 254);
+            checkBox_web_save.Margin = new Padding(4, 4, 4, 4);
             checkBox_web_save.Name = "checkBox_web_save";
-            checkBox_web_save.Size = new Size(108, 28);
+            checkBox_web_save.Size = new Size(142, 35);
             checkBox_web_save.TabIndex = 4;
             checkBox_web_save.Text = "存档通知";
             checkBox_web_save.UseVisualStyleBackColor = true;
@@ -929,18 +984,20 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(25, 97);
+            label4.Location = new Point(32, 125);
+            label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
-            label4.Size = new Size(53, 24);
+            label4.Size = new Size(71, 31);
             label4.TabIndex = 3;
             label4.Text = "Url：";
             // 
             // testWebhookbutton
             // 
             testWebhookbutton.Enabled = false;
-            testWebhookbutton.Location = new Point(448, 93);
+            testWebhookbutton.Location = new Point(570, 120);
+            testWebhookbutton.Margin = new Padding(4, 4, 4, 4);
             testWebhookbutton.Name = "testWebhookbutton";
-            testWebhookbutton.Size = new Size(112, 34);
+            testWebhookbutton.Size = new Size(143, 44);
             testWebhookbutton.TabIndex = 2;
             testWebhookbutton.Text = "测试";
             testWebhookbutton.UseVisualStyleBackColor = true;
@@ -950,17 +1007,19 @@
             // 
             webhookBox.BorderStyle = BorderStyle.FixedSingle;
             webhookBox.Enabled = false;
-            webhookBox.Location = new Point(90, 95);
+            webhookBox.Location = new Point(115, 123);
+            webhookBox.Margin = new Padding(4, 4, 4, 4);
             webhookBox.Name = "webhookBox";
-            webhookBox.Size = new Size(352, 30);
+            webhookBox.Size = new Size(447, 38);
             webhookBox.TabIndex = 1;
             // 
             // checkBox_webhook
             // 
             checkBox_webhook.AutoSize = true;
-            checkBox_webhook.Location = new Point(25, 47);
+            checkBox_webhook.Location = new Point(32, 61);
+            checkBox_webhook.Margin = new Padding(4, 4, 4, 4);
             checkBox_webhook.Name = "checkBox_webhook";
-            checkBox_webhook.Size = new Size(407, 28);
+            checkBox_webhook.Size = new Size(541, 35);
             checkBox_webhook.TabIndex = 0;
             checkBox_webhook.Text = "启用Webhook推送（已匹配企业微信和钉钉）";
             checkBox_webhook.UseVisualStyleBackColor = true;
@@ -973,11 +1032,11 @@
             tabControl1.Controls.Add(tabPage3);
             tabControl1.Controls.Add(tabPage4);
             tabControl1.Controls.Add(tabPage5);
-            tabControl1.Location = new Point(644, 13);
-            tabControl1.Margin = new Padding(5, 4, 5, 4);
+            tabControl1.Location = new Point(820, 17);
+            tabControl1.Margin = new Padding(6, 5, 6, 5);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(603, 621);
+            tabControl1.Size = new Size(767, 802);
             tabControl1.TabIndex = 20;
             // 
             // tabPage1
@@ -999,13 +1058,13 @@
             tabPage1.Controls.Add(checkBox_startprocess);
             tabPage1.Controls.Add(rconPortbox);
             tabPage1.Controls.Add(checkSecondbox);
-            tabPage1.Location = new Point(4, 33);
-            tabPage1.Margin = new Padding(5, 4, 5, 4);
+            tabPage1.Location = new Point(8, 45);
+            tabPage1.Margin = new Padding(6, 5, 6, 5);
             tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(5, 4, 5, 4);
-            tabPage1.Size = new Size(595, 584);
+            tabPage1.Padding = new Padding(6, 5, 6, 5);
+            tabPage1.Size = new Size(751, 749);
             tabPage1.TabIndex = 0;
-            tabPage1.Text = "tabPage1";
+            tabPage1.Text = "服务监控";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
@@ -1019,13 +1078,13 @@
             tabPage2.Controls.Add(selectBackuppathButton);
             tabPage2.Controls.Add(labelForbackupsecond);
             tabPage2.Controls.Add(backupSecondsbox);
-            tabPage2.Location = new Point(4, 33);
-            tabPage2.Margin = new Padding(5, 4, 5, 4);
+            tabPage2.Location = new Point(8, 45);
+            tabPage2.Margin = new Padding(6, 5, 6, 5);
             tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(5, 4, 5, 4);
-            tabPage2.Size = new Size(595, 584);
+            tabPage2.Padding = new Padding(6, 5, 6, 5);
+            tabPage2.Size = new Size(751, 749);
             tabPage2.TabIndex = 1;
-            tabPage2.Text = "tabPage2";
+            tabPage2.Text = "自动存档";
             tabPage2.UseVisualStyleBackColor = true;
             // 
             // tabPage3
@@ -1045,22 +1104,22 @@
             tabPage3.Controls.Add(button1);
             tabPage3.Controls.Add(button3);
             tabPage3.Controls.Add(button2);
-            tabPage3.Location = new Point(4, 33);
-            tabPage3.Margin = new Padding(5, 4, 5, 4);
+            tabPage3.Location = new Point(8, 45);
+            tabPage3.Margin = new Padding(6, 5, 6, 5);
             tabPage3.Name = "tabPage3";
-            tabPage3.Padding = new Padding(5, 4, 5, 4);
-            tabPage3.Size = new Size(595, 584);
+            tabPage3.Padding = new Padding(6, 5, 6, 5);
+            tabPage3.Size = new Size(751, 749);
             tabPage3.TabIndex = 2;
-            tabPage3.Text = "tabPage3";
+            tabPage3.Text = "Rcon";
             tabPage3.UseVisualStyleBackColor = true;
             // 
             // labelForservername
             // 
             labelForservername.AutoSize = true;
-            labelForservername.Location = new Point(31, 367);
-            labelForservername.Margin = new Padding(5, 0, 5, 0);
+            labelForservername.Location = new Point(39, 474);
+            labelForservername.Margin = new Padding(6, 0, 6, 0);
             labelForservername.Name = "labelForservername";
-            labelForservername.Size = new Size(154, 24);
+            labelForservername.Size = new Size(206, 31);
             labelForservername.TabIndex = 26;
             labelForservername.Text = "服务器名称：未知";
             // 
@@ -1069,21 +1128,23 @@
             tabPage4.Controls.Add(groupBox4);
             tabPage4.Controls.Add(groupBox2);
             tabPage4.Controls.Add(groupBox7);
-            tabPage4.Location = new Point(4, 33);
-            tabPage4.Margin = new Padding(5, 4, 5, 4);
+            tabPage4.Location = new Point(8, 45);
+            tabPage4.Margin = new Padding(6, 5, 6, 5);
             tabPage4.Name = "tabPage4";
-            tabPage4.Padding = new Padding(5, 4, 5, 4);
-            tabPage4.Size = new Size(595, 584);
+            tabPage4.Padding = new Padding(6, 5, 6, 5);
+            tabPage4.Size = new Size(751, 749);
             tabPage4.TabIndex = 3;
-            tabPage4.Text = "tabPage4";
+            tabPage4.Text = "通知";
             tabPage4.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
             groupBox4.Controls.Add(checkBox_mem);
-            groupBox4.Location = new Point(8, 447);
+            groupBox4.Location = new Point(10, 577);
+            groupBox4.Margin = new Padding(4, 4, 4, 4);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(578, 120);
+            groupBox4.Padding = new Padding(4, 4, 4, 4);
+            groupBox4.Size = new Size(736, 155);
             groupBox4.TabIndex = 21;
             groupBox4.TabStop = false;
             groupBox4.Text = "控制台输出";
@@ -1091,9 +1152,11 @@
             // groupBox2
             // 
             groupBox2.Controls.Add(checkBox_Noti);
-            groupBox2.Location = new Point(8, 323);
+            groupBox2.Location = new Point(10, 417);
+            groupBox2.Margin = new Padding(4, 4, 4, 4);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(578, 116);
+            groupBox2.Padding = new Padding(4, 4, 4, 4);
+            groupBox2.Size = new Size(736, 150);
             groupBox2.TabIndex = 20;
             groupBox2.TabStop = false;
             groupBox2.Text = "任务栏通知";
@@ -1101,10 +1164,10 @@
             // checkBox_Noti
             // 
             checkBox_Noti.AutoSize = true;
-            checkBox_Noti.Location = new Point(25, 49);
-            checkBox_Noti.Margin = new Padding(5, 4, 5, 4);
+            checkBox_Noti.Location = new Point(32, 63);
+            checkBox_Noti.Margin = new Padding(6, 5, 6, 5);
             checkBox_Noti.Name = "checkBox_Noti";
-            checkBox_Noti.Size = new Size(126, 28);
+            checkBox_Noti.Size = new Size(166, 35);
             checkBox_Noti.TabIndex = 12;
             checkBox_Noti.Text = "任务栏通知";
             checkBox_Noti.UseVisualStyleBackColor = true;
@@ -1112,12 +1175,13 @@
             // tabPage5
             // 
             tabPage5.Controls.Add(groupBox6);
-            tabPage5.Location = new Point(4, 33);
+            tabPage5.Location = new Point(8, 45);
+            tabPage5.Margin = new Padding(4, 4, 4, 4);
             tabPage5.Name = "tabPage5";
-            tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(595, 584);
+            tabPage5.Padding = new Padding(4, 4, 4, 4);
+            tabPage5.Size = new Size(751, 749);
             tabPage5.TabIndex = 4;
-            tabPage5.Text = "tabPage5";
+            tabPage5.Text = "测试功能";
             tabPage5.UseVisualStyleBackColor = true;
             // 
             // notifyIcon1
@@ -1133,26 +1197,41 @@
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(117, 34);
+            contextMenuStrip1.Size = new Size(137, 42);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(116, 30);
+            toolStripMenuItem1.Size = new Size(136, 38);
             toolStripMenuItem1.Text = "退出";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
+            // columnHeader_name
+            // 
+            columnHeader_name.Text = "Name";
+            columnHeader_name.Width = 250;
+            // 
+            // columnHeader_uid
+            // 
+            columnHeader_uid.Text = "UID";
+            columnHeader_uid.Width = 200;
+            // 
+            // columnHeader_steamId
+            // 
+            columnHeader_steamId.Text = "Steam ID";
+            columnHeader_steamId.Width = 200;
+            // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleDimensions = new SizeF(14F, 31F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1256, 645);
+            ClientSize = new Size(1599, 833);
             Controls.Add(tabControl1);
             Controls.Add(groupBox5);
             Controls.Add(groupBox3);
             Controls.Add(groupBox1);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(5, 4, 5, 4);
+            Margin = new Padding(6, 5, 6, 5);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Palworld Server Protector";
@@ -1279,5 +1358,8 @@
         private ToolStripMenuItem toolStripMenuItem1;
         private Label labelForservername;
         private CheckBox checkBox_playerStatus;
+        private ColumnHeader columnHeader_name;
+        private ColumnHeader columnHeader_uid;
+        private ColumnHeader columnHeader_steamId;
     }
 }
