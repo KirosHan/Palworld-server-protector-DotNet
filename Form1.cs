@@ -13,6 +13,7 @@ namespace Palworld_server_protector_DotNet
     using static System.Windows.Forms.LinkLabel;
     using System.Net;
     using System.Globalization;
+    using System.Reflection;
 
     public partial class Form1 : Form
     {
@@ -464,7 +465,16 @@ namespace Palworld_server_protector_DotNet
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            playersView.View = View.Details;
+            playersView.Columns.Add(new ColumnHeader() { Text = "Name", Width = playersView.Width / 3 });
+            playersView.Columns.Add(new ColumnHeader() { Text = "UID", Width = playersView.Width / 3 });
+            playersView.Columns.Add(new ColumnHeader() { Text = "Steam ID", Width = playersView.Width / 3 });
 
+            playersView.FullRowSelect = true;
+            playersView.MultiSelect = false;
+            playersView.HideSelection = false;
+
+            comboBox_id.SelectedIndex = 0;
             InitializeTimer();
             string buildVersion = Application.ProductVersion;
             int endIndex = buildVersion.IndexOf('+'); // 找到版本号中的"+"符号的索引位置
@@ -846,12 +856,11 @@ namespace Palworld_server_protector_DotNet
             try
             {
                 info = await Rcon.SendCommand(Settings.RconHost, Convert.ToInt32(rconPortbox.Text), passWordbox.Text, "info");
-
                 int startIndex = info.IndexOf("[") + 1;
                 int endIndex = info.IndexOf("]");
                 string version = info.Substring(startIndex, endIndex - startIndex);
-                int lastSpaceIndex = info.LastIndexOf(" ");
-                string serverName = info.Substring(lastSpaceIndex + 1);
+                int lastIndex = info.IndexOf("] ");
+                string serverName = info.Substring(lastIndex + 2);
                 labelForservername.Text = $"服务器名称：{serverName}";
                 versionLabel.Text = $"服务端版本：{version}";
                 OutputMessageAsync($"当前服务端版本：{version}");
@@ -983,7 +992,25 @@ namespace Palworld_server_protector_DotNet
             {
 
                 string Uid = playersView.SelectedItems[0].SubItems[1].Text;
-                UIDBox.Text = Uid;
+                string Steamid = playersView.SelectedItems[0].SubItems[2].Text;
+                string Name = playersView.SelectedItems[0].SubItems[0].Text;
+                if (comboBox_id.SelectedIndex == 0)
+                {
+                    UIDBox.Text = Uid;
+                }
+                else if (comboBox_id.SelectedIndex == 1)
+                {
+                    UIDBox.Text = Steamid;
+                }
+                else if (comboBox_id.SelectedIndex == 2)
+                {
+                    UIDBox.Text = Name;
+                }
+                else
+                {
+                    UIDBox.Text = Uid;
+                }
+
 
             }
         }
@@ -1154,6 +1181,21 @@ namespace Palworld_server_protector_DotNet
             else
             {
                 OutputMessageAsync($"已停用输出内存占用数据到回显。");
+            }
+        }
+
+      
+        private void button5_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (this.Width < 1278)
+            {
+                this.Width = 1278;
+                button5.Text = "<<";
+            }
+            else if (this.Width >= 1278)
+            {
+                this.Width = 669;
+                button5.Text = ">>";
             }
         }
     }

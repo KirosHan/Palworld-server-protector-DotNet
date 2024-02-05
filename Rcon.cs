@@ -27,15 +27,15 @@ namespace Palworld_server_protector_DotNet
 
         public override bool Equals(object obj)
         {
-            return obj is PalUserInfo info &&
-                   Name == info.Name &&
-                   Uid == info.Uid &&
-                   SteamId == info.SteamId;
+            //return obj is PalUserInfo info && Name == info.Name && Uid == info.Uid && SteamId == info.SteamId;
+            return obj is PalUserInfo info && Name == info.Name;
+
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Uid, SteamId);
+            //return HashCode.Combine(Name, Uid, SteamId);
+            return HashCode.Combine(Name);
         }
     }
     internal class Rcon
