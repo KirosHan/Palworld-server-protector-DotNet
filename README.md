@@ -140,8 +140,8 @@ graph LR
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://kiros.onbeta.com"><img src="https://avatars.githubusercontent.com/u/22515170?v=4" width="100px;" alt=""/><br /><sub><b>Kiros</b></sub></a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Vincentzyx"><img src="https://avatars.githubusercontent.com/u/8458250?v=4" width="100px;" alt=""/><br /><sub><b>Vincentzyx</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://kiros.onbeta.com"><img src="https://avatars.githubusercontent.com/u/22515170?v=4?s=100" width="100px;" alt="Kiros"/><br /><sub><b>Kiros</b></sub></a><br /><a href="#infra-KirosHan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com//KirosHan/Palworld-server-protector-DotNet/commits?author=KirosHan" title="Tests">⚠️</a> <a href="https://github.com//KirosHan/Palworld-server-protector-DotNet/commits?author=KirosHan" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Vincentzyx"><img src="https://avatars.githubusercontent.com/u/8458250?v=4?s=100" width="100px;" alt="Vincentzyx"/><br /><sub><b>Vincentzyx</b></sub></a><br /><a href="https://github.com//KirosHan/Palworld-server-protector-DotNet/commits?author=Vincentzyx" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
@@ -153,6 +153,12 @@ graph LR
 
 ## :chart_with_upwards_trend:Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date)](https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date)
+<a href="https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date" />
+  </picture>
+</a>
 
 
