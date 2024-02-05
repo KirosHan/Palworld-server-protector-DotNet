@@ -144,9 +144,6 @@ graph LR
 
 ## :chart_with_upwards_trend:Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date)](https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date)
-## Star History
-
 <a href="https://star-history.com/#KirosHan/Palworld-server-protector-DotNet&Date">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=KirosHan/Palworld-server-protector-DotNet&type=Date&theme=dark" />
