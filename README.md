@@ -31,6 +31,10 @@
 ## :eyes:效果图
 ![预览1](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_1.png)
 ![预览2](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/2.5.1_2.png)
+
+## :page_facing_up:使用方法
+[https://github.com/KirosHan/Palworld-server-protector-DotNet/wiki](https://github.com/KirosHan/Palworld-server-protector-DotNet/wiki)
+
 ## 	:airplane:直接下载（懒人专属）
 更新时间：2024-02-05
 
