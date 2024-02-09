@@ -7,6 +7,7 @@ using SharedLibrary;
 using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,12 +15,22 @@ namespace ConsoleWhiteList
 {
 	internal class Program
 	{
-		//
+		private static CancellationTokenSource ctSourcea = new();
+
 		static void Main(string[] args)
 		{
+			AppDomain.CurrentDomain.ProcessExit += (sender, args) => ExitHandler(ctSourcea);
+			Console.CancelKeyPress += (sender, args) =>
+			{
+				args.Cancel = true;
+				ExitHandler(ctSourcea);
+			};
+
+			CancellationToken canct = ctSourcea.Token;
+
 			LoggingConfiguration lc = new();
 
-			ConsoleTarget ct = new ConsoleTarget();
+			ColoredConsoleTarget ct = new();
 			lc.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, ct, "*");
 
 			LogManager.Configuration = lc;
@@ -27,21 +38,25 @@ namespace ConsoleWhiteList
 			LogManager.ReconfigExistingLoggers();
 
 
-			NLogLoggerProvider pippo = new NLogLoggerProvider();
-			NLogLoggerFactory nlogFactory = new NLogLoggerFactory(pippo);
+			NLogLoggerProvider pippo = new();
+			NLogLoggerFactory nlogFactory = new(pippo);
 
-			RconClient rconClient = new("host", 27016, "password", nlogFactory.CreateLogger<RconClient>());
+			FileInfo settingsFile = new(@"config.json");
+			SettingsHandler s = new(settingsFile, nlogFactory, nlogFactory.CreateLogger<SettingsHandler>());
 
-			Task<bool> tak = rconClient.Connect();
-			tak.Wait();
+			RconCommandClient rconClient = new(s.RconHost, s.RconPort, s.RconPassword, nlogFactory, nlogFactory.CreateLogger<RconCommandClient>());
 
-			//while (true)
-			//{
-			//	Task<List<PalUserInfo>> tak2 = rconClient.GetPlayers();
-			//	tak2.Wait();
-			//	Console.WriteLine("[" + string.Join("\n", tak2.Result) + "]");
-			//	Thread.Sleep(1000);
-			//}
+			Task enforceWhitelistTask = Task.Run(() => EnforceWhitelist(s, rconClient, canct), canct);
+
+			try
+			{
+				enforceWhitelistTask.Wait(canct);
+			}
+			catch (OperationCanceledException) { }
+
+
+			LogManager.Shutdown();
+			Console.WriteLine("Bye");
 
 			//var tak2 = rconClient.SendCommand("BanPlayer steamID");
 			//tak2.Wait();
@@ -50,8 +65,33 @@ namespace ConsoleWhiteList
 			//var tak2 = rconClient.ShutDown(TimeSpan.FromSeconds(5), "ciaone");
 			//tak2.Wait();
 			//Console.WriteLine(tak2.Result);
+			
+		}
 
-			Console.ReadLine();
+		private static void ExitHandler(CancellationTokenSource ctSource)
+		{
+			// You can add any arbitrary global clean up
+			Console.WriteLine("Exiting...");
+			ctSource.Cancel();
+		}
+
+		private static async Task EnforceWhitelist(SettingsHandler s, RconCommandClient rconClient, CancellationToken ct)
+		{
+			while (!ct.IsCancellationRequested)
+			{
+				List<PalUserInfo> tak2 = await rconClient.GetPlayers();
+				Console.WriteLine("[" + string.Join("\n", tak2) + "]");
+
+				foreach (PalUserInfo p in tak2)
+				{
+					if (!s.CheckSteamIdWhiteListStatus(p.SteamId))
+					{
+						await rconClient.BanPlayer(p.SteamId);
+					}
+				}
+
+				await Task.Delay(5000, ct);
+			}
 		}
 	}
 }

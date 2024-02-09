@@ -4,9 +4,9 @@ namespace SharedLibrary.Model
 {
 	public class PalUserInfo : IEquatable<PalUserInfo>
 	{
-		public string Name { get; set; }
-		public string Uid { get; set; }
-		public string SteamId { get; set; }
+		public String Name { get; set; }
+		public String Uid { get; set; }
+		public long SteamId { get; set; }
 
 		public override bool Equals(object obj)
 		{
@@ -37,7 +37,7 @@ namespace SharedLibrary.Model
 			{
 				Name = name,
 				Uid = uid,
-				SteamId = steamId
+				SteamId = long.Parse(steamId)
 			};
 		}
 

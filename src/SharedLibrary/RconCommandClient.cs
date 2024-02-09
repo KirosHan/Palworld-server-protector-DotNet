@@ -5,16 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SharedLibrary
 {
     public class RconCommandClient
     {
         private readonly RconClient _client;
+        private readonly ILogger<RconCommandClient> _logger;
 
-        public RconCommandClient(string host, int port, string password, ILogger<RconClient> loggerRcon = null, ILogger<RconCommandClient> logger = null)
+        public RconCommandClient(string host, int port, string password, ILoggerFactory iLoggerFactory, ILogger<RconCommandClient> logger = null)
         {
-            _client = new RconClient(host, port, password, loggerRcon);
+            _logger = logger;
+            _client = new RconClient(host, port, password, iLoggerFactory.CreateLogger<RconClient>());
             Task<bool> connectionTask = _client.Connect();
             connectionTask.Wait();
         }
@@ -22,6 +25,7 @@ namespace SharedLibrary
         public async Task<string> ShutDown(TimeSpan time, string text)
         {
             var data = await _client.SendCommand("shutdown " + time.TotalSeconds + " " + text);
+            _logger.LogInformation($"Requested shutdown in {time} with text: {text}");
             string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
             return responseString;
         }
@@ -29,21 +33,24 @@ namespace SharedLibrary
         public async Task<string> Broadcast(String text)
         {
             var data = await _client.SendCommand("broadcast " + text);
-            string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
+			_logger.LogInformation($"Sent broadcast message with text: {text}");
+			string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
             return responseString;
         }
 
         public async Task<string> GetServerInformation()
         {
             var data = await _client.SendCommand("info");
-            string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
+			_logger.LogInformation($"Requested server information");
+			string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
             return responseString;
         }
 
-        public async Task<string> BanPlayer(String steamId)
+        public async Task<string> BanPlayer(long steamId)
         {
             var data = await _client.SendCommand($"BanPlayer {steamId}");
-            string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
+			_logger.LogInformation($"Ban Player with SteamId: {steamId}");
+			string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
             return responseString;
         }
 
@@ -51,7 +58,8 @@ namespace SharedLibrary
         {
             List<PalUserInfo> result = [];
             var data = await _client.SendCommand("ShowPlayers");
-            String responseString = Encoding.UTF8.GetString(data.Skip(34).ToArray());
+			_logger.LogInformation($"Requested connected players");
+			String responseString = Encoding.UTF8.GetString(data.Skip(34).ToArray());
 
             var lines = responseString.Split('\n');
 
