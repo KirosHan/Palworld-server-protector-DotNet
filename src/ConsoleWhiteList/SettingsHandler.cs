@@ -51,7 +51,7 @@ namespace ConsoleWhiteList
 		public void SaveToConfigFile()
 		{
 			_checker.Stop();
-			string json = JsonConvert.SerializeObject(_settings, Formatting.Indented);
+			string json = JsonConvert.SerializeObject((_settings, Formatting.Indented));
 			using (StreamWriter writer = _configFilePath.CreateText())
 			{
 				writer.Write(json);
