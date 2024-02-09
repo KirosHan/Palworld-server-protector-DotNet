@@ -46,13 +46,20 @@ namespace ConsoleWhiteList
 
 			RconCommandClient rconClient = new(s.RconHost, s.RconPort, s.RconPassword, nlogFactory, nlogFactory.CreateLogger<RconCommandClient>());
 
-			Task enforceWhitelistTask = Task.Run(() => EnforceWhitelist(s, rconClient, canct), canct);
-
-			try
+			Task enforceWhitelistTask = null;
+			if (s.EnforceWhitelist)
 			{
-				enforceWhitelistTask.Wait(canct);
+				enforceWhitelistTask = Task.Run(() => EnforceWhitelist(s, rconClient, canct), canct);
 			}
-			catch (OperationCanceledException) { }
+
+			if (s.EnforceWhitelist)
+			{
+				try
+				{
+					enforceWhitelistTask?.Wait(canct);
+				}
+				catch (OperationCanceledException) { }
+			}
 
 
 			LogManager.Shutdown();

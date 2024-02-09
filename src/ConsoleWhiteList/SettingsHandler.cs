@@ -16,6 +16,7 @@ namespace ConsoleWhiteList
 		public String RconHost { get { return _settings.RconHost; } }
 		public String RconPassword { get { return _settings.RconPassword; } }
 		public int RconPort { get { return _settings.RconPort; } }
+		public bool EnforceWhitelist { get { return _settings.EnforceWhitelist; } set { _settings.EnforceWhitelist = value; SaveToConfigFile(); } }
 
 		public SettingsHandler(FileInfo configFilePath, ILoggerFactory loggerFactory, ILogger<SettingsHandler> logger = null)
 		{
