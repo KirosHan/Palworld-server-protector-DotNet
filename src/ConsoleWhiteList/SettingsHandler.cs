@@ -32,6 +32,12 @@ namespace ConsoleWhiteList
 		{
 			if (!_configFilePath.Exists)
 			{
+				if (defaultOnError)
+				{
+					_settings = new();
+					SaveToConfigFile();
+					return;
+				}
 				return;
 			}
 
@@ -40,29 +46,13 @@ namespace ConsoleWhiteList
 			{
 				json = reader.ReadToEnd();
 			}
-			Settings s = JsonConvert.DeserializeObject<Settings>(json);
-			bool error = false;
-			if (s == null)
-			{
-				error = true;
-			}
 
-			if (error && !defaultOnError)
-			{
-				throw new Exception($"Error deserialize config file in {_configFilePath}");
-			}
-
-			if (error)
+			if(_settings is null)
 			{
 				_settings = new();
-				SaveToConfigFile();
-			}
-			else
-			{
-				_settings = s;
 			}
 
-
+			JsonConvert.PopulateObject(json, _settings);
 		}
 
 		public void SaveToConfigFile()

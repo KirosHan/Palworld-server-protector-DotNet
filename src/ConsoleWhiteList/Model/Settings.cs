@@ -11,5 +11,7 @@ namespace ConsoleWhiteList.Model
 		public bool EnforceWhitelist { get; set; } = false;
 		public bool AutoShutdown { get; set; } = false;
 		public HashSet<long> WhiteListSteamIds { get; set; } = new();
+
+		public Settings() { }
 	}
 }
