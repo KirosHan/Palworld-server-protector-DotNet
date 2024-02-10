@@ -2,8 +2,6 @@
 using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SharedLibrary
@@ -27,26 +25,21 @@ namespace SharedLibrary
 
 		public async Task<bool> ShutDown(TimeSpan time, string text)
 		{
-			if (await Save())
-			{
-				var data = await _client.SendCommand("shutdown " + time.TotalSeconds + " " + text);
-				_logger.LogError($"Requested shutdown in {time} with text: {text}");
-				string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
+			_logger.LogError($"Requested shutdown in {time} with text: {text}");
+			String responseString = await _client.SendCommand("shutdown " + time.TotalSeconds + " " + text);
 
-				if (responseString != $"The server will shut down in {time.TotalSeconds} seconds. Please prepare to exit the game.")
-				{
-					return false;
-				}
-				return true;
+			if (responseString != $"The server will shut down in {time.TotalSeconds} seconds. Please prepare to exit the game.")
+			{
+				return false;
 			}
-			return false;
+			return true;
+
 		}
 
 		public async Task<bool> Save()
 		{
-			var data = await _client.SendCommand("Save");
+			var responseString = await _client.SendCommand("Save");
 			_logger.LogError($"Requested save");
-			string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
 
 			if (responseString != "Complete Save")
 			{
@@ -57,27 +50,29 @@ namespace SharedLibrary
 			return true;
 		}
 
-		public async Task<string> Broadcast(String text)
+		public async Task<bool> Broadcast(String text)
 		{
-			var data = await _client.SendCommand("broadcast " + text);
+			var responseString = await _client.SendCommand("broadcast " + text);
 			_logger.LogTrace($"Sent broadcast message with text: {text}");
-			string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
-			return responseString;
+			if (responseString != $"Broadcasted: {text}")
+			{
+				_logger.LogCritical("Broadcast error: {@responseString}", responseString);
+				return false;
+			}
+			return true;
 		}
 
-		public async Task<string> GetServerInformation()
+		public async Task<String> GetServerInformation()
 		{
-			var data = await _client.SendCommand("info");
+			String data = await _client.SendCommand("info");
 			_logger.LogTrace($"Requested server information");
-			string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
-			return responseString;
+			return data;
 		}
 
 		public async Task<bool> BanPlayer(long steamId)
 		{
-			var data = await _client.SendCommand($"BanPlayer {steamId}");
 			_logger.LogError($"Ban Player with SteamId: {steamId}");
-			string responseString = Encoding.UTF8.GetString(data.Skip(11).ToArray());
+			string responseString = await _client.SendCommand($"BanPlayer {steamId}");
 
 			if (responseString != $"Baned: {steamId}")
 			{
@@ -91,20 +86,28 @@ namespace SharedLibrary
 		public async Task<List<PalUserInfo>> GetPlayers()
 		{
 			List<PalUserInfo> result = [];
-			var data = await _client.SendCommand("ShowPlayers");
+			String responseString = null;
+			try
+			{
+				responseString = await _client.SendCommand("ShowPlayers");
+			} catch (Exception e)
+			{
+				_logger.LogError(e, "Catching exception and trying again in 30 seconds");
+				await Task.Delay(30000);
+				responseString = await _client.SendCommand("ShowPlayers");
+			}
 			_logger.LogTrace($"Requested connected players");
-			String responseString = Encoding.UTF8.GetString(data.Skip(34).ToArray());
 
-			var lines = responseString.Split('\n');
+			String[] lines = responseString.Split('\n');
 
-			if (lines.Length < 1)
+			if (lines.Length <= 1)
 			{
 				return result;
 			}
 
-			for (int i = 1; i <= lines.Length; i++)
+			for (int i = 1; i <= lines.Length - 1; i++)
 			{
-				var line = lines[i - 1];
+				var line = lines[i];
 
 				if (string.IsNullOrEmpty(line))
 				{

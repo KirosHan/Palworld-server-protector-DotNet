@@ -27,10 +27,19 @@ namespace ConsoleWhiteList.PalworldTask
 			if (_settings.AutoShutdown)
 			{
 				//TODO Add time settings from settings file
-				timer = ScheduleTask.Schedule(6, 00, () =>
+				timer = ScheduleTask.Schedule(22, 22, () =>
 				{
-					Task restart = _rconClient.ShutDown(TimeSpan.FromMinutes(5), "The server will be shut down in 5 minutes for daily maintenance");
-					restart.Wait();
+					Task<bool> save = _rconClient.Save();
+					save.Wait();
+					if (save.Result)
+					{
+						TimeSpan timeToShutdown = TimeSpan.FromMinutes(1);
+						Task restart = _rconClient.ShutDown(timeToShutdown, $"The server will be shut down in {timeToShutdown.TotalMinutes} minutes for daily maintenance");
+						restart.Wait();
+					} else
+					{
+						_logger.LogCritical("Restart aborted due to error in saving progress");
+					}
 				});
 			}
 		}

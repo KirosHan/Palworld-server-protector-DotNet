@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SharedLibrary.RconClient;
 
 namespace SharedLibrary
 {
@@ -17,7 +12,10 @@ namespace SharedLibrary
 
 		public Pck(int id, PacketType type, byte[] body)
 		{
-			ID = id; Type = type; Body = [.. body, .. new byte[] { 0x00, 0x00 }]; Size = body.Length + 10;
+			ID = id;
+			Type = type;
+			Body = [.. body, .. new byte[] { 0x00, 0x00 }];
+			Size = body.Length + 10;
 		}
 
 		internal byte[] ToBytes()

@@ -8,6 +8,7 @@ using SharedLibrary;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ConsoleWhiteList
 {
@@ -33,10 +34,6 @@ namespace ConsoleWhiteList
 
 			RconCommandClient rconClient = new(s.RconHost, s.RconPort, s.RconPassword, nlogFactory, nlogFactory.CreateLogger<RconCommandClient>());
 
-			//var tak2 = rconClient.ShutDown(TimeSpan.FromSeconds(50), "ciaone");
-			//tak2.Wait();
-			//Console.WriteLine(tak2.Result);
-
 			RestartSometimes rs = new(s, rconClient, canct, nlogFactory.CreateLogger<RestartSometimes>());
 			rs.Run();
 
@@ -54,7 +51,7 @@ namespace ConsoleWhiteList
 			LoggingConfiguration lc = new();
 
 			ColoredConsoleTarget ct = new();
-			lc.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, ct, "*");
+			lc.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, ct, "*");
 
 			LogManager.Configuration = lc;
 

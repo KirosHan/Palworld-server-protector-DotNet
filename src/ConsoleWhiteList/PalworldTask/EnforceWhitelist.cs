@@ -24,10 +24,16 @@ namespace ConsoleWhiteList.PalworldTask
 
 		public void Run()
 		{
+			Task t = EnforceWhitelistTask(_rconClient);
+			t.Wait();
+			
 			if (_settings.EnforceWhitelist)
 			{
 				_logger.LogInformation("Starting whitelist enforcement");
-				Task.Run(() => EnforceWhitelistTask(_rconClient), _cancellationToken);
+				Task.Run(() => EnforceWhitelistTask(_rconClient), _cancellationToken).ContinueWith((t) =>
+				{
+					if (t.IsFaulted) { throw t.Exception; }
+				});
 			}
 		}
 
