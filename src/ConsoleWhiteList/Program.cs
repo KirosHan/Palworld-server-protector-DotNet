@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace ConsoleWhiteList
 {
-    internal class Program
+	internal class Program
 	{
 		private static CancellationTokenSource ctSourcea = new();
 		private static ManualResetEvent mre = new ManualResetEvent(false);
@@ -37,9 +37,11 @@ namespace ConsoleWhiteList
 			//tak2.Wait();
 			//Console.WriteLine(tak2.Result);
 
+			RestartSometimes rs = new(s, rconClient, canct, nlogFactory.CreateLogger<RestartSometimes>());
+			rs.Run();
 
-			//EnforceWhitelist enforceWhitelist = new(s, rconClient, canct, nlogFactory.CreateLogger<EnforceWhitelist>());
-			//enforceWhitelist.Run();
+			EnforceWhitelist enforceWhitelist = new(s, rconClient, canct, nlogFactory.CreateLogger<EnforceWhitelist>());
+			enforceWhitelist.Run();
 
 			mre.WaitOne();
 
@@ -69,7 +71,5 @@ namespace ConsoleWhiteList
 			ctSource.Cancel();
 			mre.Set();
 		}
-
-
 	}
 }

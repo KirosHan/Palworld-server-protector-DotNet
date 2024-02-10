@@ -9,6 +9,7 @@ namespace ConsoleWhiteList.Model
 		public int RconPort { get; set; } = 25575;
 		public String RconPassword { get; set; } = "admin";
 		public bool EnforceWhitelist { get; set; } = false;
+		public bool AutoShutdown { get; set; } = false;
 		public HashSet<long> WhiteListSteamIds { get; set; } = new();
 	}
 }

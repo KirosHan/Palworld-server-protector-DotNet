@@ -17,17 +17,18 @@ namespace ConsoleWhiteList
 		public String RconPassword { get { return _settings.RconPassword; } }
 		public int RconPort { get { return _settings.RconPort; } }
 		public bool EnforceWhitelist { get { return _settings.EnforceWhitelist; } set { _settings.EnforceWhitelist = value; SaveToConfigFile(); } }
+		public bool AutoShutdown { get { return _settings.AutoShutdown; } set { _settings.AutoShutdown = value; SaveToConfigFile(); } }
 
 		public SettingsHandler(FileInfo configFilePath, ILoggerFactory loggerFactory, ILogger<SettingsHandler> logger = null)
 		{
 			_logger = logger;
 			_configFilePath = configFilePath;
-			LoadFromConfigFile();
+			LoadFromConfigFile(defaultOnError: true);
 			_checker = new(this, configFilePath, loggerFactory.CreateLogger<SettingsChecker>());
 			_checker.Start();
 		}
 
-		public void LoadFromConfigFile()
+		public void LoadFromConfigFile(bool defaultOnError = false)
 		{
 			if (!_configFilePath.Exists)
 			{
@@ -40,23 +41,39 @@ namespace ConsoleWhiteList
 				json = reader.ReadToEnd();
 			}
 			Settings s = JsonConvert.DeserializeObject<Settings>(json);
+			bool error = false;
 			if (s == null)
+			{
+				error = true;
+			}
+
+			if (error && !defaultOnError)
 			{
 				throw new Exception($"Error deserialize config file in {_configFilePath}");
 			}
 
-			_settings = s;
+			if (error)
+			{
+				_settings = new();
+				SaveToConfigFile();
+			}
+			else
+			{
+				_settings = s;
+			}
+
+
 		}
 
 		public void SaveToConfigFile()
 		{
-			_checker.Stop();
-			string json = JsonConvert.SerializeObject((_settings, Formatting.Indented));
+			_checker?.Stop();
+			string json = JsonConvert.SerializeObject(_settings, Formatting.Indented);
 			using (StreamWriter writer = _configFilePath.CreateText())
 			{
 				writer.Write(json);
 			}
-			_checker.Start();
+			_checker?.Start();
 		}
 
 		public bool CheckSteamIdWhiteListStatus(long steamId)
