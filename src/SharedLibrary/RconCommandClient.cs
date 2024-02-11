@@ -11,10 +11,10 @@ namespace SharedLibrary
 		private readonly RconClient _client;
 		private readonly ILogger<RconCommandClient> _logger;
 
-		public RconCommandClient(string host, int port, string password, ILoggerFactory iLoggerFactory, ILogger<RconCommandClient> logger = null)
+		public RconCommandClient(string host, int port, string password, ILoggerFactory iLoggerFactory = null, ILogger<RconCommandClient> logger = null)
 		{
 			_logger = logger;
-			_client = new RconClient(host, port, password, iLoggerFactory.CreateLogger<RconClient>());
+			_client = new RconClient(host, port, password, iLoggerFactory?.CreateLogger<RconClient>());
 			Task<bool> connectionTask = _client.Connect();
 			connectionTask.Wait();
 			if (!connectionTask.Result)
@@ -68,6 +68,20 @@ namespace SharedLibrary
 			_logger.LogTrace($"Requested server information");
 			return data;
 		}
+		
+		public async Task<bool> KickPlayer(long steamId)
+		{
+			_logger.LogError($"Kick Player with SteamId: {steamId}");
+			string responseString = await _client.SendCommand($"KickPlayer {steamId}");
+
+			if (responseString != $"Kicked: {steamId}")
+			{
+				_logger.LogCritical(responseString);
+				return false;
+			}
+
+			return true;
+		}
 
 		public async Task<bool> BanPlayer(long steamId)
 		{
@@ -92,11 +106,11 @@ namespace SharedLibrary
 				responseString = await _client.SendCommand("ShowPlayers");
 			} catch (Exception e)
 			{
-				_logger.LogError(e, "Catching exception and trying again in 30 seconds");
+				_logger?.LogError(e, "Catching exception and trying again in 30 seconds");
 				await Task.Delay(30000);
 				responseString = await _client.SendCommand("ShowPlayers");
 			}
-			_logger.LogTrace($"Requested connected players");
+			_logger?.LogTrace($"Requested connected players");
 
 			String[] lines = responseString.Split('\n');
 

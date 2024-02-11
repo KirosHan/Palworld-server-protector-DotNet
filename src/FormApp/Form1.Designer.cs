@@ -1,4 +1,7 @@
-﻿namespace Palworld_server_protector_DotNet
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace Palworld_server_protector_DotNet
 {
     partial class Form1
     {

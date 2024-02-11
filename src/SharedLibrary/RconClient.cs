@@ -30,19 +30,19 @@ namespace SharedLibrary
 
 			try
 			{
-				_logger.LogInformation("Trying to connect with RCON protocol");
+				_logger?.LogInformation("Trying to connect with RCON protocol");
 				await Client.ConnectAsync(_host, _port);
 			}
 			catch (Exception e)
 			{
-				_logger.LogError("Error", e);
+				_logger?.LogError("Error", e);
 				return false;
 			}
 
 
 			if (!Client.Connected)
 			{
-				_logger.LogError("RCON Client unable to connect");
+				_logger?.LogError("RCON Client unable to connect");
 				Client.Dispose();
 				Client = null;
 				return false;
@@ -61,14 +61,14 @@ namespace SharedLibrary
 				return false;
 			}
 			int realSize = BitConverter.ToInt32(size, 0);
-			_logger.LogTrace($"RCON packet body size: {realSize}");
+			_logger?.LogTrace($"RCON packet body size: {realSize}");
 			byte[] data = new byte[realSize];
 
 			await networkStream.ReadAsync(data, 0, realSize);
 
 			if (data[0] != 0xf5)
 			{
-				_logger.LogCritical("RCON passowrd wrong. Exiting...");
+				_logger?.LogCritical("RCON passowrd wrong. Exiting...");
 				if (Client != null)
 				{
 					if (Client.Connected)
@@ -103,7 +103,7 @@ namespace SharedLibrary
 					throw new Exception("RCON packet malformed");
 				}
 				int realSize = BitConverter.ToInt32(size, 0);
-				_logger.LogTrace($"RCON packet body size: {realSize}");
+				_logger?.LogTrace($"RCON packet body size: {realSize}");
 
 				Memory<byte> memory = new(new byte[realSize]);
 
@@ -113,7 +113,7 @@ namespace SharedLibrary
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Error");
+				_logger?.LogError(ex, "Error");
 				ProcessExit(null, null);
 				throw;
 			}
@@ -159,10 +159,10 @@ namespace SharedLibrary
 
 			if (!statusConnected)
 			{
-				_logger.LogError("RCON Socket not connected, opening it again");
+				_logger?.LogError("RCON Socket not connected, opening it again");
 				return await Connect();
 			}
-			_logger.LogTrace("RCON socket still open, continuing");
+			_logger?.LogTrace("RCON socket still open, continuing");
 			return true;
 		}
 
