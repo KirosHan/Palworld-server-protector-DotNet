@@ -45,7 +45,7 @@ namespace Palworld_server_protector_DotNet
 		// 从文件加载设置
 		public static Settings LoadFromConfigFile(string configFilePath)
 		{
-			Settings? settings = new Settings();
+			Settings settings = new();
 
 			if (!File.Exists(configFilePath))
 			{

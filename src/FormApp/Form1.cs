@@ -56,28 +56,32 @@
 		{
 			memTimer = new();
 			memTimer.Interval = 35000; // 设置定时器间隔为5秒
-			memTimer.Elapsed += (sender, args) => { 
+			memTimer.Elapsed += (sender, args) =>
+			{
 				Task t = Timer_Tick(sender, args);
 				t.Wait();
 			};
 
 			saveTimer = new();
 			saveTimer.Interval = 35000; // 设置定时器间隔为5秒
-			saveTimer.Elapsed += (sender, args) => {
+			saveTimer.Elapsed += (sender, args) =>
+			{
 				Task t = saveTimer_Tick(sender, args);
 				t.Wait();
 			};
 
 			getplayerTimer = new();
 			getplayerTimer.Interval = 10000; // 设置定时器间隔为s秒
-			getplayerTimer.Elapsed += (sender, args) => {
+			getplayerTimer.Elapsed += (sender, args) =>
+			{
 				Task t = getplayerTimer_Tick(sender, args);
 				t.Wait();
 			};
 
 			getversionTimer = new();
 			getversionTimer.Interval = 10000; // 设置定时器间隔为s秒
-			getversionTimer.Elapsed += (sender, args) => {
+			getversionTimer.Elapsed += (sender, args) =>
+			{
 				Task t = getversionTimer_Tick(sender, args);
 				t.Wait();
 			};
@@ -135,9 +139,10 @@
 
 							OutputMessageAsync($"{result}");
 							OutputMessageAsync($"紧急存档中...");
-							CopyGameDataToBackupPath();
-							if (checkbox_web_reboot.Checked == true) { 
-								await SendWebhookAsync("内存达到警戒阈值", $"内存使用率：{memoryUsage}%,已尝试关闭服务器。"); 
+							await CopyGameDataToBackupPath();
+							if (checkbox_web_reboot.Checked == true)
+							{
+								await SendWebhookAsync("内存达到警戒阈值", $"内存使用率：{memoryUsage}%,已尝试关闭服务器。");
 							}
 
 							ShowNotification($"内存使用率：{memoryUsage}%,已尝试关闭服务器。");
@@ -149,20 +154,15 @@
 					{
 						OutputMessageAsync($"发送指令失败，请检查配置。");
 
-						Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+						await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}");
 
-
-
-						if (checkbox_web_reboot.Checked == true) { SendWebhookAsync("Rcon失败", $"发送关服指令失败，请及时检查。"); }
+						if (checkbox_web_reboot.Checked == true)
+						{
+							await SendWebhookAsync("Rcon失败", $"发送关服指令失败，请及时检查。");
+						}
 
 						ShowNotification($"发送关服指令失败，请及时检查。");
-
 					}
-
-
-
-
-
 				}
 			}
 
@@ -199,7 +199,10 @@
 							labelForpidText.Visible = true;
 							labelForPid.Visible = true;
 							OutputMessageAsync($"服务端启动成功。");
-							if (checkBox_web_startprocess.Checked) { SendWebhookAsync("服务端启动成功", $"服务端启动成功。"); }
+							if (checkBox_web_startprocess.Checked)
+							{
+								await SendWebhookAsync("服务端启动成功", $"服务端启动成功。");
+							}
 
 							ShowNotification($"服务端启动成功。");
 
@@ -207,16 +210,22 @@
 						else
 						{
 							OutputMessageAsync($"服务端启动失败。");
-							if (checkBox_web_startprocess.Checked) { SendWebhookAsync("服务端启动失败", $"服务端启动失败。"); }
+							if (checkBox_web_startprocess.Checked)
+							{
+								await SendWebhookAsync("服务端启动失败", $"服务端启动失败。");
+							}
 							ShowNotification($"服务端启动失败。");
 						}
 					}
 					catch (Exception ex)
 					{
 						OutputMessageAsync($"服务端启动失败。");
-						Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x71>>>服务端启动错误>>>错误信息：{ex.Message}"));
+						await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x71>>>服务端启动错误>>>错误信息：{ex.Message}");
 
-						if (checkBox_web_startprocess.Checked) { SendWebhookAsync("服务端启动失败", $"服务端启动失败，请及时检查。"); }
+						if (checkBox_web_startprocess.Checked)
+						{
+							await SendWebhookAsync("服务端启动失败", $"服务端启动失败，请及时检查。");
+						}
 						ShowNotification($"服务端启动失败，请及时检查。");
 					}
 
@@ -301,12 +310,12 @@
 					if (newPlayerlist != "")
 					{
 						OutputMessageAsync($"{newPlayerlist.TrimEnd(',')}加入了游戏。");
-						SendWebhookAsync("玩家加入游戏", $"{newPlayerlist.TrimEnd(',')}加入了游戏。");
+						await SendWebhookAsync("玩家加入游戏", $"{newPlayerlist.TrimEnd(',')}加入了游戏。");
 					}
 					if (offPlayerlist != "")
 					{
 						OutputMessageAsync($"{offPlayerlist.TrimEnd(',')}离开了游戏。");
-						SendWebhookAsync("玩家离开游戏", $"{offPlayerlist.TrimEnd(',')}离开了游戏。");
+						await SendWebhookAsync("玩家离开游戏", $"{offPlayerlist.TrimEnd(',')}离开了游戏。");
 					}
 
 				}
@@ -319,83 +328,85 @@
 				{
 					playersTimercounter = 0;
 					playerList = playerList.TrimEnd(',');
-					if (checkBox_web_getplayers.Checked == true) { SendWebhookAsync("在线玩家统计", $"当前在线玩家：{players.Count}人。\r\n{playerList}"); }
+					if (checkBox_web_getplayers.Checked == true)
+					{
+						await SendWebhookAsync("在线玩家统计", $"当前在线玩家：{players.Count}人。\r\n{playerList}");
+					}
 
 				}
 			}
 			catch (Exception ex)
 			{
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x67>>>获取在线玩家失败>>>错误信息：{ex.Message}"));
-
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x67>>>获取在线玩家失败>>>错误信息：{ex.Message}");
 			}
 		}
 
 		private async Task CopyGameDataToBackupPath()
 		{
-			await Task.Run(() =>
+			try
 			{
+				if (Settings.BackupPath == "")
+				{
+					Invoke(new Action(() => OutputMessageAsync($"未设置备份存放目录。无法备份。")));
+					return;
+				}
+				string backupFolderName = $"SaveGames-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.zip";
+				string backupFilePath = Path.Combine(Settings.BackupPath, backupFolderName);
+
+				if (!Directory.Exists(Settings.GameDataPath))
+				{
+					Invoke(new Action(() => OutputMessageAsync($"游戏存档路径不存在：{Settings.GameDataPath}")));
+					return;
+				}
+
+				if (!Directory.Exists(Settings.BackupPath))
+				{
+					Invoke(new Action(() => OutputMessageAsync($"存档备份路径不存在：{Settings.BackupPath}")));
+					return;
+				}
+
+				// 使用唯一标识符确保每次都创建一个新的临时目录
+				string tempGameDataPath = Path.Combine(Path.GetTempPath(), $"TempGameData-{Guid.NewGuid()}");
+				Directory.CreateDirectory(tempGameDataPath);
+				string tempGameDataCopyPath = Path.Combine(tempGameDataPath, "GameData");
+
+				// Copy the game data to the temporary directory
+				await DirectoryCopy(Settings.GameDataPath, tempGameDataCopyPath, true);
+
+				ZipFile.CreateFromDirectory(tempGameDataCopyPath, backupFilePath);
+
 				try
 				{
-					if (Settings.BackupPath == "")
-					{
-						Invoke(new Action(() => OutputMessageAsync($"未设置备份存放目录。无法备份。")));
-						return;
-					}
-					string backupFolderName = $"SaveGames-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.zip";
-					string backupFilePath = Path.Combine(Settings.BackupPath, backupFolderName);
-
-					if (!Directory.Exists(Settings.GameDataPath))
-					{
-						Invoke(new Action(() => OutputMessageAsync($"游戏存档路径不存在：{Settings.GameDataPath}")));
-						return;
-					}
-
-					if (!Directory.Exists(Settings.BackupPath))
-					{
-						Invoke(new Action(() => OutputMessageAsync($"存档备份路径不存在：{Settings.BackupPath}")));
-						return;
-					}
-
-					// 使用唯一标识符确保每次都创建一个新的临时目录
-					string tempGameDataPath = Path.Combine(Path.GetTempPath(), $"TempGameData-{Guid.NewGuid()}");
-					Directory.CreateDirectory(tempGameDataPath);
-					string tempGameDataCopyPath = Path.Combine(tempGameDataPath, "GameData");
-
-					// Copy the game data to the temporary directory
-					DirectoryCopy(Settings.GameDataPath, tempGameDataCopyPath, true);
-
-					ZipFile.CreateFromDirectory(tempGameDataCopyPath, backupFilePath);
-
-					try
-					{
-						Directory.Delete(tempGameDataPath, true);
-					}
-					catch (IOException)
-					{
-						// 如果删除失败，可能需要重试或记录错误
-						Task.Delay(1000).Wait(); // 稍等一会儿再次尝试
-						Directory.Delete(tempGameDataPath, true); // 重新尝试删除
-					}
-
-					Invoke(new Action(() => OutputMessageAsync($"游戏存档已成功备份")));
-
-					if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份", $"游戏存档已成功备份。"); }
-					ShowNotification($"游戏存档已成功备份。");
+					Directory.Delete(tempGameDataPath, true);
 				}
-				catch (Exception ex)
+				catch (IOException)
 				{
-					Invoke(new Action(() => OutputMessageAsync($"备份存档失败")));
-
-
-					Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x92>>>备份存档错误>>>错误信息：{ex.Message}"));
-
-					if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。"); }
-					ShowNotification($"存档备份失败，请及时检查。");
+					// 如果删除失败，可能需要重试或记录错误
+					Task.Delay(1000).Wait(); // 稍等一会儿再次尝试
+					Directory.Delete(tempGameDataPath, true); // 重新尝试删除
 				}
-			});
+
+				Invoke(new Action(() => OutputMessageAsync($"游戏存档已成功备份")));
+
+				if (checkBox_web_save.Checked)
+				{
+					await SendWebhookAsync("存档备份", $"游戏存档已成功备份。");
+				}
+				ShowNotification($"游戏存档已成功备份。");
+			}
+			catch (Exception ex)
+			{
+				Invoke(new Action(() => OutputMessageAsync($"备份存档失败")));
+
+
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x92>>>备份存档错误>>>错误信息：{ex.Message}");
+
+				if (checkBox_web_save.Checked) { SendWebhookAsync("存档备份失败", $"存档备份失败，请及时检查。"); }
+				ShowNotification($"存档备份失败，请及时检查。");
+			}
 		}
 
-		private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+		private async Task DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
 		{
 			DirectoryInfo dir = new DirectoryInfo(sourceDirName);
 			DirectoryInfo[] dirs = dir.GetDirectories();
@@ -405,7 +416,7 @@
 			{
 				OutputMessageAsync($"游戏存档路径不存在：{sourceDirName}");
 
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x91>>>游戏存档路径不存在>>>错误信息：{sourceDirName}"));
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x91>>>游戏存档路径不存在>>>错误信息：{sourceDirName}");
 
 				ShowNotification($"游戏存档路径不存在：{sourceDirName}");
 			}
@@ -430,7 +441,7 @@
 				foreach (DirectoryInfo subdir in dirs)
 				{
 					string temppath = Path.Combine(destDirName, subdir.Name);
-					DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+					await DirectoryCopy(subdir.FullName, temppath, copySubDirs);
 				}
 			}
 		}
@@ -716,7 +727,7 @@
 				OutputMessageAsync($"读取配置文件失败。");
 				ShowNotification($"读取配置文件失败。");
 
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0xA1>>>读取配置文件错误>>>错误信息：{ex.Message}"));
+				Logger.Instance.AppendToErrorLog($"ErrorCode:0xA1>>>读取配置文件错误>>>错误信息：{ex.Message}");
 
 			}
 		}
@@ -882,13 +893,13 @@
 				else
 				{
 					OutputMessageAsync($"关服指令发送失败。");
-					Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息"));
+					await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息");
 				}
 			}
 			catch (Exception ex)
 			{
 				OutputMessageAsync($"关服指令发送失败。");
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}");
 			}
 
 		}
@@ -913,7 +924,7 @@
 			{
 				OutputMessageAsync($"发送命令时发生错误。");
 
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x68>>>处理服务端版本信息错误>>>返回值为[{info}]>>>错误信息：{ex.Message}"));
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x68>>>处理服务端版本信息错误>>>返回值为[{info}]>>>错误信息：{ex.Message}");
 
 			}
 
@@ -932,14 +943,14 @@
 				else
 				{
 					OutputMessageAsync($"broadcast指令发送失败。");
-					Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息"));
+					await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息");
 				}
 			}
 
 			catch (Exception ex)
 			{
 				OutputMessageAsync($"broadcast指令发送失败。");
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}");
 
 			}
 		}
@@ -1075,13 +1086,13 @@
 				else
 				{
 					OutputMessageAsync($"Kickplayer指令发送失败。");
-					Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息"));
+					await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息");
 				}
 			}
 			catch (Exception ex)
 			{
 				OutputMessageAsync($"Kickplayer指令发送失败。");
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}");
 			}
 		}
 
@@ -1098,13 +1109,13 @@
 				else
 				{
 					OutputMessageAsync($"Banplayer指令发送失败。");
-					Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息"));
+					await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息");
 				}
 			}
 			catch (Exception ex)
 			{
 				OutputMessageAsync($"Banplayer指令发送失败。");
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}"));
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x69>>>指令发送错误>>>错误信息：{ex.Message}");
 			}
 		}
 
@@ -1124,10 +1135,9 @@
 
 		private void testWebhookbutton_Click(object sender, EventArgs e)
 		{
-
 			SendWebhookAsync("测试标题", "这是一条测试推送通知。");
-
 		}
+
 		private async Task SendWebhookAsync(string title, string message)
 		{
 			if (!checkBox_webhook.Checked)
@@ -1159,9 +1169,7 @@
 			catch (Exception ex)
 			{
 				OutputMessageAsync($"Webhook发送失败。");
-
-				Task.Run(() => Logger.AppendToErrorLog($"ErrorCode:0x71>>>Webhook发送错误>>>相关参数：title=[{title}],message=[{message}]>>>错误信息：{ex.Message}"));
-
+				await Logger.Instance.AppendToErrorLogAsync($"ErrorCode:0x71>>>Webhook发送错误>>>相关参数：title=[{title}],message=[{message}]>>>错误信息：{ex.Message}");
 			}
 
 		}
@@ -1217,7 +1225,7 @@
 			{
 				Process.Start(new ProcessStartInfo(projectUrl) { UseShellExecute = true });
 			}
-			catch (Exception ex)
+			catch
 			{
 			}
 		}

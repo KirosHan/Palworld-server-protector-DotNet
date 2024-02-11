@@ -1,74 +1,90 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Palworld_server_protector_DotNet
 {
-    public class Logger
-    {
-        private static string errorLogName = $"error_{DateTime.Now:yyyyMMddHHmmss}.log";
-        private static string LogName = $"log_{DateTime.Now:yyyyMMddHHmmss}.log";
+	public sealed class Logger
+	{
+		private static readonly Logger instance = new Logger();
 
-        private static readonly string logFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "log");
+		private readonly string errorLogName = $"error_{DateTime.Now:yyyyMMddHHmmss}.log";
+		private readonly string LogName = $"log_{DateTime.Now:yyyyMMddHHmmss}.log";
+		private readonly string logFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "log");
+		private readonly string ErrorLogPath ;
+		private readonly string LogPath;
+		private readonly StreamWriter Logwriter;
+		private readonly StreamWriter ErrorLogwriter;
 
-        private static readonly string errorLogPath = Path.Combine(logFolderPath, errorLogName);
-        private static readonly string LogPath = Path.Combine(logFolderPath, LogName);
+		// Explicit static constructor to tell C# compiler
+		// not to mark type as beforefieldinit
+		static Logger()
+		{
+		}
 
-        private static readonly object errorLogLock = new object();
-        private static readonly object logLock = new object();
-        static Logger()
-        {
-            // 确保日志目录存在
-            if (!Directory.Exists(logFolderPath))
-            {
-                Directory.CreateDirectory(logFolderPath);
-            }
-        }
+		public static Logger Instance
+		{
+			get
+			{
+				return instance;
+			}
+		}
 
-        public static void AppendToErrorLog(string content)
-        {
-            lock (errorLogLock)
-            {
-                try
-                {
-                    using (StreamWriter writer = File.AppendText(errorLogPath))
-                    {
-                        writer.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {content}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // 处理写入日志时发生的异常，例如显示一个错误消息
-                    // 避免产生无限递归
-                    Console.WriteLine($"Error writing to log: {ex.Message}");
-                }
-            }
-        }
+		private Logger()
+		{
+			if (!Directory.Exists(logFolderPath))
+			{
+				Directory.CreateDirectory(logFolderPath);
+			}
+			ErrorLogPath = Path.Combine(logFolderPath, errorLogName);
+			LogPath = Path.Combine(logFolderPath, LogName);
+			Logwriter = File.AppendText(LogPath);
+			ErrorLogwriter = File.AppendText(ErrorLogPath);
+		}
 
-        public static void AppendToLog(string content)
-        {
-            lock (logLock)
-            {
-                try
-                {
-                    using (StreamWriter writer = File.AppendText(LogPath))
-                    {
-                        writer.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {content}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // 处理写入日志时发生的异常，例如显示一个错误消息
-                    // 避免产生无限递归
-                    Console.WriteLine($"Error writing to log: {ex.Message}");
-                }
+		~Logger()
+		{
+			Logwriter.Close();
+			ErrorLogwriter.Close();
+		}
 
-            }
-            
-        }
-    }
+		public async Task AppendToErrorLogAsync(string content)
+		{
+			try
+			{
+				await Logwriter.WriteLineAsync($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {content}");
+				await Logwriter.FlushAsync();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error writing to log: {ex.Message}");
+			}
+		}
 
+		public void AppendToErrorLog(string content)
+		{
+			try
+			{
+				Logwriter.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {content}");
+				Logwriter.Flush();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error writing to log: {ex.Message}");
+			}
+		}
+
+		public async Task AppendToLog(string content)
+		{
+			try
+			{
+				await ErrorLogwriter.WriteLineAsync($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {content}");
+				await ErrorLogwriter.FlushAsync();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error writing to log: {ex.Message}");
+			}
+		}
+	}
 }
