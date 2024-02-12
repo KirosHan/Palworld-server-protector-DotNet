@@ -1,3 +1,6 @@
+using System;
+using System.Windows.Forms;
+
 namespace Palworld_server_protector_DotNet
 {
     internal static class Program
