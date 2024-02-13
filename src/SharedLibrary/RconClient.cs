@@ -31,7 +31,8 @@ namespace SharedLibrary
 			try
 			{
 				_logger?.LogInformation("Trying to connect with RCON protocol");
-				await Client.ConnectAsync(_host, _port);
+				Task ppp = Client.ConnectAsync(_host, _port);
+				ppp.Wait();
 			}
 			catch (Exception e)
 			{

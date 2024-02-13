@@ -25,7 +25,7 @@ namespace SharedLibrary
 
 		public async Task<bool> ShutDown(TimeSpan time, string text)
 		{
-			_logger.LogError($"Requested shutdown in {time} with text: {text}");
+			_logger?.LogError($"Requested shutdown in {time} with text: {text}");
 			String responseString = await _client.SendCommand("shutdown " + time.TotalSeconds + " " + text);
 
 			if (responseString != $"The server will shut down in {time.TotalSeconds} seconds. Please prepare to exit the game.")
@@ -53,10 +53,10 @@ namespace SharedLibrary
 		public async Task<bool> Broadcast(String text)
 		{
 			var responseString = await _client.SendCommand("broadcast " + text);
-			_logger.LogTrace($"Sent broadcast message with text: {text}");
+			_logger?.LogTrace($"Sent broadcast message with text: {text}");
 			if (responseString != $"Broadcasted: {text}")
 			{
-				_logger.LogCritical("Broadcast error: {@responseString}", responseString);
+				_logger?.LogCritical("Broadcast error: {@responseString}", responseString);
 				return false;
 			}
 			return true;
@@ -65,18 +65,18 @@ namespace SharedLibrary
 		public async Task<String> GetServerInformation()
 		{
 			String data = await _client.SendCommand("info");
-			_logger.LogTrace($"Requested server information");
+			_logger?.LogTrace($"Requested server information");
 			return data;
 		}
 		
 		public async Task<bool> KickPlayer(long steamId)
 		{
-			_logger.LogError($"Kick Player with SteamId: {steamId}");
+			_logger?.LogError($"Kick Player with SteamId: {steamId}");
 			string responseString = await _client.SendCommand($"KickPlayer {steamId}");
 
 			if (responseString != $"Kicked: {steamId}")
 			{
-				_logger.LogCritical(responseString);
+				_logger?.LogCritical(responseString);
 				return false;
 			}
 
@@ -85,12 +85,12 @@ namespace SharedLibrary
 
 		public async Task<bool> BanPlayer(long steamId)
 		{
-			_logger.LogError($"Ban Player with SteamId: {steamId}");
+			_logger?.LogError($"Ban Player with SteamId: {steamId}");
 			string responseString = await _client.SendCommand($"BanPlayer {steamId}");
 
 			if (responseString != $"Baned: {steamId}")
 			{
-				_logger.LogCritical(responseString);
+				_logger?.LogCritical(responseString);
 				return false;
 			}
 
