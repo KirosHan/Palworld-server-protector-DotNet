@@ -102,8 +102,6 @@
 			}
 		}
 
-
-
 		private async Task Timer_Tick(object sender, EventArgs e)
 		{
 			// 获取系统内存使用百分比
@@ -534,11 +532,15 @@
 			SyncUIWithSettings(Settings);
 			SetupDataBindings(Settings);
 
+			lock (lockCreateRconClient)
+			{
+				_rconCommandClient ??= new(Settings.RconHost, Settings.RconPort, Settings.RconPassword);
+			}
+
 			memTimer.Start();
 			verisionLabel.Text = $"当前版本：{version}";
 
 			OutputMessageAsync($"当前构建版本号：{version}");
-			//_rconCommandClient = new(Settings.RconHost, Settings.RconPort, Settings.RconPassword);
 		}
 
 		private async Task checkVersion(string myversion)
