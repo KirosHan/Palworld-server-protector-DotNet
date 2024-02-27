@@ -108,7 +108,17 @@
                 action();
             }
         }
-
+        private void UpdateLabelForProgram(string text)
+        {
+            if (labelForprogram.InvokeRequired)
+            {
+                labelForprogram.Invoke(new Action<string>(UpdateLabelForProgram), text);
+            }
+            else
+            {
+                labelForprogram.Text = text;
+            }
+        }
         private async Task Timer_Tick(object sender, EventArgs e)
         {
             // 获取系统内存使用百分比
@@ -175,7 +185,7 @@
             { //监控&自启
               // 检查进程是否在运行
                 var isProcessRunning = IsProcessRunning(Settings.CmdPath);
-                labelForprogram.Text = $"{(isProcessRunning ? "运行中" : "未运行")}";
+                UpdateLabelForProgram( $"{(isProcessRunning ? "运行中" : "未运行")}");
                 OutputMessageAsync($"进程运行状态：{(isProcessRunning ? "运行中" : "未运行")}");
                 if (!isProcessRunning)
                 {
