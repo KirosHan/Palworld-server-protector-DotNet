@@ -118,11 +118,372 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="checkBox_reboot.Size" type="System.Drawing.Size, System.Drawing">
+    <value>216, 28</value>
+  </data>
+  <data name="checkBox_reboot.Text" xml:space="preserve">
+    <value>Automatic shutdown</value>
+  </data>
+  <data name="checkBox_save.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 28</value>
+  </data>
+  <data name="checkBox_save.Text" xml:space="preserve">
+    <value>Automatic save</value>
+  </data>
+  <data name="outPutbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>621, 194</value>
+  </data>
+  <data name="selectCmdbutton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>482, 179</value>
+  </data>
+  <data name="selectCmdbutton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>81, 32</value>
+  </data>
+  <data name="selectCmdbutton.Text" xml:space="preserve">
+    <value>Choose</value>
+  </data>
+  <data name="rebootSecondbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>289, 330</value>
+  </data>
+  <data name="rebootSecondbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>272, 30</value>
+  </data>
+  <data name="labelForpassword.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 24</value>
+  </data>
+  <data name="labelForpassword.Text" xml:space="preserve">
+    <value>Admin password</value>
+  </data>
+  <data name="checkSecondbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>289, 282</value>
+  </data>
+  <data name="checkSecondbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>272, 30</value>
+  </data>
+  <data name="labelForrconport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 24</value>
+  </data>
+  <data name="labelForrconport.Text" xml:space="preserve">
+    <value>Rcon port</value>
+  </data>
+  <data name="memTargetbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>289, 232</value>
+  </data>
+  <data name="memTargetbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>272, 30</value>
+  </data>
+  <data name="labelForrebootsecond.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 24</value>
+  </data>
+  <data name="labelForrebootsecond.Text" xml:space="preserve">
+    <value>Reboot delay (seconds)</value>
+  </data>
+  <data name="labelForchecksecond.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 24</value>
+  </data>
+  <data name="labelForchecksecond.Text" xml:space="preserve">
+    <value>Detection interval {seconds}</value>
+  </data>
+  <data name="labelFotmemtarget.Size" type="System.Drawing.Size, System.Drawing">
+    <value>170, 24</value>
+  </data>
+  <data name="labelFotmemtarget.Text" xml:space="preserve">
+    <value>Memory threshold</value>
+  </data>
+  <data name="labelForcmd.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 24</value>
+  </data>
+  <data name="labelForcmd.Text" xml:space="preserve">
+    <value>Server path</value>
+  </data>
+  <data name="passWordbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>289, 426</value>
+  </data>
+  <data name="passWordbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>273, 30</value>
+  </data>
+  <data name="cmdbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>294, 30</value>
+  </data>
+  <data name="rconPortbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>289, 378</value>
+  </data>
+  <data name="rconPortbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>273, 30</value>
+  </data>
+  <data name="checkBox_startprocess.Size" type="System.Drawing.Size, System.Drawing">
+    <value>223, 28</value>
+  </data>
+  <data name="checkBox_startprocess.Text" xml:space="preserve">
+    <value>Monitoring the server</value>
+  </data>
+  <data name="selectBackuppathButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>481, 254</value>
+  </data>
+  <data name="selectBackuppathButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 32</value>
+  </data>
+  <data name="selectBackuppathButton.Text" xml:space="preserve">
+    <value>Choose</value>
+  </data>
+  <data name="backupSecondsbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>241, 80</value>
+  </data>
+  <data name="backupSecondsbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 30</value>
+  </data>
+  <data name="labelForbackuppath.Size" type="System.Drawing.Size, System.Drawing">
+    <value>149, 24</value>
+  </data>
+  <data name="labelForbackuppath.Text" xml:space="preserve">
+    <value>Target directory</value>
+  </data>
+  <data name="backupPathbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>241, 250</value>
+  </data>
+  <data name="backupPathbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 30</value>
+  </data>
+  <data name="labelForbackupsecond.Size" type="System.Drawing.Size, System.Drawing">
+    <value>204, 24</value>
+  </data>
+  <data name="labelForbackupsecond.Text" xml:space="preserve">
+    <value>Save interval (seconds)</value>
+  </data>
+  <data name="memProcessbar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>373, 34</value>
+  </data>
+  <data name="memProcessbar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 24</value>
+  </data>
+  <data name="memOutput.Location" type="System.Drawing.Point, System.Drawing">
+    <value>540, 85</value>
+  </data>
+  <data name="checkBox_geplayers.Size" type="System.Drawing.Size, System.Drawing">
+    <value>313, 28</value>
+  </data>
+  <data name="checkBox_geplayers.Text" xml:space="preserve">
+    <value>Automatical Fetching Player List</value>
+  </data>
+  <data name="button6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>396, 248</value>
+  </data>
+  <data name="labelForPid.Location" type="System.Drawing.Point, System.Drawing">
+    <value>514, 184</value>
+  </data>
+  <data name="labelForpidText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>450, 184</value>
+  </data>
+  <data name="labelForprogram.Location" type="System.Drawing.Point, System.Drawing">
+    <value>514, 134</value>
+  </data>
+  <data name="labelForprogram.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 24</value>
+  </data>
+  <data name="labelForprogram.Text" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
+    <value>373, 134</value>
+  </data>
+  <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 24</value>
+  </data>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Server Status</value>
+  </data>
+  <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
+    <value>334, 34</value>
+  </data>
+  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>215, 48</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Automatically Fetching 
+Player List</value>
+  </data>
+  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 24</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Webhook</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 24</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Automatically Saving</value>
+  </data>
+  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>166, 24</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Server Monitoring</value>
+  </data>
   <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>155, 15</value>
+    <value>209, 72</value>
   </data>
   <data name="label6.Text" xml:space="preserve">
-    <value>Automatic Shutdown Server</value>
+    <value>Automatically Shutting
+down
+
+</value>
+  </data>
+  <data name="labelForwebhook.Location" type="System.Drawing.Point, System.Drawing">
+    <value>250, 184</value>
+  </data>
+  <data name="labelForwebhook.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 24</value>
+  </data>
+  <data name="labelForwebhook.Text" xml:space="preserve">
+    <value>[ OFF ]</value>
+  </data>
+  <data name="labelForgetplayers.Location" type="System.Drawing.Point, System.Drawing">
+    <value>250, 234</value>
+  </data>
+  <data name="labelForgetplayers.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 24</value>
+  </data>
+  <data name="labelForgetplayers.Text" xml:space="preserve">
+    <value>[ OFF ]</value>
+  </data>
+  <data name="labelForsave.Location" type="System.Drawing.Point, System.Drawing">
+    <value>250, 134</value>
+  </data>
+  <data name="labelForsave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 24</value>
+  </data>
+  <data name="labelForsave.Text" xml:space="preserve">
+    <value>[ OFF ]</value>
+  </data>
+  <data name="labelForstart.Location" type="System.Drawing.Point, System.Drawing">
+    <value>250, 85</value>
+  </data>
+  <data name="labelForstart.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 24</value>
+  </data>
+  <data name="labelForstart.Text" xml:space="preserve">
+    <value>[ OFF ]</value>
+  </data>
+  <data name="labelForreboot.Location" type="System.Drawing.Point, System.Drawing">
+    <value>250, 34</value>
+  </data>
+  <data name="labelForreboot.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 24</value>
+  </data>
+  <data name="labelForreboot.Text" xml:space="preserve">
+    <value>[ OFF ]</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>373, 85</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>150, 24</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>System Memory</value>
+  </data>
+  <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>625, 314</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>Console</value>
+  </data>
+  <data name="arguments.Location" type="System.Drawing.Point, System.Drawing">
+    <value>255, 133</value>
+  </data>
+  <data name="arguments.Size" type="System.Drawing.Size, System.Drawing">
+    <value>305, 30</value>
+  </data>
+  <data name="checkBox_args.Size" type="System.Drawing.Size, System.Drawing">
+    <value>207, 28</value>
+  </data>
+  <data name="checkBox_args.Text" xml:space="preserve">
+    <value>Parameters (option)</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>210, 96</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Game data path
+(Automatically 
+selects based 
+on the server directory)</value>
+  </data>
+  <data name="selectCustombutton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>478, 128</value>
+  </data>
+  <data name="selectCustombutton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>85, 32</value>
+  </data>
+  <data name="selectCustombutton.Text" xml:space="preserve">
+    <value>Choose</value>
+  </data>
+  <data name="gamedataBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>241, 130</value>
+  </data>
+  <data name="gamedataBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 30</value>
+  </data>
+  <data name="groupBox3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 329</value>
+  </data>
+  <data name="groupBox3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>625, 221</value>
+  </data>
+  <data name="groupBox3.Text" xml:space="preserve">
+    <value>Echo</value>
+  </data>
+  <data name="playersCounterLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>376, 204</value>
+  </data>
+  <data name="versionLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>228, 24</value>
+  </data>
+  <data name="versionLabel.Text" xml:space="preserve">
+    <value>Server version：Unknown</value>
+  </data>
+  <data name="button4.Text" xml:space="preserve">
+    <value>Fetch version</value>
+  </data>
+  <data name="button3.Text" xml:space="preserve">
+    <value>Shutdown in 10s</value>
+  </data>
+  <data name="button2.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="button1.Text" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="textBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>141, 355</value>
+  </data>
+  <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>312, 30</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 24</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Broadcast</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="labelForservername.Size" type="System.Drawing.Size, System.Drawing">
+    <value>215, 24</value>
+  </data>
+  <data name="labelForservername.Text" xml:space="preserve">
+    <value>Server name：Unknown</value>
+  </data>
+  <data name="tabPage4.Text" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="tabPage5.Text" xml:space="preserve">
+    <value>Test</value>
   </data>
   <data name="notifyIcon1.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -498,9 +859,6 @@
         sXUVp4d60xKRZKmIIn4it3BTvJ8TWUzqfv6zFv67Rfzf0t84jQhG+PDTfAliBuLfEf+VE/2J0Yguk906
         r/8fIX0ArMAQFpYAAAAASUVORK5CYII=
 </value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>964, 403</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

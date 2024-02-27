@@ -3,6 +3,7 @@ using SharedLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SharedLibrary
 {
@@ -17,9 +18,10 @@ namespace SharedLibrary
 			_client = new RconClient(host, port, password, iLoggerFactory?.CreateLogger<RconClient>());
 			Task<bool> connectionTask = _client.Connect();
 			connectionTask.Wait();
-			if (!connectionTask.Result)
+            if (!connectionTask.Result)
 			{
-				throw new Exception("Connection error");
+                _logger?.LogError($"Connection error");
+                //throw new Exception("Connection error");
 			}
 		}
 
