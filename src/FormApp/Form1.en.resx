@@ -130,6 +130,12 @@
   <data name="checkBox_save.Text" xml:space="preserve">
     <value>Automatic save</value>
   </data>
+  <data name="checkBox_mem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>161, 28</value>
+  </data>
+  <data name="checkBox_mem.Text" xml:space="preserve">
+    <value>Memory datas</value>
+  </data>
   <data name="outPutbox.Size" type="System.Drawing.Size, System.Drawing">
     <value>621, 194</value>
   </data>
@@ -182,7 +188,7 @@
     <value>249, 24</value>
   </data>
   <data name="labelForchecksecond.Text" xml:space="preserve">
-    <value>Detection interval {seconds}</value>
+    <value>Detection interval (seconds)</value>
   </data>
   <data name="labelFotmemtarget.Size" type="System.Drawing.Size, System.Drawing">
     <value>170, 24</value>
@@ -264,6 +270,12 @@
   </data>
   <data name="checkBox_geplayers.Text" xml:space="preserve">
     <value>Automatical Fetching Player List</value>
+  </data>
+  <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>625, 314</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>Console</value>
   </data>
   <data name="button6.Location" type="System.Drawing.Point, System.Drawing">
     <value>396, 248</value>
@@ -383,12 +395,6 @@ down
   <data name="label1.Text" xml:space="preserve">
     <value>System Memory</value>
   </data>
-  <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>625, 314</value>
-  </data>
-  <data name="groupBox1.Text" xml:space="preserve">
-    <value>Console</value>
-  </data>
   <data name="arguments.Location" type="System.Drawing.Point, System.Drawing">
     <value>255, 133</value>
   </data>
@@ -400,6 +406,9 @@ down
   </data>
   <data name="checkBox_args.Text" xml:space="preserve">
     <value>Parameters (option)</value>
+  </data>
+  <data name="settingButton.Text" xml:space="preserve">
+    <value>Edit ini file (TEST)</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
     <value>210, 96</value>
@@ -437,6 +446,12 @@ on the server directory)</value>
   <data name="playersCounterLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>376, 204</value>
   </data>
+  <data name="playersCounterLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 24</value>
+  </data>
+  <data name="playersCounterLabel.Text" xml:space="preserve">
+    <value>Online: Unknown</value>
+  </data>
   <data name="versionLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>228, 24</value>
   </data>
@@ -467,6 +482,63 @@ on the server directory)</value>
   <data name="label2.Text" xml:space="preserve">
     <value>Broadcast</value>
   </data>
+  <data name="linkLabel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>373, 30</value>
+  </data>
+  <data name="verisionLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 24</value>
+  </data>
+  <data name="verisionLabel.Text" xml:space="preserve">
+    <value>Latest (Stable)：v2.0.0</value>
+  </data>
+  <data name="linkLabel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>250, 30</value>
+  </data>
+  <data name="groupBox6.Text" xml:space="preserve">
+    <value>Ini file</value>
+  </data>
+  <data name="checkBox_playerStatus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>145, 28</value>
+  </data>
+  <data name="checkBox_playerStatus.Text" xml:space="preserve">
+    <value>Player status</value>
+  </data>
+  <data name="checkBox_web_getplayers.Size" type="System.Drawing.Size, System.Drawing">
+    <value>266, 28</value>
+  </data>
+  <data name="checkBox_web_getplayers.Text" xml:space="preserve">
+    <value>Player list (per 30 minutes)</value>
+  </data>
+  <data name="checkbox_web_reboot.Size" type="System.Drawing.Size, System.Drawing">
+    <value>212, 28</value>
+  </data>
+  <data name="checkbox_web_reboot.Text" xml:space="preserve">
+    <value>Memory notification</value>
+  </data>
+  <data name="checkBox_web_startprocess.Location" type="System.Drawing.Point, System.Drawing">
+    <value>269, 147</value>
+  </data>
+  <data name="checkBox_web_startprocess.Size" type="System.Drawing.Size, System.Drawing">
+    <value>262, 28</value>
+  </data>
+  <data name="checkBox_web_startprocess.Text" xml:space="preserve">
+    <value>Server started Notification</value>
+  </data>
+  <data name="checkBox_web_save.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 28</value>
+  </data>
+  <data name="checkBox_web_save.Text" xml:space="preserve">
+    <value>Save notification</value>
+  </data>
+  <data name="testWebhookbutton.Text" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="checkBox_webhook.Size" type="System.Drawing.Size, System.Drawing">
+    <value>321, 28</value>
+  </data>
+  <data name="checkBox_webhook.Text" xml:space="preserve">
+    <value>Webhook (WeCom and Dingtalk)</value>
+  </data>
   <data name="tabPage1.Text" xml:space="preserve">
     <value>Server</value>
   </data>
@@ -484,6 +556,18 @@ on the server directory)</value>
   </data>
   <data name="tabPage5.Text" xml:space="preserve">
     <value>Test</value>
+  </data>
+  <data name="groupBox4.Text" xml:space="preserve">
+    <value>Console Output</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>Task Bar</value>
+  </data>
+  <data name="checkBox_Noti.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 28</value>
+  </data>
+  <data name="checkBox_Noti.Text" xml:space="preserve">
+    <value>Task bar notification</value>
   </data>
   <data name="notifyIcon1.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
