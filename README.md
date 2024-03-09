@@ -5,9 +5,6 @@
 
 注意：protector-electron（旧版）已弃用
 
-欢迎反馈bug，可提交issues或者扫码进群（添加机器人后发送Palworld即可）
-
-![Qrcode](https://raw.githubusercontent.com/KirosHan/Palworld-server-protector-DotNet/main/PNG/qrcode.jpg)
 
 ## 	:beers:功能
 
